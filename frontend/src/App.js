@@ -956,71 +956,101 @@ const ChatScreen = ({
             return;
         }
 
-        // 선택된 메시지만 렌더링할 임시 컨테이너 생성 (헤더 없이)
+        if (!captureRef.current) {
+            alert('캡쳐할 영역을 찾을 수 없습니다.');
+            return;
+        }
+
+        // 실제 메시지 리스트에서 선택된 메시지 요소들 찾기
+        const messageElements = Array.from(captureRef.current.children);
+        const startElement = messageElements[startIdx];
+        const endElement = messageElements[endIdx];
+
+        if (!startElement || !endElement) {
+            alert('선택된 메시지를 찾을 수 없습니다.');
+            return;
+        }
+
+        // 실제 채팅 컨테이너의 스타일 가져오기
+        const chatContainer = captureRef.current.closest('.chat-container');
+        const chatWindow = captureRef.current.closest('.chat-window');
+        
+        // 임시 컨테이너 생성 (실제 채팅방과 동일한 구조)
         const tempContainer = document.createElement('div');
         tempContainer.style.position = 'absolute';
         tempContainer.style.left = '-9999px';
-        tempContainer.style.width = captureRef.current?.offsetWidth ? `${captureRef.current.offsetWidth}px` : '600px';
-        tempContainer.style.background = '#F5F1EB';
+        tempContainer.style.top = '0';
+        tempContainer.style.width = chatWindow ? `${chatWindow.offsetWidth}px` : (captureRef.current.offsetWidth ? `${captureRef.current.offsetWidth}px` : '420px');
+        tempContainer.style.background = chatContainer ? window.getComputedStyle(chatContainer).backgroundColor : '#F5F1EB';
         tempContainer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif';
         tempContainer.style.textRendering = 'optimizeLegibility';
         tempContainer.style.webkitFontSmoothing = 'antialiased';
         tempContainer.style.mozOsxFontSmoothing = 'grayscale';
-        tempContainer.className = 'capture-container';
+        
+        // 채팅 컨테이너 클래스 복제
+        if (chatContainer) {
+            tempContainer.className = chatContainer.className + ' capture-temp-container';
+        } else {
+            tempContainer.className = 'capture-temp-container';
+        }
 
-        const messageListClone = document.createElement('div');
-        messageListClone.className = 'message-list';
-        messageListClone.style.padding = '20px 16px';
-        messageListClone.style.background = '#F5F1EB';
+        // 채팅 윈도우 복제
+        const chatWindowClone = document.createElement('div');
+        chatWindowClone.className = chatWindow ? chatWindow.className : 'chat-window';
+        const chatWindowStyle = chatWindow ? window.getComputedStyle(chatWindow) : null;
+        if (chatWindowStyle) {
+            chatWindowClone.style.width = chatWindowStyle.width;
+            chatWindowClone.style.maxWidth = chatWindowStyle.maxWidth;
+            chatWindowClone.style.background = chatWindowStyle.background;
+        } else {
+            chatWindowClone.style.width = '420px';
+            chatWindowClone.style.maxWidth = '420px';
+            chatWindowClone.style.background = '#F5F1EB';
+        }
+
+        // 메시지 리스트 복제
+        const messageListClone = captureRef.current.cloneNode(false);
+        const messageListStyle = window.getComputedStyle(captureRef.current);
+        messageListClone.style.padding = messageListStyle.padding;
+        messageListClone.style.background = messageListStyle.background;
         messageListClone.style.minHeight = 'auto';
         messageListClone.style.display = 'flex';
         messageListClone.style.flexDirection = 'column';
-        messageListClone.style.gap = '24px';
-
-        selectedRange.forEach((msg, idx) => {
-            const msgElement = captureRef.current.children[startIdx + idx];
+        messageListClone.style.gap = messageListStyle.gap || '24px';
+        
+        // 선택된 메시지들 복제 (깊은 복사로 모든 스타일 유지)
+        for (let i = startIdx; i <= endIdx; i++) {
+            const msgElement = messageElements[i];
             if (msgElement) {
                 const clonedMsg = msgElement.cloneNode(true);
                 
+                // 캡쳐 관련 클래스만 제거
                 clonedMsg.classList.remove('selected-for-capture', 'selectable', 'out-of-range', 'in-range-for-capture');
                 
-                clonedMsg.style.opacity = '1';
-                clonedMsg.style.filter = 'none';
-                
-                const allChildElements = clonedMsg.querySelectorAll('*');
-                allChildElements.forEach(el => {
-                    const computedStyle = window.getComputedStyle(el);
-                    if (computedStyle.opacity !== '1') {
-                        el.style.opacity = '1';
-                    }
-                    if (computedStyle.filter !== 'none') {
-                        el.style.filter = 'none';
-                    }
-                    if (computedStyle.backdropFilter && computedStyle.backdropFilter !== 'none') {
+                // 모든 자식 요소의 스타일 복원
+                const allElements = clonedMsg.querySelectorAll('*');
+                allElements.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.filter = 'none';
+                    if (el.style.backdropFilter) {
                         el.style.backdropFilter = 'none';
-                    }
-                    // 색상 관련 스타일 명시적으로 복원
-                    if (computedStyle.color) {
-                        el.style.color = computedStyle.color;
-                    }
-                    if (computedStyle.backgroundColor && computedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)' && computedStyle.backgroundColor !== 'transparent') {
-                        el.style.backgroundColor = computedStyle.backgroundColor;
                     }
                 });
                 
                 messageListClone.appendChild(clonedMsg);
             }
-        });
+        }
 
-        tempContainer.appendChild(messageListClone);
+        chatWindowClone.appendChild(messageListClone);
+        tempContainer.appendChild(chatWindowClone);
         document.body.appendChild(tempContainer);
 
         // 선택된 메시지 캡처
         setTimeout(async () => {
             try {
                 const canvas = await html2canvas(tempContainer, {
-                    backgroundColor: '#F5F1EB',
-                    scale: 3,
+                    backgroundColor: null, // 투명 배경
+                    scale: 2,
                     logging: false,
                     useCORS: true,
                     allowTaint: false,
@@ -1036,7 +1066,7 @@ const ChatScreen = ({
                         return element.classList && element.classList.contains('capture-controls');
                     },
                     onclone: (clonedDoc) => {
-                        // 모든 요소의 색상과 스타일 명시적으로 복원
+                        // 모든 요소의 스타일 명시적으로 복원
                         const clonedDocElements = clonedDoc.querySelectorAll('*');
                         clonedDocElements.forEach(el => {
                             // 투명도 및 필터 복원
@@ -1047,46 +1077,37 @@ const ChatScreen = ({
                             }
                             
                             // 텍스트 렌더링 설정
-                                el.style.textRendering = 'optimizeLegibility';
+                            el.style.textRendering = 'optimizeLegibility';
                             el.style.webkitFontSmoothing = 'antialiased';
                             el.style.mozOsxFontSmoothing = 'grayscale';
-                            
-                            // 메시지 버블 배경색 명시적으로 설정
-                            if (el.classList && el.classList.contains('message-bubble')) {
-                                if (el.classList.contains('ai')) {
-                                    el.style.backgroundColor = '#FFFFFF';
-                                } else if (el.classList.contains('user')) {
-                                    el.style.backgroundColor = '#E8D5C4';
-                                }
-                            }
-                            
-                            // 텍스트 색상 명시적으로 설정
-                            if (el.classList && (el.classList.contains('message-text') || el.classList.contains('message-bubble'))) {
-                                const computedStyle = window.getComputedStyle(el);
-                                if (computedStyle.color) {
-                                    el.style.color = computedStyle.color;
-                                }
-                            }
                         });
                         
-                        // 배경색 명시적으로 설정
+                        // 배경색 설정
                         const body = clonedDoc.body;
                         if (body) {
-                            body.style.backgroundColor = '#F5F1EB';
-                        }
-                        const html = clonedDoc.documentElement;
-                        if (html) {
-                            html.style.backgroundColor = '#F5F1EB';
+                            const bodyStyle = window.getComputedStyle(document.body);
+                            body.style.backgroundColor = bodyStyle.backgroundColor || '#F5F1EB';
                         }
                         
-                        // 컨테이너 배경색 명시적으로 설정
-                        const container = clonedDoc.querySelector('.capture-container');
+                        // 컨테이너 배경색 설정
+                        const container = clonedDoc.querySelector('.capture-temp-container');
                         if (container) {
-                            container.style.backgroundColor = '#F5F1EB';
+                            const containerStyle = chatContainer ? window.getComputedStyle(chatContainer) : null;
+                            container.style.backgroundColor = containerStyle ? containerStyle.backgroundColor : '#F5F1EB';
                         }
-                        const messageList = clonedDoc.querySelector('.message-list');
-                        if (messageList) {
-                            messageList.style.backgroundColor = '#F5F1EB';
+                        
+                        // 채팅 윈도우 배경색 설정
+                        const clonedChatWindow = clonedDoc.querySelector('.chat-window');
+                        if (clonedChatWindow) {
+                            const chatWindowStyle = chatWindow ? window.getComputedStyle(chatWindow) : null;
+                            clonedChatWindow.style.background = chatWindowStyle ? chatWindowStyle.background : '#F5F1EB';
+                        }
+                        
+                        // 메시지 리스트 배경색 설정
+                        const clonedMessageList = clonedDoc.querySelector('.message-list');
+                        if (clonedMessageList) {
+                            const messageListStyle = window.getComputedStyle(captureRef.current);
+                            clonedMessageList.style.background = messageListStyle.background || '#F5F1EB';
                         }
                     }
                 });
@@ -1112,7 +1133,7 @@ const ChatScreen = ({
                     document.body.removeChild(tempContainer);
                 }
             }
-        }, 100);
+        }, 200);
     };
 
     useEffect(() => {
@@ -2073,6 +2094,10 @@ const ChatScreen = ({
                     onInput={(e) => {
                         const element = e.target;
                         
+                        // 높이 자동 조절
+                        element.style.height = 'auto';
+                        element.style.height = Math.max(44, element.scrollHeight) + 'px';
+                        
                         // 버튼 클릭으로 인한 변경이면 messageType 업데이트 건너뛰기
                         if (element._isButtonToggle) {
                             const newText = element.innerText || element.textContent || '';
@@ -2727,14 +2752,33 @@ function App() {
         setWaitingForUserInput(false);
         setShowDebateIntervention(false);
         
+        // 토론 시작 시 바로 두 인물이 각각 두 번씩 번갈아가며 말하도록
+        // debateMode가 설정된 후 바로 실행
         setTimeout(() => {
-            continueDebateRound(1);
-        }, 2000);
+            startInitialDebateRounds(); // 초기 두 라운드 연속 실행
+        }, 500); // 0.5초 후 바로 시작
+    };
+    
+    // 토론 시작 시 초기 두 라운드 연속 실행 (각 캐릭터가 두 번씩 말하기)
+    const startInitialDebateRounds = async () => {
+        try {
+            // 첫 번째 라운드: A1, B1
+            await continueDebateRound(1, true, true); // isInitialStart=true, isFirstRound=true
+            
+            // 두 번째 라운드: A2, B2 (약간의 지연 후)
+            setTimeout(async () => {
+                await continueDebateRound(2, true, false); // isInitialStart=true, isFirstRound=false
+            }, 4000); // 첫 번째 라운드 메시지들이 모두 표시된 후
+        } catch (error) {
+            console.error('토론 시작 오류:', error);
+            setIsLoading(false);
+        }
     };
     
     // 토론 라운드 계속하기
-    const continueDebateRound = async (round) => {
-        if (!debateMode) {
+    const continueDebateRound = async (round, isInitialStart = false, isFirstRound = false) => {
+        // 초기 시작이 아닐 때만 debateMode 체크
+        if (!isInitialStart && !debateMode) {
             setIsLoading(false);
             return;
         }
@@ -2844,47 +2888,74 @@ function App() {
             const data = await response.json();
             
             if (data && data.responses && Array.isArray(data.responses)) {
-                for (const res of data.responses) {
-                    if (res.texts && Array.isArray(res.texts)) {
-                        for (const text of res.texts) {
-                            const debateMessage = {
-                                id: Date.now() + Math.random(),
-                                sender: 'ai',
-                                text: text,
-                                characterId: res.id,
-                                timestamp: new Date(),
-                                read: false
-                            };
+                // 각 캐릭터가 한 번씩 말하기 (순차적으로)
+                for (let i = 0; i < data.responses.length; i++) {
+                    const res = data.responses[i];
+                    if (res.texts && Array.isArray(res.texts) && res.texts.length > 0) {
+                        // 각 캐릭터의 첫 번째 텍스트만 사용
+                        const text = res.texts[0];
+                        const debateMessage = {
+                            id: Date.now() + Math.random() + i,
+                            sender: 'ai',
+                            text: text,
+                            characterId: res.id,
+                            timestamp: new Date(),
+                            read: false
+                        };
+                        // 첫 번째 메시지는 즉시 표시, 이후 메시지는 짧은 지연
+                        if (i === 0) {
                             setMessages(prev => [...prev, debateMessage]);
+                        } else {
+                            setTimeout(() => {
+                                setMessages(prev => [...prev, debateMessage]);
+                            }, i * 800); // 1.5초에서 0.8초로 단축하여 더 빠르게 표시
                         }
                     }
                 }
                 
                 // 다음 라운드 진행
                 const nextRound = round + 1;
+                const totalDelay = data.responses.length > 1 ? (data.responses.length - 1) * 1500 + 2000 : 2000;
                 
-                if (round === 1) {
-                    // 라운드 1: 자동으로 라운드 2 진행 (두 번 주고받기)
+                if (isInitialStart && isFirstRound) {
+                    // 첫 번째 라운드 완료: 두 번째 라운드로 자동 진행 (startInitialDebateRounds에서 처리)
+                    setDebateRound(nextRound);
+                    setIsLoading(false);
+                    // 두 번째 라운드는 startInitialDebateRounds에서 호출됨
+                } else if (isInitialStart && !isFirstRound && round === 2) {
+                    // 두 번째 라운드 완료: 사용자 입력 대기
+                    setDebateRound(3);
+                    setTimeout(() => {
+                        setWaitingForUserInput(true);
+                        setShowDebateIntervention(true);
+                        setIsInterventionPanelHidden(false);
+                        setCurrentTurn('USER');
+                        const userInputPrompt = {
+                            id: Date.now() + 1,
+                            sender: 'system',
+                            text: '💬 어떤 의견에 더 공감하시나요?',
+                            timestamp: new Date(),
+                            read: false
+                        };
+                        setMessages(prev => [...prev, userInputPrompt]);
+                    }, totalDelay);
+                } else {
+                    // 일반 라운드: 사용자 입력 대기
                     setDebateRound(nextRound);
                     setTimeout(() => {
-                        continueDebateRound(nextRound);
-                    }, 2000);
-                } else {
-                    // 라운드 2 이상: 사용자 입력 가능 (한 번씩만 주고받기)
-                    setDebateRound(nextRound);
-                    setWaitingForUserInput(true);
-                    setShowDebateIntervention(true);
-                    setIsInterventionPanelHidden(false);
-                    // 사용자 입력창 활성화 (토론 계속 가능)
-                    setCurrentTurn('USER');
-                    const userInputPrompt = {
-                        id: Date.now() + 1,
-                        sender: 'system',
-                        text: '💬 어떤 의견에 더 공감하시나요?',
-                        timestamp: new Date(),
-                        read: false
-                    };
-                    setMessages(prev => [...prev, userInputPrompt]);
+                        setWaitingForUserInput(true);
+                        setShowDebateIntervention(true);
+                        setIsInterventionPanelHidden(false);
+                        setCurrentTurn('USER');
+                        const userInputPrompt = {
+                            id: Date.now() + 1,
+                            sender: 'system',
+                            text: '💬 어떤 의견에 더 공감하시나요?',
+                            timestamp: new Date(),
+                            read: false
+                        };
+                        setMessages(prev => [...prev, userInputPrompt]);
+                    }, totalDelay);
                 }
             } else {
                 throw new Error('토론 응답 형식이 올바르지 않습니다.');
@@ -2977,12 +3048,13 @@ function App() {
             
             if (response.ok) {
                 const summaryData = await response.json();
+                console.log('토론 요약 응답:', summaryData);
                 
                 // 로딩 메시지 제거
                 setMessages(prev => prev.filter(msg => msg.text !== '📋 토론 결론 요약 중...'));
                 
                 // 토론 요약을 시스템 메시지로 표시
-                if (summaryData.summary) {
+                if (summaryData && summaryData.summary) {
                     const summaryMessage = {
                         id: Date.now(),
                         sender: 'system',
@@ -2991,6 +3063,17 @@ function App() {
                         read: false
                     };
                     setMessages(prev => [...prev, summaryMessage]);
+                } else {
+                    console.error('토론 요약 데이터가 없습니다:', summaryData);
+                    // 요약이 없어도 오류 메시지 표시
+                    const errorMessage = {
+                        id: Date.now(),
+                        sender: 'system',
+                        text: '토론 요약을 생성할 수 없습니다.',
+                        timestamp: new Date(),
+                        read: false
+                    };
+                    setMessages(prev => [...prev, errorMessage]);
                 }
                 
                 // 사용자가 직접 입력한 메시지 확인 (💭로 시작하지 않는 사용자 메시지)
@@ -3044,6 +3127,52 @@ function App() {
                         // 오류 발생해도 계속 진행
                     }
                 }
+                
+                // 모든 요약과 감상평이 추가된 후에 종료 메시지 추가
+                setTimeout(() => {
+                    const debateEndMessage = {
+                        id: Date.now() + 2000,
+                        sender: 'system',
+                        text: '🎤 토론이 종료되었습니다.',
+                        timestamp: new Date(),
+                        read: false
+                    };
+                    setMessages(prev => {
+                        const hasEndMessage = prev.some(msg => msg.text === '🎤 토론이 종료되었습니다.');
+                        if (!hasEndMessage) {
+                            return [...prev, debateEndMessage];
+                        }
+                        return prev;
+                    });
+                }, 500);
+            } else {
+                // 요약 요청 실패
+                console.error('토론 요약 요청 실패:', response.status, response.statusText);
+                const errorText = await response.text();
+                console.error('에러 응답:', errorText);
+                
+                // 로딩 메시지 제거
+                setMessages(prev => prev.filter(msg => msg.text !== '📋 토론 결론 요약 중...'));
+                
+                // 오류 메시지 표시
+                const errorMessage = {
+                    id: Date.now(),
+                    sender: 'system',
+                    text: '토론 요약 생성 중 오류가 발생했습니다.',
+                    timestamp: new Date(),
+                    read: false
+                };
+                setMessages(prev => [...prev, errorMessage]);
+                
+                // 종료 메시지 추가
+                const debateEndMessage = {
+                    id: Date.now() + 1,
+                    sender: 'system',
+                    text: '🎤 토론이 종료되었습니다.',
+                    timestamp: new Date(),
+                    read: false
+                };
+                setMessages(prev => [...prev, debateEndMessage]);
             }
         } catch (error) {
             // 로딩 메시지 제거
@@ -3071,22 +3200,7 @@ function App() {
             setIsLoading(false);
             setCurrentTurn('USER'); // 입력창 잠금 해제
             
-            // 토론 종료 후 일반 채팅으로 자연스럽게 전환
-            // 토론 종료 메시지 추가 (중복 체크)
-            setMessages(prev => {
-                const hasEndMessage = prev.some(msg => msg.text === '🎤 토론이 종료되었습니다.');
-                if (!hasEndMessage) {
-                    const debateEndTransition = {
-                        id: Date.now() + 1000,
-                        sender: 'system',
-                        text: '🎤 토론이 종료되었습니다.',
-                        timestamp: new Date(),
-                        read: false
-                    };
-                    return [...prev, debateEndTransition];
-                }
-                return prev;
-            });
+            // 토론 종료 메시지는 이미 요약 후에 추가되었으므로 여기서는 추가하지 않음
         }
     };
     
@@ -3514,7 +3628,7 @@ function App() {
         // contentEditable div 초기화
         if (textareaRef && textareaRef.current && textareaRef.current.contentEditable === 'true') {
             textareaRef.current.innerHTML = '';
-            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = '44px';
         } else {
         const textarea = document.querySelector('.input-area textarea');
         if (textarea) textarea.style.height = 'auto';

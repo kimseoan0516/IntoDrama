@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { characterData } from '../constants/characterData';
 import { api, API_BASE_URL } from '../utils/api';
 import { auth, psychologyReports } from '../utils/storage';
+import html2canvas from 'html2canvas';
 
 // 마이페이지 모달
 export const MyPageScreen = ({ userProfile, onClose, onSave, token, onLogout }) => {
@@ -381,8 +382,6 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                 <div className="stats-content">
                     {loading ? (
                         <p className="empty-message">불러오는 중...</p>
-                    ) : !weeklyStats || weeklyStats.top_characters.length === 0 ? (
-                        <p className="empty-message">이번주 대화 기록이 없습니다.</p>
                     ) : (
                         <>
                             <div className="weekly-stats-header" style={{ marginBottom: '8px' }}>
@@ -390,6 +389,18 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                 <p style={{ fontSize: '0.85rem', color: '#8D6E63', margin: 0 }}>가장 티키타카가 잘 맞는 파트너를 모았어요</p>
                             </div>
                             
+                            {!weeklyStats || weeklyStats.top_characters.length === 0 ? (
+                                <div style={{ 
+                                    padding: '40px 20px', 
+                                    textAlign: 'center',
+                                    color: '#8D6E63',
+                                    fontSize: '0.95rem'
+                                }}>
+                                    <p style={{ margin: 0, opacity: 0.7 }}>이번주 대화 기록이 없습니다.</p>
+                                    <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', opacity: 0.6 }}>대화를 시작하고 저장하면 통계가 표시됩니다.</p>
+                                </div>
+                            ) : (
+                                <>
                             {/* 상위 3명 캐릭터 카드 - 1위 위에, 2·3위 아래 가로로 */}
                             <div style={{ marginBottom: '12px' }}>
                                 {/* 1위 카드 */}
@@ -685,7 +696,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     textAlign: 'center'
                                 }}>
                                     <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#5D4037', marginBottom: '4px' }}>
-                                        {weeklyStats.total_chats}
+                                        {weeklyStats?.total_chats || 0}
                                     </div>
                                     <div style={{ fontSize: '0.85rem', color: '#8D6E63' }}>총 대화 수</div>
                                 </div>
@@ -697,7 +708,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     textAlign: 'center'
                                 }}>
                                     <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#5D4037', marginBottom: '4px' }}>
-                                        {weeklyStats.total_messages}
+                                        {weeklyStats?.total_messages || 0}
                                     </div>
                                     <div style={{ fontSize: '0.85rem', color: '#8D6E63' }}>총 메시지 수</div>
                                 </div>
@@ -709,13 +720,64 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     textAlign: 'center'
                                 }}>
                                     <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#5D4037', marginBottom: '4px' }}>
-                                        {weeklyStats.top_characters.length}
+                                        {weeklyStats?.top_characters?.length || 0}
                                     </div>
                                     <div style={{ fontSize: '0.85rem', color: '#8D6E63', lineHeight: '1.3' }}>
                                         대화한<br />캐릭터
                                     </div>
                                 </div>
                             </div>
+                                </>
+                            )}
+                            
+                            {/* 총 통계 (데이터가 없을 때도 표시) */}
+                            {(!weeklyStats || weeklyStats.top_characters.length === 0) && (
+                                <div className="total-stats-container" style={{ 
+                                    display: 'grid', 
+                                    gridTemplateColumns: 'repeat(3, 1fr)', 
+                                    gap: '12px',
+                                    marginTop: '12px'
+                                }}>
+                                    <div style={{
+                                        padding: '16px',
+                                        backgroundColor: '#FFFFFF',
+                                        borderRadius: '10px',
+                                        border: '1px solid #E8E0DB',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#5D4037', marginBottom: '4px' }}>
+                                            0
+                                        </div>
+                                        <div style={{ fontSize: '0.85rem', color: '#8D6E63' }}>총 대화 수</div>
+                                    </div>
+                                    <div style={{
+                                        padding: '16px',
+                                        backgroundColor: '#FFFFFF',
+                                        borderRadius: '10px',
+                                        border: '1px solid #E8E0DB',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#5D4037', marginBottom: '4px' }}>
+                                            0
+                                        </div>
+                                        <div style={{ fontSize: '0.85rem', color: '#8D6E63' }}>총 메시지 수</div>
+                                    </div>
+                                    <div style={{
+                                        padding: '16px',
+                                        backgroundColor: '#FFFFFF',
+                                        borderRadius: '10px',
+                                        border: '1px solid #E8E0DB',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#5D4037', marginBottom: '4px' }}>
+                                            0
+                                        </div>
+                                        <div style={{ fontSize: '0.85rem', color: '#8D6E63', lineHeight: '1.3' }}>
+                                            대화한<br />캐릭터
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </>
                     )}
                     
@@ -790,12 +852,22 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                         </div>
                     )}
                     
-                    {/* 저장한 대사 목록 */}
-                    {quotes.length > 0 && (
-                        <div className="stats-quotes-list" style={{ marginTop: '32px' }}>
-                            <div style={{ marginBottom: '16px' }}>
-                                <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#5D4037', margin: 0 }}>저장한 대사 목록</h3>
+                    {/* 저장한 대사 목록 - 항상 표시 */}
+                    <div className="stats-quotes-list" style={{ marginTop: '32px', paddingTop: '24px', borderTop: '2px solid #E8E0DB' }}>
+                        <div style={{ marginBottom: '16px' }}>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: '#5D4037', margin: 0 }}>저장한 대사 목록</h3>
                                     </div>
+                        {quotes.length === 0 ? (
+                            <div style={{ 
+                                padding: '40px 20px', 
+                                textAlign: 'center',
+                                color: '#8D6E63',
+                                fontSize: '0.95rem'
+                            }}>
+                                <p style={{ margin: 0, opacity: 0.7 }}>저장한 대사가 없습니다.</p>
+                                <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', opacity: 0.6 }}>대화 중 마음에 드는 대사를 하트로 저장하면 여기에 표시됩니다.</p>
+                            </div>
+                        ) : (
                             <div className="stats-quotes-items">
                                 {(() => {
                                     const totalPages = Math.ceil(quotes.length / quotesPerPage);
@@ -1128,8 +1200,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     );
                                 })()}
                             </div>
-                        </div>
                     )}
+                    </div>
                 </div>
             </div>
         </div>
@@ -1139,6 +1211,25 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
 // 감정 분석 함수 (리포트용)
 const detectRomanceLevel = (text) => {
     if (!text) return 0;
+    
+    // 취향을 묻는 패턴 감지 (로맨스가 아닌 경우)
+    const preferencePatterns = [
+        /어떤\s+\w+\s*(좋아|조아|선호|취향)/,
+        /무엇(을|를)\s*(좋아|조아|선호)/,
+        /뭐\s*(좋아|조아|선호)/,
+        /\w+\s*(좋아|조아|선호|취향)\s*(해|해요|하세요|하나|하니|하냐)/,
+        /\w+\s*(종류|맛|스타일|타입)\s*(좋아|조아|선호)/,
+        /(커피|차|음식|음료|음악|영화|책|색깔|색|드라마|게임|스포츠|운동|취미|취향|선호)\s*(좋아|조아|선호)/,
+        /(좋아|조아|선호)\s*(하는|하는)\s*(커피|차|음식|음료|음악|영화|책|색깔|색|드라마|게임|스포츠|운동|취미)/,
+        /(어떤|무엇|뭐)\s*(커피|차|음식|음료|음악|영화|책|색깔|색|드라마|게임|스포츠|운동|취미)/
+    ];
+    
+    // 취향을 묻는 패턴이 있으면 로맨스 점수 0 반환
+    const isPreferenceQuestion = preferencePatterns.some(pattern => pattern.test(text));
+    if (isPreferenceQuestion) {
+        return 0;
+    }
+    
     const keywords = ['좋아해', '좋아', '사랑', '설레', '보고 싶', '너 생각', '그리워', '사랑해', '좋아한다', '마음', '심장', '떨려', '두근', '설렘', '행복', '기쁨', '웃음', '미소'];
     let score = 0;
     keywords.forEach(k => {
@@ -1151,21 +1242,53 @@ const detectRomanceLevel = (text) => {
 
 const detectComfortLevel = (text) => {
     if (!text) return 0;
-    const keywords = ['괜찮아', '힘내', '위로', '안아', '따뜻', '포근', '편안', '안심', '걱정', '아픔', '슬퍼', '울어', '힘들어', '외로워'];
+    const keywords = ['괜찮아', '힘내', '위로', '안아', '따뜻', '포근', '편안', '안심', '걱정', '아픔', '아프', '아파', '슬퍼', '울어', '힘들어', '외로워', '지치', '피곤', '힘들', '지침'];
     let score = 0;
     keywords.forEach(k => {
-        if (text.includes(k)) score += 0.3;
+        if (text.includes(k)) {
+            // "지치", "피곤", "힘들"은 위로가 필요한 감정이므로 점수 높게
+            if (k === '지치' || k === '피곤' || k === '힘들' || k === '지침') {
+                score += 0.4;
+            } else {
+                score += 0.3;
+            }
+        }
     });
     return Math.min(score, 1);
 };
 
 const detectConflictLevel = (text) => {
     if (!text) return 0;
-    const keywords = ['화나', '싫어', '미워', '왜', '이해 못해', '답답', '짜증', '화', '분노', '실망', '아쉬워', '서운'];
+    // 갈등 키워드: 화나고 섭섭한 감정 표현
+    const conflictKeywords = ['화나', '싫어', '미워', '이해 못해', '짜증', '화', '분노', '실망', '아쉬워', '서운', '섭섭', '억울', '원망'];
+    // "지친다"와 함께 갈등으로 판단할 키워드
+    const conflictWithTired = ['화나', '싫어', '미워', '짜증', '화', '분노', '실망', '아쉬워', '서운', '섭섭', '억울', '원망', '답답'];
+    
     let score = 0;
-    keywords.forEach(k => {
-        if (text.includes(k)) score += 0.3;
+    const hasTired = text.includes('지치') || text.includes('피곤') || text.includes('힘들');
+    
+    conflictKeywords.forEach(k => {
+        if (text.includes(k)) {
+            score += 0.3;
+        }
     });
+    
+    // "지친다"만 있으면 갈등으로 판단하지 않음
+    // "지친다" + 화나고 섭섭한 키워드가 함께 있을 때만 갈등 점수 추가
+    if (hasTired) {
+        const hasConflictWithTired = conflictWithTired.some(k => text.includes(k));
+        if (hasConflictWithTired) {
+            score += 0.2; // 갈등 점수 추가
+        }
+    }
+    
+    // "답답"은 "지친다"와 함께 있을 때만 갈등으로 판단
+    if (text.includes('답답')) {
+        if (hasTired) {
+            score += 0.2;
+        }
+    }
+    
     return Math.min(score, 1);
 };
 
@@ -1320,6 +1443,7 @@ const generateReport = (messages, userProfile) => {
     // 에피소드 번호 (저장된 리포트 수 + 1)
     const savedReports = psychologyReports.load();
     const episode = savedReports.length + 1;
+    const reportId = `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     // 에피소드 요약 생성
     let episodeSummary = '';
@@ -1414,6 +1538,7 @@ const generateReport = (messages, userProfile) => {
     ];
 
     return {
+        id: reportId,
         episode,
         date: new Date(),
         stats: {
@@ -1434,7 +1559,8 @@ const generateReport = (messages, userProfile) => {
         psychologicalIssues,
         issueReasons,
         therapeuticActivities,
-        suggestions
+        suggestions,
+        imageUrl: null // 이미지 URL 저장용
     };
 };
 
@@ -1442,9 +1568,11 @@ const generateReport = (messages, userProfile) => {
 export const ReportScreen = ({ onClose, messages, userProfile }) => {
     const [report, setReport] = useState(null);
     const [previousReports, setPreviousReports] = useState([]);
+    const reportRef = useRef(null);
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
-        // 리포트 생성
+        // 리포트 생성 - messages가 변경될 때마다 새로 생성
         const newReport = generateReport(messages, userProfile);
         setReport(newReport);
 
@@ -1453,33 +1581,66 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
         setPreviousReports(savedReports);
     }, [messages, userProfile]);
 
-    const handleSaveReport = () => {
-        if (!report) return;
+    const handleSaveReport = async () => {
+        if (!report || !reportRef.current) return;
         
-        const savedReports = psychologyReports.load();
+        setIsSaving(true);
         
-        // 같은 에피소드가 이미 저장되어 있는지 확인
-        const existingReport = savedReports.find(r => r.episode === report.episode);
-        if (existingReport) {
+        try {
+            // 리포트를 이미지로 캡처
+            const canvas = await html2canvas(reportRef.current, {
+                backgroundColor: '#FFFFFF',
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: false,
+                windowWidth: reportRef.current.scrollWidth,
+                windowHeight: reportRef.current.scrollHeight,
+                scrollX: 0,
+                scrollY: 0
+            });
+
+            // Canvas를 Blob으로 변환
+            canvas.toBlob((blob) => {
+                const imageUrl = URL.createObjectURL(blob);
+                
+                // 리포트에 이미지 URL 추가
+                const reportWithImage = {
+                    ...report,
+                    imageUrl: imageUrl
+                };
+                
+                const savedReports = psychologyReports.load();
+                
+                // 같은 ID가 이미 저장되어 있는지 확인
+                const existingIndex = savedReports.findIndex(r => r.id === report.id);
+                if (existingIndex >= 0) {
             const overwrite = window.confirm(
                 `Ep.${report.episode} 리포트가 이미 저장되어 있습니다.\n덮어쓰시겠습니까?`
             );
-            if (!overwrite) return;
-            
-            // 기존 리포트 제거
-            const filteredReports = savedReports.filter(r => r.episode !== report.episode);
-            filteredReports.push(report);
-            psychologyReports.save(filteredReports);
+                    if (!overwrite) {
+                        setIsSaving(false);
+                        return;
+                    }
+                    savedReports[existingIndex] = reportWithImage;
         } else {
-            savedReports.push(report);
-            psychologyReports.save(savedReports);
-        }
-        
-        alert(`Ep.${report.episode} 리포트가 저장되었습니다.`);
-        
-        // 리포트 목록 새로고침
-        const updatedReports = JSON.parse(localStorage.getItem('psychologyReports') || '[]');
+                    savedReports.push(reportWithImage);
+                }
+                
+                psychologyReports.save(savedReports);
+                
+                alert(`Ep.${report.episode} 리포트가 이미지와 함께 저장되었습니다.`);
+                
+                // 리포트 목록 새로고침
+                const updatedReports = psychologyReports.load();
         setPreviousReports(updatedReports);
+                setIsSaving(false);
+            }, 'image/png', 1.0);
+        } catch (error) {
+            console.error('리포트 저장 실패:', error);
+            alert('리포트 저장 중 오류가 발생했습니다.');
+            setIsSaving(false);
+        }
     };
 
     const formatDate = (date) => {
@@ -1515,57 +1676,261 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                     </svg>
                 </button>
-                <div className="report-content">
-                    <div className="report-header">
-                        <div className="episode-header-main">
-                            <h3>📌 감정 분석 리포트 – Ep.{report.episode} "숨겨진 문장 사이에서"</h3>
-                            <p className="report-date">{formatDate(report.date)}</p>
+                <div className="report-content" ref={reportRef}>
+                    <div className="report-header" style={{
+                        background: 'linear-gradient(135deg, #FBF9F7 0%, #FFFFFF 100%)',
+                        borderRadius: '20px',
+                        padding: '24px',
+                        marginBottom: '24px',
+                        border: '2px solid #E8E0DB',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.06)'
+                    }}>
+                        <div className="episode-header-main" style={{
+                            marginBottom: '20px'
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                marginBottom: '8px'
+                            }}>
+                                <div style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '12px',
+                                    background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '1.5rem',
+                                    boxShadow: '0 4px 12px rgba(141, 110, 99, 0.3)'
+                                }}>
+                                    📊
+                                </div>
+                                <div>
+                                    <h3 style={{
+                                        fontSize: '1.3rem',
+                                        fontWeight: '700',
+                                        color: '#3E2723',
+                                        margin: 0,
+                                        lineHeight: '1.3'
+                                    }}>
+                                        감정 분석 리포트
+                                    </h3>
+                                    <p style={{
+                                        fontSize: '0.9rem',
+                                        color: '#8D6E63',
+                                        margin: '4px 0 0 0',
+                                        fontWeight: '500'
+                                    }}>
+                                        Ep.{report.episode} · {formatDate(report.date)}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                         
-                        {/* 감정 스탯 */}
-                        <div className="episode-emotion-stats">
-                            <span className={`emotion-stat ${report.stats.romanceScore > 20 ? 'active' : ''}`}>
-                                로맨스 {report.stats.romanceScore}%
-                            </span>
-                            <span className="emotion-stat-separator">·</span>
-                            <span className={`emotion-stat ${report.stats.comfortScore > 20 ? 'active' : ''}`}>
-                                위로/안정 {report.stats.comfortScore}%
-                            </span>
-                            <span className="emotion-stat-separator">·</span>
-                            <span className={`emotion-stat ${report.stats.conflictScore > 20 ? 'active' : ''}`}>
-                                갈등/긴장 {report.stats.conflictScore}%
-                            </span>
+                        {/* 감정 스탯 - 모던한 카드 스타일 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '12px',
+                            marginBottom: '20px',
+                            flexWrap: 'wrap'
+                        }}>
+                            <div style={{
+                                flex: '1',
+                                minWidth: '120px',
+                                padding: '16px',
+                                borderRadius: '14px',
+                                background: report.stats.romanceScore > 20 
+                                    ? 'linear-gradient(135deg, rgba(255, 200, 184, 0.3) 0%, rgba(255, 220, 210, 0.2) 100%)'
+                                    : 'linear-gradient(135deg, #F5F1EB 0%, #FFFFFF 100%)',
+                                border: `2px solid ${report.stats.romanceScore > 20 ? '#FFC8B8' : '#E8E0DB'}`,
+                                textAlign: 'center',
+                                transition: 'all 0.3s ease'
+                            }}>
+                                <div style={{
+                                    fontSize: '0.85rem',
+                                    color: '#8D6E63',
+                                    marginBottom: '8px',
+                                    fontWeight: '600'
+                                }}>
+                                    로맨스
+                                </div>
+                                <div style={{
+                                    fontSize: '1.8rem',
+                                    fontWeight: '700',
+                                    color: report.stats.romanceScore > 20 ? '#D84315' : '#5D4037',
+                                    lineHeight: '1'
+                                }}>
+                                    {report.stats.romanceScore}%
+                                </div>
+                            </div>
+                            <div style={{
+                                flex: '1',
+                                minWidth: '120px',
+                                padding: '16px',
+                                borderRadius: '14px',
+                                background: report.stats.comfortScore > 20 
+                                    ? 'linear-gradient(135deg, rgba(255, 235, 59, 0.3) 0%, rgba(255, 248, 225, 0.2) 100%)'
+                                    : 'linear-gradient(135deg, #F5F1EB 0%, #FFFFFF 100%)',
+                                border: `2px solid ${report.stats.comfortScore > 20 ? '#FFEB3B' : '#E8E0DB'}`,
+                                textAlign: 'center',
+                                transition: 'all 0.3s ease'
+                            }}>
+                                <div style={{
+                                    fontSize: '0.85rem',
+                                    color: '#8D6E63',
+                                    marginBottom: '8px',
+                                    fontWeight: '600'
+                                }}>
+                                    위로/안정
+                                </div>
+                                <div style={{
+                                    fontSize: '1.8rem',
+                                    fontWeight: '700',
+                                    color: report.stats.comfortScore > 20 ? '#F57F17' : '#5D4037',
+                                    lineHeight: '1'
+                                }}>
+                                    {report.stats.comfortScore}%
+                                </div>
+                            </div>
+                            <div style={{
+                                flex: '1',
+                                minWidth: '120px',
+                                padding: '16px',
+                                borderRadius: '14px',
+                                background: report.stats.conflictScore > 20 
+                                    ? 'linear-gradient(135deg, rgba(255, 150, 150, 0.3) 0%, rgba(255, 200, 200, 0.2) 100%)'
+                                    : 'linear-gradient(135deg, #F5F1EB 0%, #FFFFFF 100%)',
+                                border: `2px solid ${report.stats.conflictScore > 20 ? '#FF9696' : '#E8E0DB'}`,
+                                textAlign: 'center',
+                                transition: 'all 0.3s ease'
+                            }}>
+                                <div style={{
+                                    fontSize: '0.85rem',
+                                    color: '#8D6E63',
+                                    marginBottom: '8px',
+                                    fontWeight: '600'
+                                }}>
+                                    갈등/긴장
+                                </div>
+                                <div style={{
+                                    fontSize: '1.8rem',
+                                    fontWeight: '700',
+                                    color: report.stats.conflictScore > 20 ? '#C62828' : '#5D4037',
+                                    lineHeight: '1'
+                                }}>
+                                    {report.stats.conflictScore}%
+                                </div>
+                            </div>
                         </div>
 
                         {/* 대표 감정 뱃지 */}
                         {report.dominantEmotion && report.dominantEmotion !== 'neutral' && (
-                            <div className="dominant-emotion-badge">
-                                <span className="badge-label">Ep.{report.episode} 대표 감정:</span>
-                                <span className="badge-emotion">
-                                    {report.dominantEmotion === 'romance' && '로맨스'}
-                                    {report.dominantEmotion === 'comfort' && '위로/안정'}
-                                    {report.dominantEmotion === 'conflict' && '갈등/긴장'}
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                padding: '10px 16px',
+                                borderRadius: '12px',
+                                background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                                color: '#FFFFFF',
+                                fontSize: '0.9rem',
+                                fontWeight: '600',
+                                marginBottom: '20px',
+                                boxShadow: '0 4px 12px rgba(141, 110, 99, 0.3)'
+                            }}>
+                                <span>대표 감정:</span>
+                                <span style={{
+                                    fontSize: '1rem',
+                                    fontWeight: '700'
+                                }}>
+                                    {report.dominantEmotion === 'romance' && '💕 로맨스'}
+                                    {report.dominantEmotion === 'comfort' && '🤗 위로/안정'}
+                                    {report.dominantEmotion === 'conflict' && '⚡ 갈등/긴장'}
                                 </span>
                             </div>
                         )}
 
                         {/* 에피소드 한 줄 요약 */}
                         {report.episodeSummary && (
-                            <div className="episode-summary">
-                                <p className="summary-label">이 에피소드의 한 줄 장면 요약</p>
-                                <p className="summary-text">"{report.episodeSummary}"</p>
+                            <div style={{
+                                padding: '20px',
+                                borderRadius: '16px',
+                                background: 'linear-gradient(135deg, #FFF8E1 0%, #FFFFFF 100%)',
+                                border: '2px solid #FFE0B2',
+                                marginBottom: '16px',
+                                boxShadow: '0 2px 8px rgba(255, 224, 178, 0.2)'
+                            }}>
+                                <p style={{
+                                    fontSize: '0.85rem',
+                                    color: '#8D6E63',
+                                    margin: '0 0 8px 0',
+                                    fontWeight: '600'
+                                }}>
+                                    이 에피소드의 한 줄 장면 요약
+                                </p>
+                                <p style={{
+                                    fontSize: '1rem',
+                                    color: '#5D4037',
+                                    margin: 0,
+                                    lineHeight: '1.6',
+                                    fontWeight: '500'
+                                }}>
+                                    "{report.episodeSummary}"
+                                </p>
                             </div>
                         )}
 
                         {/* 다음 장면 제안 */}
                         {report.nextSceneSuggestion && (
-                            <div className="next-scene-suggestion">
-                                <p className="suggestion-label">다음엔 이런 장면이 이어지면 좋겠어요:</p>
-                                <p className="suggestion-text">"{report.nextSceneSuggestion}"</p>
+                            <div style={{
+                                padding: '20px',
+                                borderRadius: '16px',
+                                background: 'linear-gradient(135deg, #E8F5E9 0%, #FFFFFF 100%)',
+                                border: '2px solid #C8E6C9',
+                                boxShadow: '0 2px 8px rgba(200, 230, 201, 0.2)'
+                            }}>
+                                <p style={{
+                                    fontSize: '0.85rem',
+                                    color: '#8D6E63',
+                                    margin: '0 0 8px 0',
+                                    fontWeight: '600'
+                                }}>
+                                    다음엔 이런 장면이 이어지면 좋겠어요:
+                                </p>
+                                <p style={{
+                                    fontSize: '1rem',
+                                    color: '#5D4037',
+                                    margin: '0 0 16px 0',
+                                    lineHeight: '1.6',
+                                    fontWeight: '500'
+                                }}>
+                                    "{report.nextSceneSuggestion}"
+                                </p>
                                 <button 
-                                    className="continue-conversation-button"
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 20px',
+                                        background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                                        color: '#FFFFFF',
+                                        border: 'none',
+                                        borderRadius: '12px',
+                                        fontSize: '0.95rem',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s ease',
+                                        boxShadow: '0 4px 12px rgba(141, 110, 99, 0.3)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(141, 110, 99, 0.4)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(141, 110, 99, 0.3)';
+                                    }}
                                     onClick={() => {
-                                        // 대화로 돌아가기 (리포트 닫기)
                                         onClose();
                                     }}
                                 >
@@ -1837,10 +2202,183 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                     )}
 
                     <div className="report-actions">
-                        <button className="save-report-button" onClick={handleSaveReport}>
-                            리포트 저장
+                        <button 
+                            className="save-report-button" 
+                            onClick={handleSaveReport}
+                            disabled={isSaving}
+                        >
+                            {isSaving ? '저장 중...' : '📸 리포트 이미지로 저장'}
                         </button>
                     </div>
+
+                    {/* 저장된 리포트 목록 */}
+                    {previousReports.length > 0 && (
+                        <div className="report-section saved-reports-section">
+                            <h4 style={{ 
+                                fontSize: '1.2rem', 
+                                fontWeight: '700', 
+                                color: '#5D4037', 
+                                marginBottom: '16px',
+                                paddingTop: '24px',
+                                borderTop: '2px solid #E8E0DB'
+                            }}>
+                                📚 저장된 리포트
+                            </h4>
+                            <div className="saved-reports-grid">
+                                {previousReports.slice().reverse().map((savedReport) => (
+                                    <div 
+                                        key={savedReport.id || savedReport.episode} 
+                                        className="saved-report-card"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #FFFFFF 0%, #FBF9F7 100%)',
+                                            borderRadius: '16px',
+                                            padding: '16px',
+                                            border: '2px solid #E8E0DB',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            position: 'relative',
+                                            overflow: 'hidden'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-4px)';
+                                            e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
+                                            e.currentTarget.style.borderColor = '#8D6E63';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+                                            e.currentTarget.style.borderColor = '#E8E0DB';
+                                        }}
+                                        onClick={() => {
+                                            if (savedReport.imageUrl) {
+                                                const newWindow = window.open();
+                                                if (newWindow) {
+                                                    newWindow.document.write(`
+                                                        <html>
+                                                            <head>
+                                                                <title>감정 분석 리포트 Ep.${savedReport.episode}</title>
+                                                                <style>
+                                                                    body { 
+                                                                        margin: 0; 
+                                                                        padding: 20px; 
+                                                                        background: #F5F1EB; 
+                                                                        display: flex; 
+                                                                        justify-content: center; 
+                                                                        align-items: center; 
+                                                                        min-height: 100vh;
+                                                                    }
+                                                                    img { 
+                                                                        max-width: 100%; 
+                                                                        height: auto; 
+                                                                        border-radius: 12px;
+                                                                        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+                                                                    }
+                                                                </style>
+                                                            </head>
+                                                            <body>
+                                                                <img src="${savedReport.imageUrl}" alt="감정 분석 리포트 Ep.${savedReport.episode}" />
+                                                            </body>
+                                                        </html>
+                                                    `);
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        {savedReport.imageUrl && (
+                                            <div style={{
+                                                width: '100%',
+                                                height: '180px',
+                                                borderRadius: '12px',
+                                                overflow: 'hidden',
+                                                marginBottom: '12px',
+                                                background: '#F5F1EB',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <img 
+                                                    src={savedReport.imageUrl} 
+                                                    alt={`Ep.${savedReport.episode}`}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                </div>
+                                        )}
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            marginBottom: '8px'
+                                        }}>
+                                            <span style={{
+                                                fontSize: '1rem',
+                                                fontWeight: '700',
+                                                color: '#5D4037'
+                                            }}>
+                                                Ep.{savedReport.episode}
+                                            </span>
+                                            <span style={{
+                                                fontSize: '0.85rem',
+                                                color: '#8D6E63',
+                                                opacity: 0.8
+                                            }}>
+                                                {formatDate(savedReport.date)}
+                                            </span>
+                                        </div>
+                                        <div style={{
+                                            display: 'flex',
+                                            gap: '8px',
+                                            flexWrap: 'wrap',
+                                            marginTop: '8px'
+                                        }}>
+                                            <span style={{
+                                                fontSize: '0.75rem',
+                                                padding: '4px 8px',
+                                                borderRadius: '8px',
+                                                background: savedReport.stats?.romanceScore > 20 ? 'rgba(255, 200, 184, 0.3)' : '#F5F1EB',
+                                                color: '#8D6E63'
+                                            }}>
+                                                로맨스 {savedReport.stats?.romanceScore || 0}%
+                                            </span>
+                                            <span style={{
+                                                fontSize: '0.75rem',
+                                                padding: '4px 8px',
+                                                borderRadius: '8px',
+                                                background: savedReport.stats?.comfortScore > 20 ? 'rgba(255, 235, 59, 0.3)' : '#F5F1EB',
+                                                color: '#8D6E63'
+                                            }}>
+                                                위로/안정 {savedReport.stats?.comfortScore || 0}%
+                                            </span>
+                                            <span style={{
+                                                fontSize: '0.75rem',
+                                                padding: '4px 8px',
+                                                borderRadius: '8px',
+                                                background: savedReport.stats?.conflictScore > 20 ? 'rgba(255, 150, 150, 0.3)' : '#F5F1EB',
+                                                color: '#8D6E63'
+                                            }}>
+                                                갈등/긴장 {savedReport.stats?.conflictScore || 0}%
+                                            </span>
+                                        </div>
+                                        {savedReport.episodeSummary && (
+                                            <p style={{
+                                                fontSize: '0.85rem',
+                                                color: '#6B4E3D',
+                                                marginTop: '12px',
+                                                lineHeight: '1.5',
+                                                opacity: 0.9
+                                            }}>
+                                                {savedReport.episodeSummary}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -1760,6 +1760,7 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
         
         # 첫 번째 라운드의 메시지만 추출 (토론 시작 후 첫 번째 AI 응답들)
         first_round_found = False
+        round_1_count = 0  # 라운드 1에서 각 캐릭터가 말한 횟수 추적
         for msg in request.chat_history:
             sender = msg.sender if hasattr(msg, 'sender') else msg.get('sender')
             char_id = msg.characterId if hasattr(msg, 'characterId') else msg.get('characterId')
@@ -1774,13 +1775,20 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
             if first_round_found and sender == 'ai' and text and text.strip():
                 # 시스템 메시지나 사용자 개입 메시지는 제외
                 if not text.startswith('🎬') and not text.startswith('🎤') and not text.startswith('💬') and not text.startswith('💭'):
+                    # 라운드 1에서 각 캐릭터의 첫 번째 메시지만 저장 (절대 고정)
                     if char_id == char_a_id and char_a_stance is None:
-                        char_a_stance = text  # 첫 번째 라운드의 첫 번째 메시지만 저장
+                        char_a_stance = text  # 첫 번째 라운드의 첫 번째 메시지만 저장 (절대 고정)
+                        round_1_count += 1
                     elif char_id == char_b_id and char_b_stance is None:
-                        char_b_stance = text  # 첫 번째 라운드의 첫 번째 메시지만 저장
+                        char_b_stance = text  # 첫 번째 라운드의 첫 번째 메시지만 저장 (절대 고정)
+                        round_1_count += 1
                     
                     # 두 캐릭터 모두 첫 번째 라운드 입장을 찾으면 중단
                     if char_a_stance and char_b_stance:
+                        break
+                    
+                    # 라운드 1이 끝났는지 확인 (사용자 메시지나 라운드 2 시작 시그널)
+                    if sender == 'user' or (sender == 'system' and ('라운드' in text or '어떤 의견' in text)):
                         break
         
         # 토론 입장 요약 (첫 라운드)
@@ -1788,8 +1796,14 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
         if round_num == 1:
             # 첫 번째 라운드: 입장 결정
             stance_context = f"""
-**⚠️ 매우 중요 - 입장 고정 규칙**:
-이것은 토론의 첫 번째 라운드입니다. 각 캐릭터는 이 라운드에서 자신의 입장을 명확히 결정해야 합니다.
+**🚨🚨🚨 절대적 입장 고정 규칙 (최우선, 절대 불가변) 🚨🚨🚨**:
+이것은 토론의 첫 번째 라운드입니다. 각 캐릭터는 이 라운드에서 자신의 입장을 **명확히 한 번만** 결정해야 합니다.
+
+**⚠️⚠️⚠️ 매우 중요 - 입장 결정 규칙**:
+1. **각 캐릭터는 첫 번째 라운드에서 자신의 입장을 한 번만 결정합니다.**
+2. **이 입장은 토론이 끝날 때까지 절대적으로 고정됩니다. 절대 변경할 수 없습니다.**
+3. **라운드 1 내에서도 입장이 바뀌거나 모순되면 안 됩니다.**
+4. **라운드 1에서 결정한 입장의 핵심 가치와 신념을 절대 부정하거나 변경하지 마세요.**
 
 **입장의 다양성 (매우 중요)**:
 - 두 캐릭터가 **같은 입장**을 가질 수 있습니다. 이 경우 서로 공감하고 보완하는 방식으로 대화합니다.
@@ -1798,13 +1812,20 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
 - 다른 입장이지만 **일부 공통된 시각이나 가치**를 가질 수 있습니다. 예: A는 찬성, B는 반대하지만, 둘 다 "안전"이라는 가치를 중요하게 생각.
 
 **입장 결정 원칙**:
-- [{persona_a['name']}]: 자신의 성격, 가치관, 경험에 따라 자연스럽게 입장을 결정하세요. 억지로 반대 입장을 취할 필요가 전혀 없습니다.
-- [{persona_b['name']}]: 자신의 성격, 가치관, 경험에 따라 자연스럽게 입장을 결정하세요. 억지로 반대 입장을 취할 필요가 전혀 없습니다.
+- [{persona_a['name']}]: 자신의 성격, 가치관, 경험에 따라 자연스럽게 입장을 결정하세요. 억지로 반대 입장을 취할 필요가 전혀 없습니다. **단, 한 번 결정한 입장은 절대 바꾸지 마세요.**
+- [{persona_b['name']}]: 자신의 성격, 가치관, 경험에 따라 자연스럽게 입장을 결정하세요. 억지로 반대 입장을 취할 필요가 전혀 없습니다. **단, 한 번 결정한 입장은 절대 바꾸지 마세요.**
 
-**중요**: 
-- 이 입장은 토론이 끝날 때까지 절대적으로 고정됩니다.
-- 이후 라운드에서는 이 입장을 유지하면서 논리를 발전시켜야 합니다.
-- 같은 입장이면 서로 보완하고, 다른 입장이면 논쟁하되, 모두 자연스럽게 자신의 성격에 맞게 행동하세요.
+**🚫🚫🚫 절대 금지 사항 (라운드 1에서도 적용) 🚫🚫🚫**:
+1. ❌❌❌ 라운드 1 내에서 입장을 번복하거나 바꾸는 것 - 절대 불가능
+2. ❌❌❌ 라운드 1에서 한 말과 반대되는 의견을 제시하는 것 - 절대 불가능
+3. ❌❌❌ "아까는 그렇게 생각했는데 지금은...", "그런데 생각해보니...", "다만..." 같은 표현 사용 - 절대 불가능
+4. ❌❌❌ 한 문장 안에서 입장이 바뀌거나 모순되는 표현 사용 - 절대 불가능
+
+**✅✅✅ 필수 사항 ✅✅✅**:
+1. ✅✅✅ 라운드 1에서 입장을 명확히 한 번만 결정하고, 그 입장을 절대적으로 유지
+2. ✅✅✅ 라운드 1 내에서도 입장이 일관되게 유지되어야 함
+3. ✅✅✅ 이후 라운드에서는 이 입장을 유지하면서 논리를 발전시켜야 합니다.
+4. ✅✅✅ 같은 입장이면 서로 보완하고, 다른 입장이면 논쟁하되, 모두 자연스럽게 자신의 성격에 맞게 행동하세요.
 """
         else:
             # 이후 라운드: 첫 번째 라운드의 입장만 고정 유지 + 상대방의 이전 메시지 참고
@@ -1965,10 +1986,13 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
 2. response_A와 response_B에는 **오직 캐릭터의 실제 대사만** 포함해야 합니다.
 3. 절대로 "[캐릭터명의 의견/반박]" 같은 형식이나 설명을 포함하지 마세요.
 4. 절대로 "의견을 제시합니다" 같은 형식적인 문장을 사용하지 마세요. 실제 대사만 작성하세요.
-5. 캐릭터 이름, 설명, 괄호 안의 텍스트 등은 모두 제외하고 순수한 대사만 출력하세요.
-6. 예시: "절대적인 도덕? 그런 게 있으면 세상 사는 게 이래 지랄 맞지는 않을 기다." (O)
-7. 잘못된 예시: "[쓰레기의 의견/반박] 절대적인 도덕?..." (X)
-8. 잘못된 예시: "쓰레기 (정우)의 의견을 제시합니다." (X)"""
+5. 절대로 "캐릭터명 (배우명)의 의견을 제시합니다" 같은 형식을 사용하지 마세요. 실제 대사만 작성하세요.
+6. 캐릭터 이름, 설명, 괄호 안의 텍스트 등은 모두 제외하고 순수한 대사만 출력하세요.
+7. 예시: "절대적인 도덕? 그런 게 있으면 세상 사는 게 이래 지랄 맞지는 않을 기다." (O)
+8. 잘못된 예시: "[쓰레기의 의견/반박] 절대적인 도덕?..." (X)
+9. 잘못된 예시: "쓰레기 (정우)의 의견을 제시합니다." (X)
+10. 잘못된 예시: "박동훈 (이선균)의 의견을 제시합니다." (X)
+11. **절대로 캐릭터 이름이나 배우 이름을 언급하지 마세요. 오직 대사만 작성하세요.**"""
 
         # 시스템 프롬프트 구성
         system_prompt_parts = []
@@ -2034,21 +2058,20 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
             json_response_string = None
             finish_reason = None
             
-            # 먼저 finish_reason 확인
+            # 먼저 finish_reason 확인 및 candidates에서 직접 텍스트 추출
             if hasattr(response, 'candidates') and response.candidates and len(response.candidates) > 0:
                 candidate = response.candidates[0]
                 if hasattr(candidate, 'finish_reason'):
                     finish_reason = candidate.finish_reason
                     print(f"⚠️ finish_reason: {finish_reason}")
-            
-            try:
-                json_response_string = response.text.strip()
-            except (AttributeError, Exception) as text_error:
-                # response.text 접근 실패 시 candidates에서 직접 추출
-                print(f"⚠️ response.text 접근 실패, candidates에서 직접 추출 시도: {text_error}")
-                try:
-                    if hasattr(response, 'candidates') and response.candidates and len(response.candidates) > 0:
-                        candidate = response.candidates[0]
+                
+                # finish_reason이 STOP이 아니면 response.text 접근하지 않음
+                if finish_reason and finish_reason != 'STOP':
+                    print(f"⚠️ finish_reason이 STOP이 아님: {finish_reason}, candidates에서 직접 추출 시도")
+                    json_response_string = None
+                else:
+                    # candidates에서 직접 텍스트 추출 시도
+                    try:
                         if hasattr(candidate, 'content') and candidate.content:
                             if hasattr(candidate.content, 'parts') and candidate.content.parts:
                                 text_parts = []
@@ -2057,23 +2080,24 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
                                         text_parts.append(part.text)
                                 if text_parts:
                                     json_response_string = "".join(text_parts).strip()
-                    
-                    # finish_reason이 SAFETY나 다른 이유로 차단된 경우
-                    if not json_response_string and finish_reason:
-                        print(f"⚠️ finish_reason으로 인해 응답이 차단됨: {finish_reason}")
-                        # finish_reason에 따라 적절한 기본 응답 생성
-                        if finish_reason in ['SAFETY', 'RECITATION', 'OTHER']:
-                            # 안전 정책이나 다른 이유로 차단된 경우, 기본 응답 생성 시도
-                            print(f"⚠️ finish_reason {finish_reason}로 인해 응답 차단, 기본 응답 생성 시도")
-                            json_response_string = None  # 아래 fallback 로직으로 진행
-                        else:
-                            # 다른 finish_reason인 경우 기본 응답 생성
-                            json_response_string = None
-                    
-                    if not json_response_string:
-                        # 기본 응답 생성 - 실제 대사 생성
-                        print(f"⚠️ 응답에 유효한 텍스트가 없어 실제 대사를 생성합니다.")
-                        try:
+                    except Exception as parts_error:
+                        print(f"⚠️ candidates.parts에서 텍스트 추출 실패: {parts_error}")
+                        json_response_string = None
+            
+            # response.text 접근은 마지막 수단으로만 사용 (candidates에서 추출 실패한 경우)
+            if not json_response_string:
+                try:
+                    json_response_string = response.text.strip()
+                except (AttributeError, Exception) as text_error:
+                    # response.text 접근 실패 - 이미 candidates에서 추출 시도했으므로 fallback으로 진행
+                    print(f"⚠️ response.text 접근 실패: {text_error}")
+                    json_response_string = None
+            
+            # 응답이 없으면 fallback 로직 실행
+            if not json_response_string:
+                # 기본 응답 생성 - 실제 대사 생성
+                print(f"⚠️ 응답에 유효한 텍스트가 없어 실제 대사를 생성합니다.")
+                try:
                             # 각 캐릭터의 실제 대사 생성
                             chat_history_for_fallback = []
                             for msg in request.chat_history:
@@ -2108,54 +2132,55 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
                                 "response_A": response_a_fallback[:200] if response_a_fallback else f"{persona_a['name']}의 의견을 제시합니다.",
                                 "response_B": response_b_fallback[:200] if response_b_fallback else f"{persona_b['name']}의 의견을 제시합니다."
                             }, ensure_ascii=False)
-                        except Exception as fallback_gen_error:
-                            print(f"⚠️ 실제 대사 생성 실패: {fallback_gen_error}, 기본값 사용")
-                            json_response_string = json.dumps({
-                                "response_A": f"{persona_a['name']}의 의견을 제시합니다.",
-                                "response_B": f"{persona_b['name']}의 의견을 제시합니다."
-                            }, ensure_ascii=False)
-                except Exception as extract_error:
-                    print(f"⚠️ candidates에서 텍스트 추출 실패: {extract_error}")
-                    # 기본 응답 생성 - 실제 대사 생성
-                    print(f"⚠️ 실제 대사를 생성합니다.")
-                    try:
-                        chat_history_for_fallback = []
-                        for msg in request.chat_history:
-                            if msg.sender == 'user':
-                                chat_history_for_fallback.append({"role": "user", "parts": [{"text": msg.text}]})
-                            elif msg.sender == 'ai':
-                                chat_history_for_fallback.append({"role": "model", "parts": [{"text": msg.text}]})
-                        
-                        response_a_fallback = get_ai_response(
-                            character_id=char_a_id,
-                            persona=persona_a,
-                            chat_history_for_ai=chat_history_for_fallback,
-                            user_nickname=request.user_nickname,
-                            settings=request.settings,
-                            user_id=user_id,
-                            db=db
-                        )
-                        
-                        response_b_fallback = get_ai_response(
-                            character_id=char_b_id,
-                            persona=persona_b,
-                            chat_history_for_ai=chat_history_for_fallback,
-                            user_nickname=request.user_nickname,
-                            settings=request.settings,
-                            user_id=user_id,
-                            db=db
-                        )
-                        
-                        json_response_string = json.dumps({
-                            "response_A": response_a_fallback[:200] if response_a_fallback else f"{persona_a['name']}의 의견을 제시합니다.",
-                            "response_B": response_b_fallback[:200] if response_b_fallback else f"{persona_b['name']}의 의견을 제시합니다."
-                        }, ensure_ascii=False)
-                    except Exception as fallback_gen_error:
-                        print(f"⚠️ 실제 대사 생성 실패: {fallback_gen_error}, 기본값 사용")
-                        json_response_string = json.dumps({
-                            "response_A": f"{persona_a['name']}의 의견을 제시합니다.",
-                            "response_B": f"{persona_b['name']}의 의견을 제시합니다."
-                        }, ensure_ascii=False)
+                except Exception as fallback_gen_error:
+                    print(f"⚠️ 실제 대사 생성 실패: {fallback_gen_error}, 기본값 사용")
+                    json_response_string = json.dumps({
+                        "response_A": f"{persona_a['name']}의 의견을 제시합니다.",
+                        "response_B": f"{persona_b['name']}의 의견을 제시합니다."
+                    }, ensure_ascii=False)
+            
+            # candidates에서 텍스트 추출 실패한 경우 처리
+            if not json_response_string:
+                # 기본 응답 생성 - 실제 대사 생성
+                print(f"⚠️ 실제 대사를 생성합니다.")
+                try:
+                    chat_history_for_fallback = []
+                    for msg in request.chat_history:
+                        if msg.sender == 'user':
+                            chat_history_for_fallback.append({"role": "user", "parts": [{"text": msg.text}]})
+                        elif msg.sender == 'ai':
+                            chat_history_for_fallback.append({"role": "model", "parts": [{"text": msg.text}]})
+                    
+                    response_a_fallback = get_ai_response(
+                        character_id=char_a_id,
+                        persona=persona_a,
+                        chat_history_for_ai=chat_history_for_fallback,
+                        user_nickname=request.user_nickname,
+                        settings=request.settings,
+                        user_id=user_id,
+                        db=db
+                    )
+                    
+                    response_b_fallback = get_ai_response(
+                        character_id=char_b_id,
+                        persona=persona_b,
+                        chat_history_for_ai=chat_history_for_fallback,
+                        user_nickname=request.user_nickname,
+                        settings=request.settings,
+                        user_id=user_id,
+                        db=db
+                    )
+                    
+                    json_response_string = json.dumps({
+                        "response_A": response_a_fallback[:200] if response_a_fallback else f"{persona_a['name']}의 의견을 제시합니다.",
+                        "response_B": response_b_fallback[:200] if response_b_fallback else f"{persona_b['name']}의 의견을 제시합니다."
+                    }, ensure_ascii=False)
+                except Exception as fallback_gen_error:
+                    print(f"⚠️ 실제 대사 생성 실패: {fallback_gen_error}, 기본값 사용")
+                    json_response_string = json.dumps({
+                        "response_A": f"{persona_a['name']}의 의견을 제시합니다.",
+                        "response_B": f"{persona_b['name']}의 의견을 제시합니다."
+                    }, ensure_ascii=False)
             
             if not json_response_string or len(json_response_string.strip()) == 0:
                 # 기본 응답 생성 - 실제 대사 생성
@@ -2256,10 +2281,21 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
                 response_a_text = re.sub(pattern, '', response_a_text).strip()
                 response_b_text = re.sub(pattern, '', response_b_text).strip()
                 
-                # "의견을 제시합니다" 패턴 제거
-                pattern_opinion = r'[^\s]*의\s*의견을\s*제시합니다\.?'
+                # "의견을 제시합니다" 패턴 제거 (모든 변형 포함)
+                # "캐릭터명 (배우명)의 의견을 제시합니다" 형식 제거
+                pattern_opinion2 = r'[^\s]+\s*\([^)]+\)\s*의\s*의견을\s*제시합니다\.?'
+                response_a_text = re.sub(pattern_opinion2, '', response_a_text).strip()
+                response_b_text = re.sub(pattern_opinion2, '', response_b_text).strip()
+                
+                # "캐릭터명의 의견을 제시합니다" 형식 제거
+                pattern_opinion = r'[^\s]+\s*의\s*의견을\s*제시합니다\.?'
                 response_a_text = re.sub(pattern_opinion, '', response_a_text).strip()
                 response_b_text = re.sub(pattern_opinion, '', response_b_text).strip()
+                
+                # "의견을 제시합니다" 단독 패턴 제거
+                pattern_opinion3 = r'의견을\s*제시합니다\.?'
+                response_a_text = re.sub(pattern_opinion3, '', response_a_text).strip()
+                response_b_text = re.sub(pattern_opinion3, '', response_b_text).strip()
                 
                 # 대사 시작 부분의 "[캐릭터명]" 형식만 제거 (대사 중간의 [ ]는 유지)
                 pattern2 = r'^\[[^\]]*\]\s*'
@@ -2310,8 +2346,10 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
                     response_b_text = original_b
                     # 최소한의 정리만 - "[캐릭터명의 의견/반박]" 형식만 제거
                     response_b_text = re.sub(r'^\[[^\]]*의\s*의견/반박\]\s*', '', response_b_text).strip()
-                    # "의견을 제시합니다" 패턴 제거
-                    response_b_text = re.sub(r'[^\s]*의\s*의견을\s*제시합니다\.?', '', response_b_text).strip()
+                    # "의견을 제시합니다" 패턴 제거 (캐릭터명 (배우명) 형식 포함)
+                    response_b_text = re.sub(r'[^\s]*(\([^)]*\))?\s*의\s*의견을\s*제시합니다\.?', '', response_b_text).strip()
+                    # "캐릭터명 (배우명)의 의견을 제시합니다" 형식 제거
+                    response_b_text = re.sub(r'[^\s]+\s*\([^)]+\)\s*의\s*의견을\s*제시합니다\.?', '', response_b_text).strip()
                     # "[캐릭터명]" 형식만 제거
                     response_b_text = re.sub(r'^\[[^\]]*\]\s*', '', response_b_text).strip()
                     if not response_b_text or len(response_b_text.strip()) < 2:
@@ -3410,63 +3448,46 @@ def get_debate_summary(
 
 {debate_text}
 
-다음 형식으로 핵심만 정리해주세요. **각 항목 사이에 반드시 빈 줄(줄바꿈)을 넣어주세요**:
+다음 형식으로 핵심만 정리해주세요:
 
 • {char_a_name}: [핵심 입장 한 문장]
-
 • {char_b_name}: [핵심 입장 한 문장]"""
         
         if user_messages:
             prompt += f"""
-
 • 사용자: [핵심 입장 한 문장]"""
         
         prompt += """
 
 **⚠️ 매우 중요한 형식 규칙**:
-1. 각 항목 사이에 반드시 빈 줄(줄바꿈)을 넣어주세요 - 이것이 가장 중요합니다
-2. 각 항목은 한 문장으로 간결하게 작성하세요
-3. 추가 설명이나 종합은 포함하지 마세요
-4. 위 형식(각 항목 사이 빈 줄 포함)으로만 응답하세요
+1. 각 항목은 한 문장으로 간결하게 작성하세요
+2. 추가 설명이나 종합은 포함하지 마세요
+3. 위 형식으로만 응답하세요
 
 예시 형식:
 • 캐릭터1: 입장 내용
-
 • 캐릭터2: 입장 내용
-
 • 사용자: 입장 내용"""
         
         response = model.generate_content(prompt)
         summary = response.text.strip()
         
-        # 토론 요약 포맷팅 (항목 사이 빈 줄 추가)
+        # 토론 요약 포맷팅 (빈 줄 제거, 문단 띄어쓰기만 유지)
         lines = summary.split('\n')
         formatted_lines = []
-        item_indices = []
         
         for i, line in enumerate(lines):
-            if line.strip().startswith('•'):
-                item_indices.append(i)
-        
-        for idx, item_idx in enumerate(item_indices):
-            formatted_lines.append(lines[item_idx])
+            line_stripped = line.strip()
+            # 빈 줄은 제거
+            if not line_stripped:
+                continue
             
-            if idx < len(item_indices) - 1:
-                next_item_idx = item_indices[idx + 1]
-                for j in range(item_idx + 1, next_item_idx):
-                    formatted_lines.append(lines[j])
-                
-                has_blank = False
-                for j in range(item_idx + 1, next_item_idx):
-                    if not lines[j].strip():
-                        has_blank = True
-                        break
-                
-                if not has_blank:
-                    formatted_lines.append('')
+            # •로 시작하는 항목인 경우
+            if line_stripped.startswith('•'):
+                formatted_lines.append(line)
             else:
-                for j in range(item_idx + 1, len(lines)):
-                    formatted_lines.append(lines[j])
+                # 항목 내용인 경우 바로 추가
+                formatted_lines.append(line)
         
         summary = '\n'.join(formatted_lines)
         

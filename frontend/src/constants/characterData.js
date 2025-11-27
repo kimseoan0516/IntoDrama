@@ -1,0 +1,25 @@
+// 캐릭터 데이터
+export const characterData = {
+    'kim_shin': { id: 'kim_shin', name: '김신 (공유)', dramaTitle: '도깨비', image: 'https://i.imgur.com/fWFDCMq.jpeg' },
+    'yoo_sijin': { id: 'yoo_sijin', name: '유시진 (송중기)', dramaTitle: '태양의 후예', image: 'https://i.imgur.com/XGBp21m.jpeg' },
+    'min_yong': { id: 'min_yong', name: '이민용 (최민용)', dramaTitle: '거침없이 하이킥', image: 'https://i.imgur.com/5v9Masd.jpeg' },
+    'min_jeong': { id: 'min_jeong', name: '서민정 (서민정)', dramaTitle: '거침없이 하이킥', image: 'https://i.imgur.com/PvDYFTZ.jpeg' },
+    'sseuregi': { id: 'sseuregi', name: '쓰레기 (정우)', dramaTitle: '응답하라 1994', image: 'https://i.imgur.com/rOumojN.jpeg' },
+    'kim_tan': { id: 'kim_tan', name: '김탄 (이민호)', dramaTitle: '상속자들', image: 'https://i.imgur.com/A4slYWq.jpeg' }, 
+    'young_do': { id: 'young_do', name: '최영도 (김우빈)', dramaTitle: '상속자들', image: 'https://i.imgur.com/v1CZpEq.jpeg' },
+    'goo_junpyo': { id: 'goo_junpyo', name: '구준표 (이민호)', dramaTitle: '꽃보다 남자', image: 'https://i.imgur.com/910F5dt.jpeg' },
+    'eugene_choi': { id: 'eugene_choi', name: '유진 초이 (이병헌)', dramaTitle: '미스터 션샤인', image: 'https://i.imgur.com/gkGwNKk.jpeg' },
+    'goo_dongmae': { id: 'goo_dongmae', name: '구동매 (유연석)', dramaTitle: '미스터 션샤인', image: 'https://i.imgur.com/pC1Q3sU.jpeg' },
+    'sun_jae': { id: 'sun_jae', name: '류선재 (변우석)', dramaTitle: '선재 업고 튀어', image: 'https://i.imgur.com/ZuZudCT.jpeg' },
+    'im_sol': { id: 'im_sol', name: '임솔 (김혜윤)', dramaTitle: '선재 업고 튀어', image: 'https://i.imgur.com/vbAYO3A.jpeg' },
+    'park_saeroy': { id: 'park_saeroy', name: '박새로이 (박서준)', dramaTitle: '이태원 클라쓰', image: 'https://i.imgur.com/X6rnRfT.jpeg' },
+    'kim_juwon': { id: 'kim_juwon', name: '김주원 (현빈)', dramaTitle: '시크릿 가든', image: 'https://i.imgur.com/8UhRvD6.jpeg' },
+    'hong_banjang': { id: 'hong_banjang', name: '홍반장 (김선호)', dramaTitle: '갯마을 차차차', image: 'https://i.imgur.com/RLOfyPW.jpeg' },
+    'oh_sangshik': { id: 'oh_sangshik', name: '오상식 (이성민)', dramaTitle: '미생', image: 'https://i.imgur.com/pVsF3Vq.jpeg' },
+    'park_donghoon': { id: 'park_donghoon', name: '박동훈 (이선균)', dramaTitle: '나의 아저씨', image: 'https://i.imgur.com/cQYxKNI.jpeg' },
+    'go_boksu': { id: 'go_boksu', name: '고복수 (양동근)', dramaTitle: '네 멋대로 해라', image: 'https://i.imgur.com/1TBbKQs.jpeg' },
+    'na_heedo': { id: 'na_heedo', name: '나희도 (김태리)', dramaTitle: '스물다섯 스물하나', image: 'https://i.imgur.com/jZoUd76.jpeg' },
+    'yong_sik': { id: 'yong_sik', name: '황용식 (강하늘)', dramaTitle: '동백꽃 필 무렵', image: 'https://i.imgur.com/GyaEfAe.jpeg' },
+    'jang_jaeyeol': { id: 'jang_jaeyeol', name: '장재열 (조인성)', dramaTitle: '괜찮아 사랑이야', image: 'https://i.imgur.com/coExRSV.jpeg' },
+};
+

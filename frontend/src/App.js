@@ -1017,6 +1017,7 @@ const ChatScreen = ({
         messageListClone.style.display = 'flex';
         messageListClone.style.flexDirection = 'column';
         messageListClone.style.gap = messageListStyle.gap || '24px';
+        messageListClone.style.overflow = 'visible';
         
         // 선택된 메시지들 복제 (깊은 복사로 모든 스타일 유지)
         for (let i = startIdx; i <= endIdx; i++) {
@@ -1027,13 +1028,35 @@ const ChatScreen = ({
                 // 캡쳐 관련 클래스만 제거
                 clonedMsg.classList.remove('selected-for-capture', 'selectable', 'out-of-range', 'in-range-for-capture');
                 
-                // 모든 자식 요소의 스타일 복원
+                // 모든 자식 요소의 스타일 복원 및 원본 스타일 복사
                 const allElements = clonedMsg.querySelectorAll('*');
-                allElements.forEach(el => {
+                const originalElements = msgElement.querySelectorAll('*');
+                
+                allElements.forEach((el, idx) => {
                     el.style.opacity = '1';
                     el.style.filter = 'none';
                     if (el.style.backdropFilter) {
                         el.style.backdropFilter = 'none';
+                    }
+                    
+                    // 원본 요소에서 해당 인덱스의 요소 찾기
+                    if (originalElements[idx]) {
+                        const originalEl = originalElements[idx];
+                        const elComputedStyle = window.getComputedStyle(originalEl);
+                        
+                        // 색상 관련 스타일 강제 적용
+                        if (elComputedStyle.color && elComputedStyle.color !== 'rgba(0, 0, 0, 0)') {
+                            el.style.color = elComputedStyle.color;
+                        }
+                        if (elComputedStyle.backgroundColor && elComputedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)') {
+                            el.style.backgroundColor = elComputedStyle.backgroundColor;
+                        }
+                        if (elComputedStyle.background && elComputedStyle.background !== 'none' && !elComputedStyle.background.includes('rgba(0, 0, 0, 0)')) {
+                            el.style.background = elComputedStyle.background;
+                        }
+                        if (elComputedStyle.borderColor && elComputedStyle.borderColor !== 'rgba(0, 0, 0, 0)') {
+                            el.style.borderColor = elComputedStyle.borderColor;
+                        }
                     }
                 });
                 
@@ -1044,20 +1067,35 @@ const ChatScreen = ({
         chatWindowClone.appendChild(messageListClone);
         tempContainer.appendChild(chatWindowClone);
         document.body.appendChild(tempContainer);
+        
+        // 메시지 리스트의 실제 높이 계산 후 컨테이너 높이 조정
+        const actualHeight = messageListClone.offsetHeight;
+        tempContainer.style.height = `${actualHeight}px`;
+        chatWindowClone.style.height = `${actualHeight}px`;
+        messageListClone.style.height = `${actualHeight}px`;
 
         // 선택된 메시지 캡처
         setTimeout(async () => {
             try {
+                // 실제 메시지 높이 재계산 (렌더링 후)
+                const finalHeight = messageListClone.scrollHeight;
+                tempContainer.style.height = `${finalHeight}px`;
+                chatWindowClone.style.height = `${finalHeight}px`;
+                messageListClone.style.height = `${finalHeight}px`;
+                
+                // 실제 배경색 가져오기
+                const actualBgColor = chatContainer ? window.getComputedStyle(chatContainer).backgroundColor : '#F5F1EB';
+                
                 const canvas = await html2canvas(tempContainer, {
-                    backgroundColor: null, // 투명 배경
-                    scale: 2,
+                    backgroundColor: actualBgColor, // 실제 배경색 사용
+                    scale: 3, // 선명도를 위해 scale 증가
                     logging: false,
                     useCORS: true,
                     allowTaint: false,
                     width: tempContainer.offsetWidth,
-                    height: tempContainer.offsetHeight,
+                    height: finalHeight,
                     windowWidth: tempContainer.offsetWidth,
-                    windowHeight: tempContainer.offsetHeight,
+                    windowHeight: finalHeight,
                     removeContainer: false,
                     imageTimeout: 15000,
                     pixelRatio: Math.max(window.devicePixelRatio || 2, 2),
@@ -1080,6 +1118,18 @@ const ChatScreen = ({
                             el.style.textRendering = 'optimizeLegibility';
                             el.style.webkitFontSmoothing = 'antialiased';
                             el.style.mozOsxFontSmoothing = 'grayscale';
+                            
+                            // 색상이 제대로 렌더링되도록 강제
+                            const computedStyle = window.getComputedStyle(el);
+                            if (computedStyle.color && computedStyle.color !== 'rgba(0, 0, 0, 0)') {
+                                el.style.color = computedStyle.color;
+                            }
+                            if (computedStyle.backgroundColor && computedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)') {
+                                el.style.backgroundColor = computedStyle.backgroundColor;
+                            }
+                            if (computedStyle.background && computedStyle.background !== 'none') {
+                                el.style.background = computedStyle.background;
+                            }
                         });
                         
                         // 배경색 설정
@@ -1109,6 +1159,31 @@ const ChatScreen = ({
                             const messageListStyle = window.getComputedStyle(captureRef.current);
                             clonedMessageList.style.background = messageListStyle.background || '#F5F1EB';
                         }
+                        
+                        // 메시지 버블 색상 강제 적용
+                        const messageBubbles = clonedDoc.querySelectorAll('.message-bubble');
+                        messageBubbles.forEach(bubble => {
+                            const originalBubble = Array.from(captureRef.current.children).find(
+                                (child, idx) => idx >= startIdx && idx <= endIdx && 
+                                child.classList.toString() === bubble.classList.toString()
+                            );
+                            if (originalBubble) {
+                                const computedStyle = window.getComputedStyle(originalBubble);
+                                const messageText = bubble.querySelector('.message-text');
+                                if (messageText) {
+                                    const textComputedStyle = window.getComputedStyle(originalBubble.querySelector('.message-text'));
+                                    if (textComputedStyle.background) {
+                                        messageText.style.background = textComputedStyle.background;
+                                    }
+                                    if (textComputedStyle.backgroundColor) {
+                                        messageText.style.backgroundColor = textComputedStyle.backgroundColor;
+                                    }
+                                    if (textComputedStyle.color) {
+                                        messageText.style.color = textComputedStyle.color;
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
 

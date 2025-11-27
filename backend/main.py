@@ -854,27 +854,27 @@ def get_multi_ai_response_json(
     if char_a_id == 'min_yong' and char_b_id == 'min_jeong':
         persona_a_description = persona_a_description.replace(
             "사용자의 실제 닉네임이 '{{user_nickname}}'일지라도, 너는 사용자를 항상 '서선생'이라고 부른다.",
-            f"너는 사용자 '{user_nickname}'을 서민정 선생과는 다른 존재로 인식한다. 사용자를 '{user_nickname}'이라고 부른다."
+            f"너는 사용자 '{user_nickname}씨'를 서민정 선생과는 다른 존재로 인식한다. (매우 중요) 사용자를 부를 때는 반드시 '{user_nickname}씨'라고 부른다. 절대로 '서선생'이라고 부르지 마라."
         )
         persona_a_description = persona_a_description.replace(
             "너는 지금 1:1로 너의 연인인 '서민정 선생'과 대화하고 있다.",
-            f"너는 지금 서민정 선생과 사용자 '{user_nickname}'과 함께 3명이서 대화하고 있다."
+            f"너는 지금 서민정 선생과 사용자 '{user_nickname}씨'와 함께 3명이서 대화하고 있다."
         )
     elif char_b_id == 'min_yong' and char_a_id == 'min_jeong':
         persona_b_description = persona_b_description.replace(
             "사용자의 실제 닉네임이 '{{user_nickname}}'일지라도, 너는 사용자를 항상 '서선생'이라고 부른다.",
-            f"너는 사용자 '{user_nickname}'을 서민정 선생과는 다른 존재로 인식한다. 사용자를 '{user_nickname}'이라고 부른다."
+            f"너는 사용자 '{user_nickname}씨'를 서민정 선생과는 다른 존재로 인식한다. (매우 중요) 사용자를 부를 때는 반드시 '{user_nickname}씨'라고 부른다. 절대로 '서선생'이라고 부르지 마라."
         )
         persona_b_description = persona_b_description.replace(
             "너는 지금 1:1로 너의 연인인 '서민정 선생'과 대화하고 있다.",
-            f"너는 지금 서민정 선생과 사용자 '{user_nickname}'과 함께 3명이서 대화하고 있다."
+            f"너는 지금 서민정 선생과 사용자 '{user_nickname}씨'와 함께 3명이서 대화하고 있다."
         )
     
     # 특정 캐릭터 조합 시 사용자 호칭 변경 (류선재 + 임솔)
     if char_a_id == 'sun_jae' and char_b_id == 'im_sol':
         persona_a_description = persona_a_description.replace(
             "사용자의 실제 닉네임이 '{{user_nickname}}'일지라도, 너는 사용자를 항상 '솔' 또는 '솔아'라고 부른다.",
-            f"너는 사용자 '{user_nickname}'을 임솔과는 다른 존재로 인식한다. 사용자를 '{user_nickname}'이라고 부른다."
+            f"너는 사용자 '{user_nickname}'을 임솔과는 다른 존재로 인식한다. (매우 중요) 사용자를 부를 때는 '{user_nickname}' 또는 '{user_nickname}아'라고 부른다. 절대로 '솔' 또는 '솔아'라고 부르지 마라."
         )
         persona_a_description = persona_a_description.replace(
             "너는 지금 1:1로 네가 목숨 걸고 사랑하는 '임솔'과 대화하고 있다.",
@@ -884,7 +884,7 @@ def get_multi_ai_response_json(
         # 류선재가 B인 경우
         persona_b_description = persona_b_description.replace(
             "사용자의 실제 닉네임이 '{{user_nickname}}'일지라도, 너는 사용자를 항상 '솔' 또는 '솔아'라고 부른다.",
-            f"너는 사용자 '{user_nickname}'을 임솔과는 다른 존재로 인식한다. 사용자를 '{user_nickname}'이라고 부른다."
+            f"너는 사용자 '{user_nickname}'을 임솔과는 다른 존재로 인식한다. (매우 중요) 사용자를 부를 때는 '{user_nickname}' 또는 '{user_nickname}아'라고 부른다. 절대로 '솔' 또는 '솔아'라고 부르지 마라."
         )
         persona_b_description = persona_b_description.replace(
             "너는 지금 1:1로 네가 목숨 걸고 사랑하는 '임솔'과 대화하고 있다.",

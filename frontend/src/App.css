@@ -8,52 +8,35 @@
     padding: 0; 
 }
 
-/* 배경 영역: 전체 화면을 차지하고, 안쪽 카드에 여백을 줘서 배경을 보여줌 */
 body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%);
-    /* 화면 꽉 채우기 */
-    width: 100%;
-    height: 100dvh;
-    /* 내부 카드 중앙 정렬 */
-    display: flex;
-    justify-content: center;
+    display: flex; 
+    justify-content: center; 
     align-items: center;
-    /* 핵심: 모바일에서 배경이 보일 만큼만 안쪽으로 밀어넣기 */
-    padding: 20px;
-    padding-top: calc(20px + env(safe-area-inset-top));
-    padding-bottom: calc(20px + env(safe-area-inset-bottom));
-    padding-left: calc(20px + env(safe-area-inset-left));
-    padding-right: calc(20px + env(safe-area-inset-right));
-    box-sizing: border-box;
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
 }
 
 
-/* 앱 화면: 배경 위에 떠 있는 둥근 카드 */
+/* iPhone 16 스타일 - 상단 바 제거 */
 .app-container {
     position: relative;
-    background: #F5F1EB;
-    /* 크기 설정 */
-    width: 100%;
-    max-width: 420px; /* PC에선 너무 안 커지게 제한 */
-    height: 100%;
-    max-height: 850px; /* 너무 길어지면 위아래 배경 보이게 제한 */
+    width: 420px;  /* 실제 콘텐츠 영역 */
+    height: 90vh;
+    max-height: 800px;
     min-height: 600px;
-    /* 둥근 모서리와 그림자 (둥둥 떠 있는 느낌) */
-    border-radius: 24px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    /* 내부 스크롤 구조 만들기 */
-    display: flex;
+    background: #F5F1EB;
+    border-radius: 40px;  /* iPhone 16 둥근 모서리 */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    display: flex; 
     flex-direction: column;
-    overflow: hidden; /* 둥근 모서리 밖으로 내용 튀어 나가는 것 방지 */
+    overflow: hidden;
     padding: 0;
-    margin: 0;
-    flex-shrink: 0;
+    margin: 30px;
 }
 
 
@@ -95,7 +78,7 @@ body {
     background-size: 250px 250px, 3px 3px, 3px 3px, 100% 100%;
     text-align: center;
     position: relative; 
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     min-height: 0;
     height: 100%;
@@ -1763,18 +1746,18 @@ body {
 
 /* 메시지 영역 - 스크롤 콘텐츠 */
 .chat-window { 
-    flex: 1; /* 남은 공간 다 차지해라 */
+    flex: 1; 
     display: flex; 
     flex-direction: column; 
-    overflow-y: auto; /* 내용 많으면 스크롤 */
+    overflow-y: auto; 
     background: #F5F1EB;
     scroll-behavior: smooth;
     position: relative;
     z-index: 5;
     min-height: 0;
     overscroll-behavior: contain;
-    width: 100%;
-    max-width: 100%;
+    width: 420px;
+    max-width: 420px;
     box-sizing: border-box;
     margin: 0;
 }
@@ -7593,39 +7576,12 @@ body {
 
 /* 반응형 */
 @media (max-width: 480px) {
-    body {
-        align-items: center;
-        padding: 20px;
-        padding-top: calc(20px + env(safe-area-inset-top));
-        padding-bottom: calc(20px + env(safe-area-inset-bottom));
-        padding-left: calc(20px + env(safe-area-inset-left));
-        padding-right: calc(20px + env(safe-area-inset-right));
-    }
-    
     .app-container {
         width: 100%;
-        max-width: 100%;
-        height: 100%;
-        max-height: 100%;
-        min-height: 0;
-        border-radius: 24px;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
         margin: 0;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    }
-    
-    .character-select-screen {
-        border-radius: 24px;
-        overflow-y: auto;
-    }
-    
-    .chat-container {
-        border-radius: 24px;
-        overflow: hidden;
-    }
-    
-    .chat-window {
-        width: 100%;
-        max-width: 100%;
     }
     
     .character-card {

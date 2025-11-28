@@ -1,6 +1,25 @@
 // API 설정 및 호출 유틸리티
-// 로컬 개발 환경: 내 컴퓨터에서 백엔드와 통신할 때 사용하는 주소
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+// 환경 변수가 설정되어 있으면 우선 사용, 없으면 환경에 따라 자동 선택
+const getApiBaseUrl = () => {
+    // 환경 변수가 명시적으로 설정되어 있으면 사용
+    if (process.env.REACT_APP_API_URL) {
+        return process.env.REACT_APP_API_URL;
+    }
+    
+    // 로컬 개발 환경 (localhost 또는 127.0.0.1)
+    const isLocalhost = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1' ||
+                        window.location.hostname === '';
+    
+    if (isLocalhost) {
+        return 'http://localhost:8000';  // 로컬 개발용
+    }
+    
+    // 배포 환경 (Vercel 등)
+    return 'https://seoan0516-intodrama.hf.space';  // 배포된 백엔드 주소
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // 인증 토큰 가져오기
 const getToken = () => localStorage.getItem('token');

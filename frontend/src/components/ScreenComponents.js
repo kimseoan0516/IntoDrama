@@ -1611,7 +1611,7 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                 };
                 
                 const savedReports = psychologyReports.load();
-                
+        
                 // 같은 ID가 이미 저장되어 있는지 확인
                 const existingIndex = savedReports.findIndex(r => r.id === report.id);
                 if (existingIndex >= 0) {
@@ -1628,9 +1628,9 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                 }
                 
                 psychologyReports.save(savedReports);
-                
+        
                 alert(`Ep.${report.episode} 리포트가 이미지와 함께 저장되었습니다.`);
-                
+        
                 // 리포트 목록 새로고침
                 const updatedReports = psychologyReports.load();
         setPreviousReports(updatedReports);

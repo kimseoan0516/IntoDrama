@@ -40,12 +40,12 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:*",
-    "http://127.0.0.1:*",
+    "https://intodrama.vercel.app",  # Vercel 배포 주소
+    "https://*.vercel.app",  # Vercel 프리뷰 배포 주소 포함
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 개발 환경에서 모든 origin 허용
+    allow_origins=origins,  # 배포 환경: 명시된 origin만 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -3686,4 +3686,6 @@ def get_debate_comments(
 
 # Uvicorn 서버 실행
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    # host="0.0.0.0"으로 설정하여 모든 네트워크 인터페이스에서 접근 가능하도록 함
+    # 모바일 기기에서 접근하려면 이 설정이 필요합니다
+    uvicorn.run(app, host="0.0.0.0", port=8000)

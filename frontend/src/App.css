@@ -8,43 +8,61 @@
     padding: 0; 
 }
 
+/* 배경 영역 (Outer Container): 화면 전체를 차지하고 배경색 표시 */
 body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%);
-    display: flex; 
-    justify-content: center; 
+    /* 화면 전체 높이 (모바일 주소창 고려) */
+    width: 100%;
+    min-height: 100dvh;
+    /* 앱 카드를 정중앙에 배치 */
+    display: flex;
+    justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow: hidden;
+    /* 상하좌우 여백으로 배경이 보이도록 */
+    padding: 20px;
+    padding-top: calc(20px + env(safe-area-inset-top));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    box-sizing: border-box;
+    /* 전체 스크롤은 가능하되, 카드 내부 스크롤이 우선 */
+    overflow-y: auto;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
 }
 
 
-/* iPhone 16 스타일 - 상단 바 제거 */
+/* 앱 화면 (Inner Card): 배경 위에 떠 있는 둥근 카드 */
 .app-container {
     position: relative;
-    width: 420px;  /* 실제 콘텐츠 영역 */
-    height: 90vh;
-    max-height: 800px;
-    min-height: 600px;
     background: #F5F1EB;
-    border-radius: 40px;  /* iPhone 16 둥근 모서리 */
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    display: flex; 
+    /* 크기 설정 */
+    width: 100%;
+    max-width: 420px; /* PC에서 너무 넓어지지 않도록 제한 */
+    height: 100%;
+    max-height: calc(100dvh - 40px); /* 상하 여백(20px * 2) 제외 */
+    min-height: 600px;
+    /* 둥근 모서리와 그림자 (둥둥 떠 있는 느낌) */
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    /* 내부 스크롤 구조 */
+    display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden; /* 카드 외부로 내용이 나가지 않도록 */
     padding: 0;
-    margin: 30px;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 
 
 /* --- 캐릭터 선택 화면 --- */
-/* 내용물 영역: 카드 안에서 혼자 스크롤 됨 */
+/* 내용물 영역: 카드 안에서만 스크롤 됨 */
 .character-select-screen {
-    flex: 1; /* 남은 공간 다 차지해라 */
+    flex: 1; /* 남은 공간 다 차지 */
     display: flex; 
     flex-direction: column;
     padding: 10px 0 0 0;
@@ -78,7 +96,7 @@ body {
     background-size: 250px 250px, 3px 3px, 3px 3px, 100% 100%;
     text-align: center;
     position: relative; 
-    overflow-y: hidden;
+    overflow-y: auto; /* 내용이 많으면 카드 안에서만 스크롤 */
     overflow-x: hidden;
     min-height: 0;
     height: 100%;
@@ -7574,14 +7592,31 @@ body {
     box-shadow: 0 2px 8px rgba(141, 110, 99, 0.3);
 }
 
-/* 반응형 */
+/* 반응형 - 모바일 */
 @media (max-width: 480px) {
+    body {
+        align-items: center;
+        padding: 20px;
+        padding-top: calc(20px + env(safe-area-inset-top));
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        padding-left: calc(20px + env(safe-area-inset-left));
+        padding-right: calc(20px + env(safe-area-inset-right));
+    }
+    
     .app-container {
         width: 100%;
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
+        max-width: 100%;
+        height: 100%;
+        max-height: calc(100dvh - 40px); /* 상하 여백 제외 */
+        min-height: 0;
+        border-radius: 24px; /* 모바일에서도 둥근 모서리 유지 */
         margin: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    
+    .character-select-screen {
+        border-radius: 24px;
+        overflow-y: auto; /* 모바일에서도 내부 스크롤 가능 */
     }
     
     .character-card {

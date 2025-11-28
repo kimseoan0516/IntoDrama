@@ -41,11 +41,16 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://intodrama.vercel.app",  # Vercel 배포 주소
-    "https://*.vercel.app",  # Vercel 프리뷰 배포 주소 포함
 ]
+
+# Vercel 프리뷰 배포를 위한 정규식 패턴
+import re
+origin_regex = r"https://.*\.vercel\.app"
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # 배포 환경: 명시된 origin만 허용
+    allow_origins=origins,  # 배포 환경: 명시된 origin 허용
+    allow_origin_regex=origin_regex,  # Vercel 프리뷰 배포 주소 패턴 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

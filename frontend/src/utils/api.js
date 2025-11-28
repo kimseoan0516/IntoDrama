@@ -1,9 +1,6 @@
 // API 설정 및 호출 유틸리티
-// [변경 전] 로컬에서 개발할 때 사용했던 주소
-// const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-
-// [변경 후] 배포된 백엔드 서버 주소 (https:// 필수!)
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://seoan0516-intodrama.hf.space';
+// 로컬 개발 환경: 내 컴퓨터에서 백엔드와 통신할 때 사용하는 주소
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 // 인증 토큰 가져오기
 const getToken = () => localStorage.getItem('token');

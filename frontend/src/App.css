@@ -7663,7 +7663,7 @@ body {
     }
     
     .select-title {
-        font-size: 1.8rem;
+        font-size: 2.4rem; /* 모바일에서 제목 크기 증가 (1.8rem -> 2.4rem) */
     }
     
     .user-info {
@@ -8007,33 +8007,20 @@ body {
         position: absolute !important;
     }
     
-    /* 모바일: 닫기 버튼 기본 스타일 (원형 준비) */
-    .close-button {
-        border-radius: 0 !important; /* 기본 상태에서는 배경 없음 */
-    }
-    
-    /* 모바일: 닫기 버튼 hover 효과 제거 (터치 시 회전 방지) */
-    .close-button:hover {
+    /* 모바일: 닫기 버튼 hover 효과 제거 (터치 시 회전 방지) - PC와 동일하게 */
+    .close-button:hover:not(:active) {
         background: transparent !important; /* hover 시 배경 없음 */
-        transform: none !important; /* 회전 효과 완전 제거 */
+        transform: none !important; /* 회전 효과 완전 제거 (모바일에서는 회전 없음) */
         color: #8D6E63 !important;
-        border-radius: 0 !important; /* hover 시에도 원형 아님 */
     }
     
-    /* 모바일: 닫기 버튼 클릭 시 완전한 원형 배경 (회전 없이, 바로 사라지게) */
+    /* 모바일: 닫기 버튼 클릭 시 원형 배경 - PC와 완전히 동일하게 */
     .close-button:active {
         background: #EFEBE9 !important; /* 클릭 시 동그란 배경 */
-        border-radius: 50% !important; /* 완전한 원형 (정사각형 아님) */
+        border-radius: 50% !important; /* 동그란 모양 */
         width: 36px !important; /* 클릭 시 크기 고정 */
         height: 36px !important;
-        min-width: 36px !important; /* 최소 너비 고정 */
-        min-height: 36px !important; /* 최소 높이 고정 */
-        max-width: 36px !important; /* 최대 너비 고정 */
-        max-height: 36px !important; /* 최대 높이 고정 */
-        transform: none !important; /* 회전 효과 완전 제거 */
-        transition: background 0.1s, border-radius 0.1s, width 0.1s, height 0.1s !important; /* 빠른 전환 */
-        padding: 0 !important; /* 패딩 제거 */
-        box-sizing: border-box !important; /* 박스 사이징 */
+        transform: none !important; /* 회전 효과 제거 (바로 꺼지게) */
     }
     
     /* 모바일: diary-modal-header 안의 button도 클릭 시 동그란 배경 */

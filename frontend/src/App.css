@@ -12,48 +12,42 @@
 body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%);
-    /* 화면 전체 높이 (모바일 주소창 고려) */
+    /* PC 원래 디자인: 화면 전체 높이, 스크롤 없음 */
     width: 100%;
-    min-height: 100dvh;
+    height: 100vh;
     /* 앱 카드를 정중앙에 배치 */
     display: flex;
     justify-content: center;
     align-items: center;
-    /* 상하좌우 여백으로 배경이 보이도록 */
-    padding: 20px;
-    padding-top: calc(20px + env(safe-area-inset-top));
-    padding-bottom: calc(20px + env(safe-area-inset-bottom));
-    padding-left: calc(20px + env(safe-area-inset-left));
-    padding-right: calc(20px + env(safe-area-inset-right));
+    /* PC 원래 디자인: 패딩 없음 */
+    padding: 0;
     box-sizing: border-box;
-    /* 전체 스크롤은 가능하되, 카드 내부 스크롤이 우선 */
-    overflow-y: auto;
-    overflow-x: hidden;
+    /* PC 원래 디자인: 스크롤 없음 */
+    overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
 }
 
 
-/* 앱 화면 (Inner Card): 배경 위에 떠 있는 둥근 카드 */
+/* 앱 화면 (Inner Card): 배경 위에 떠 있는 둥근 카드 - PC 원래 디자인 */
 .app-container {
     position: relative;
     background: #F5F1EB;
-    /* 크기 설정 */
-    width: 100%;
-    max-width: 420px; /* PC에서 너무 넓어지지 않도록 제한 */
-    height: 100%;
-    max-height: calc(100dvh - 40px); /* 상하 여백(20px * 2) 제외 */
+    /* PC 원래 디자인: 고정 크기 */
+    width: 420px;
+    height: 90vh;
+    max-height: 800px;
     min-height: 600px;
-    /* 둥근 모서리와 그림자 (둥둥 떠 있는 느낌) */
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    /* PC 원래 디자인: 둥근 모서리와 그림자 */
+    border-radius: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     /* 내부 스크롤 구조 */
     display: flex;
     flex-direction: column;
     overflow: hidden; /* 카드 외부로 내용이 나가지 않도록 */
     padding: 0;
-    margin: 0;
+    margin: 30px; /* PC 원래 디자인: 여백 */
     flex-shrink: 0;
 }
 
@@ -66,7 +60,8 @@ body {
     display: flex; 
     flex-direction: column;
     padding: 10px 0 0 0;
-    border-radius: 24px;  /* app-container와 동일한 둥근 모서리 */
+    border-radius: 40px;  /* PC 원래 디자인: app-container와 동일한 둥근 모서리 */
+    overflow-y: hidden; /* PC 원래 디자인: 스크롤 없음 */
     /* 입체감 있는 베이지 배경 - 위/아래 명암 그라데이션 + 아주 옅은 종이 질감 */
     background: 
         /* 아주 옅은 종이 질감 노이즈 - 전체 배경에 3% opacity */
@@ -329,10 +324,10 @@ body {
     display: flex;
     gap: 10px;
     align-items: center;
-    flex-shrink: 1;
-    min-width: 0;
-    flex-wrap: nowrap;
+    flex-shrink: 0;
+    flex-wrap: nowrap; /* 줄바꿈 금지 - 가로 스크롤을 위해 필수 */
     padding-right: 4px;
+    overflow: visible;
 }
 
 .selected-char-badge {
@@ -712,7 +707,7 @@ body {
     flex: none;
     overflow-y: visible;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: auto; /* 가로 스크롤 활성화 */
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -728,7 +723,7 @@ body {
 
 .character-slider {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap; /* 한 줄로 배치 (가로 스크롤) */
     padding: 0;
     gap: 14px;
     align-items: flex-start;
@@ -3071,7 +3066,7 @@ body {
 
 /* --- 모달 스타일 --- */
 .modal-overlay {
-    position: absolute;
+    position: fixed; /* absolute에서 fixed로 변경하여 항상 화면 전체를 덮도록 */
     top: 0; 
     left: 0; 
     right: 0; 
@@ -3081,8 +3076,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10000; /* z-index를 높여서 모든 요소 위에 표시 */
     animation: fadeIn 0.2s ease;
+    overflow-y: auto; /* 모달 내용이 길 경우 스크롤 가능 */
 }
 
 .my-page-modal, .history-modal, .stats-modal, .settings-modal, .template-modal, .report-modal {
@@ -3091,8 +3087,8 @@ body {
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
+    max-width: 380px; /* PC: 메인 화면(420px)보다 작게 */
+    max-height: 80vh; /* PC 원래 디자인 */
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -3121,7 +3117,7 @@ body {
 }
 
 .report-modal {
-    max-width: 600px;
+    max-width: 380px; /* PC: 메인 화면(420px)보다 작게 */
     width: 90%;
     max-height: 85vh;
     overflow: hidden;
@@ -3159,11 +3155,11 @@ body {
     position: absolute;
     top: 16px;
     right: 16px;
-    width: 36px;
-    height: 36px;
+    width: auto;
+    height: auto;
     border: none;
-    background: #EFEBE9;
-    border-radius: 50%;
+    background: transparent; /* 동그란 배경 제거 */
+    border-radius: 0; /* 동그란 모양 제거 */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -3173,15 +3169,23 @@ body {
     padding: 0;
 }
 
-.close-button:hover {
-    background: #D7CCC8;
+.close-button:hover:not(:active) {
+    background: transparent; /* hover 시에도 배경 없음 */
     color: #5D4037;
     transform: rotate(90deg);
 }
 
+.close-button:active {
+    background: #EFEBE9 !important; /* 클릭 시 동그란 배경 */
+    border-radius: 50% !important; /* 동그란 모양 */
+    width: 36px !important; /* 클릭 시 크기 고정 */
+    height: 36px !important;
+    transform: none !important; /* 회전 효과 제거 (바로 꺼지게) */
+}
+
 .close-button svg {
-    width: 20px;
-    height: 20px;
+    width: 24px; /* 아이콘 크기 약간 증가 */
+    height: 24px;
 }
 
 /* 프로필 미리보기 */
@@ -5642,7 +5646,7 @@ body {
 
 /* 일기 모달 스타일 */
 .diary-modal {
-    max-width: 720px;
+    max-width: 380px; /* PC: 메인 화면(420px)보다 작게 */
     max-height: 85vh;
     overflow-y: auto;
     padding: 24px 40px 32px 36px !important;
@@ -6818,7 +6822,7 @@ body {
 
 /* 토론 모드 스타일 */
 .debate-modal {
-    max-width: 800px;
+    max-width: 380px; /* PC: 메인 화면(420px)보다 작게 */
     max-height: 80vh;
     overflow: hidden;
     padding: 28px;
@@ -7594,34 +7598,68 @@ body {
 
 /* 반응형 - 모바일 */
 @media (max-width: 480px) {
+    /* 메인 페이지(캐릭터 선택 화면): 플로팅 카드 유지 - 여백 과감하게 */
     body {
-        align-items: center;
-        padding: 20px;
+        align-items: center; /* 위아래 가운데 정렬 */
+        padding: 20px; /* 위아래 여백 조정 */
         padding-top: calc(20px + env(safe-area-inset-top));
         padding-bottom: calc(20px + env(safe-area-inset-bottom));
         padding-left: calc(20px + env(safe-area-inset-left));
         padding-right: calc(20px + env(safe-area-inset-right));
     }
     
-    .app-container {
+    /* 메인 페이지: 플로팅 카드 - 살짝 작게, 높이 제한 */
+    .app-container:not(:has(.chat-container)) {
+        width: 400px; /* 420px에서 400px로 살짝 작게 */
+        max-width: calc(100% - 40px); /* 좌우 20px씩 여백 확보 */
+        height: auto; /* 자동 높이 */
+        max-height: 650px; /* 최대 높이를 650px로 제한 (800px에서 감소) */
+        min-height: 500px; /* 최소 높이도 조정 */
+        border-radius: 40px; /* PC와 동일한 둥근 모서리 */
+        margin: 0 auto; /* 중앙 정렬 */
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); /* PC와 동일한 그림자 */
+    }
+    
+    /* 채팅 화면: 전체 화면 */
+    .app-container:has(.chat-container) {
         width: 100%;
         max-width: 100%;
-        height: 100%;
-        max-height: calc(100dvh - 40px); /* 상하 여백 제외 */
-        min-height: 0;
-        border-radius: 24px; /* 모바일에서도 둥근 모서리 유지 */
+        height: 100dvh;
+        max-height: 100dvh;
+        min-height: 100dvh;
+        border-radius: 0; /* 전체 화면이므로 둥근 모서리 제거 */
         margin: 0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        box-shadow: none; /* 전체 화면이므로 그림자 제거 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    
+    /* 채팅 화면일 때 body도 전체 화면 */
+    body:has(.app-container:has(.chat-container)) {
+        padding: 0;
+        align-items: stretch;
     }
     
     .character-select-screen {
-        border-radius: 24px;
+        border-radius: 40px; /* app-container와 동일한 둥근 모서리 */
         overflow-y: auto; /* 모바일에서도 내부 스크롤 가능 */
     }
     
+    /* 채팅 컨테이너: 전체 화면 */
+    .chat-container {
+        border-radius: 0; /* 전체 화면이므로 둥근 모서리 제거 */
+    }
+    
     .character-card {
-        flex: 0 0 160px;
+        flex: 0 0 160px; /* 가로 스크롤을 위해 고정 너비 */
         height: 220px;
+    }
+    
+    .character-slider {
+        flex-wrap: nowrap; /* 가로 스크롤을 위해 한 줄로 */
     }
     
     .select-title {
@@ -7642,6 +7680,379 @@ body {
         padding: 4px 8px;
         font-size: 0.75rem;
     }
+    
+    /* 모바일: 드롭다운은 고정, 캐릭터 칩은 오른쪽에 표시되되 칩 영역만 슬라이드 */
+    .filter-section {
+        flex-wrap: nowrap; /* 한 줄로 유지 - 드롭다운 왼쪽, 칩 오른쪽 */
+        align-items: center; /* 세로 중앙 정렬 */
+    }
+    
+    /* 모바일: 드롭다운과 검색 입력은 고정 (줄어들지 않게) */
+    .drama-filter,
+    .search-input {
+        flex-shrink: 0; /* 드롭다운과 검색 입력은 줄어들지 않게 */
+    }
+    
+    /* 모바일: 캐릭터 칩 영역만 스크롤 - 드롭다운 오른쪽에 배치 */
+    .selected-characters-display {
+        overflow-x: auto; /* 스크롤 명령어 필수 - 넘친 내용을 스크롤로 보여줌 */
+        overflow-y: visible; /* 그림자가 잘리지 않도록 */
+        -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 - 아이폰에서도 부드럽게 넘어가게 */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scroll-behavior: smooth; /* 부드러운 스크롤 */
+        /* 스크롤 영역의 padding을 안쪽으로 줘서 그림자가 보일 공간 확보 + 터치 영역 넓히기 */
+        padding: 30px 20px; /* 위아래 30px로 넉넉하게 (터치할 공간 확보), 좌우 20px 패딩으로 그림자 공간 확보 및 터치 영역 넓힘 */
+        margin: -30px -20px; /* 패딩만큼 마진으로 위치 조정 (위아래도 포함) */
+        flex-wrap: nowrap; /* 줄바꿈 금지 - 가로 스크롤을 위해 필수 */
+        /* 가로 폭 제한 (가장 중요) - 스크롤 박스가 화면 밖까지 무한대로 늘어나지 않도록 */
+        flex: 1 1 auto; /* 남은 공간 차지 - 드롭다운 오른쪽에 배치 */
+        min-width: 0; /* 플렉스 자식일 경우 버그 방지 (이거 없으면 안 될 때 많음) */
+        max-width: 100%; /* 부모 컨테이너 너비를 넘지 마라 */
+        touch-action: pan-x; /* 가로 스크롤만 허용 */
+    }
+    
+    .selected-characters-display::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+        width: 0;
+        height: 0;
+    }
+    
+    /* 모바일: 버튼이 터치를 가로채지 않도록 설정 + 절대 줄어들지 않게 */
+    .selected-char-badge {
+        flex-shrink: 0 !important; /* 절대 줄어들지 마! - 가로 스크롤을 위해 필수 */
+        flex-grow: 0; /* 늘어나지도 않게 */
+        min-width: fit-content; /* 최소 너비는 내용에 맞게 */
+        touch-action: pan-x; /* 가로 스크롤 허용, 클릭은 지연 */
+    }
+    
+    .selected-char-badge .remove-char-btn {
+        touch-action: manipulation; /* 버튼은 클릭만 허용, 스크롤 방해 안 함 */
+        flex-shrink: 0; /* 버튼도 줄어들지 않게 */
+    }
+    
+    /* 모바일: 세로 스크롤바가 있는 페이지들의 스크롤바 숨기기 및 중앙 정렬 */
+    .settings-content,
+    .history-list,
+    .stats-content,
+    .template-list,
+    .report-content,
+    .diary-modal,
+    .diary-modal-body,
+    .my-page-modal,
+    .history-modal,
+    .stats-modal,
+    .settings-modal,
+    .template-modal,
+    .report-modal,
+    .debate-modal,
+    .debate-content {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    .settings-content::-webkit-scrollbar,
+    .history-list::-webkit-scrollbar,
+    .stats-content::-webkit-scrollbar,
+    .template-list::-webkit-scrollbar,
+    .report-content::-webkit-scrollbar,
+    .diary-modal::-webkit-scrollbar,
+    .diary-modal-body::-webkit-scrollbar,
+    .my-page-modal::-webkit-scrollbar,
+    .history-modal::-webkit-scrollbar,
+    .stats-modal::-webkit-scrollbar,
+    .settings-modal::-webkit-scrollbar,
+    .template-modal::-webkit-scrollbar,
+    .report-modal::-webkit-scrollbar,
+    .debate-modal::-webkit-scrollbar,
+    .debate-content::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+        width: 0;
+        height: 0;
+    }
+    
+    /* 모바일: 모달 중앙 정렬 (스크롤바로 인한 치우침 방지) */
+    .modal-overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .my-page-modal,
+    .history-modal,
+    .stats-modal,
+    .settings-modal,
+    .template-modal,
+    .report-modal,
+    .diary-modal,
+    .debate-modal {
+        margin: 0 auto; /* 중앙 정렬 */
+        width: 100%; /* width: 100% 기준으로 중앙 정렬 */
+        max-width: calc(100% - 40px); /* 좌우 20px씩 여백 */
+    }
+    
+    /* 모바일: 스크롤바 보정용 padding-right 제거 (왼쪽 치우침 방지) */
+    .history-list {
+        padding-right: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+        margin-right: 0 !important;
+    }
+    
+    .stats-content {
+        padding-right: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+        padding-left: 0 !important;
+    }
+    
+    .diary-modal-body {
+        padding: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+    }
+    
+    .diary-modal {
+        padding: 28px 20px 32px 20px !important; /* 상단 padding을 28px로 통일 (다른 모달과 동일, 닫기 버튼 위치 맞춤) */
+    }
+    
+    .debate-content {
+        padding-right: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+        margin-right: 0 !important;
+    }
+    
+    /* 모바일: 모달 내부 콘텐츠 중앙 정렬 */
+    .history-modal,
+    .stats-modal,
+    .diary-modal,
+    .debate-modal {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 내부 콘텐츠 중앙 정렬 */
+    }
+    
+    .history-list,
+    .stats-content,
+    .diary-modal-body,
+    .debate-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+    }
+    
+    /* 모바일: 대화 보관함 카드 가로 길이 통일 */
+    .history-item {
+        width: 100% !important; /* 모든 카드의 가로 길이를 100%로 통일 */
+        box-sizing: border-box; /* padding 포함한 전체 너비 계산 */
+        touch-action: pan-y; /* 수직 스크롤만 허용 */
+    }
+    
+    /* 모바일: 대화 보관함 카드 hover 효과 비활성화 (드래그 방지) */
+    .history-item:hover {
+        transform: none !important; /* 좌우 이동 효과 제거 */
+    }
+    
+    /* 모바일: 대화 보관함 리스트 스크롤 고정 */
+    .history-list {
+        overflow-x: hidden !important; /* 가로 스크롤 원천 차단 */
+        touch-action: pan-y; /* 수직 스크롤만 허용 */
+    }
+    
+    /* 모바일: 일기 쓰기 페이지 중앙 정렬 */
+    .diary-write-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+        width: 100%;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+    
+    /* 모바일: 캘린더 잘림 방지 및 중앙 정렬 */
+    .diary-calendar {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: visible; /* 잘림 방지 */
+        padding: 20px; /* 좌우 대칭 패딩 */
+    }
+    
+    .diary-calendar-weekdays,
+    .diary-calendar-days {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .diary-calendar-day {
+        min-width: 0; /* 잘림 방지 */
+        box-sizing: border-box;
+    }
+    
+    .stats-content {
+        padding-right: 0 !important; /* 스크롤바 보정 여백 제거 */
+        padding-left: 0 !important;
+    }
+    
+    .diary-modal-body {
+        padding: 0 !important; /* 스크롤바 보정 여백 제거 */
+    }
+    
+    .diary-modal {
+        padding: 24px 20px 32px 20px !important; /* 좌우 대칭 패딩 */
+    }
+    
+    .debate-content {
+        padding-right: 0 !important; /* 스크롤바 보정 여백 제거 */
+        margin-right: 0 !important;
+    }
+    
+    /* 모바일: 모달 내부 콘텐츠 중앙 정렬 */
+    .history-modal,
+    .stats-modal,
+    .diary-modal,
+    .debate-modal {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 내부 콘텐츠 중앙 정렬 */
+    }
+    
+    .history-list,
+    .stats-content,
+    .diary-modal-body,
+    .debate-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+    }
+    
+    /* 모바일: 일기 쓰기 페이지 중앙 정렬 */
+    .diary-write-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+        width: 100%;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+    
+    /* 모바일: 캘린더 잘림 방지 및 중앙 정렬 */
+    .diary-calendar {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: visible; /* 잘림 방지 */
+        padding: 20px; /* 좌우 대칭 패딩 */
+    }
+    
+    .diary-calendar-weekdays,
+    .diary-calendar-days {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .diary-calendar-day {
+        min-width: 0; /* 잘림 방지 */
+        box-sizing: border-box;
+    }
+    
+    /* 모바일: 모달 크기 조정 */
+    .my-page-modal, .history-modal, .stats-modal, .settings-modal, .template-modal, .report-modal {
+        max-height: 85vh; /* 모바일에서 높이 증가 */
+        margin: 20px auto; /* 중앙 정렬 + 여백 */
+        z-index: 10001; /* 모달 오버레이 위에 표시 */
+    }
+    
+    /* 모바일: 마음 기록 노트 닫기 버튼 위치 통일 */
+    .diary-modal {
+        position: relative; /* 닫기 버튼 absolute 위치 기준 */
+        padding: 28px 20px 32px 20px !important; /* 상단 padding을 28px로 통일 */
+    }
+    
+    /* 모바일: diary-modal-header 안의 닫기 버튼을 다른 페이지와 동일한 위치로 */
+    .diary-modal-header {
+        position: relative;
+    }
+    
+    /* 모바일: diary-modal-header 안의 닫기 버튼을 원래 위치로 (헤더 오른쪽) */
+    .diary-modal-header {
+        position: relative;
+    }
+    
+    .diary-modal-header button {
+        position: static !important; /* 원래 위치 (헤더의 justify-content: space-between으로 오른쪽 배치) */
+        top: auto !important;
+        right: auto !important;
+        z-index: 10 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* 모바일: weekly recap 버튼 가로 길이 확대 및 레이아웃 조정 (이미지와 동일하게) */
+    .weekly-recap-box > div {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        padding-right: 50px !important; /* 아이콘 공간 확보 */
+        position: relative !important;
+    }
+    
+    .weekly-recap-box > div > div:first-child {
+        text-align: center !important; /* "Weekly Recap" 중앙 정렬 */
+    }
+    
+    .weekly-recap-box > div > div:nth-child(2) {
+        text-align: center !important; /* "주별 통계 보기" 중앙 정렬 */
+    }
+    
+    .weekly-recap-box > div svg {
+        right: 20px !important; /* 아이콘을 오른쪽으로 이동 */
+        top: 50% !important;
+        transform: translateY(-50%) !important; /* 수직 중앙 정렬 */
+        position: absolute !important;
+    }
+    
+    /* 모바일: 닫기 버튼 클릭 시 동그란 배경 (마음 기록 노트와 동일하게, 회전 없이) */
+    .close-button:active {
+        background: #EFEBE9 !important; /* 클릭 시 동그란 배경 */
+        border-radius: 50% !important; /* 동그란 모양 */
+        width: 36px !important; /* 클릭 시 크기 고정 */
+        height: 36px !important;
+        transform: none !important; /* 회전 효과 제거 (바로 꺼지게) */
+    }
+    
+    /* 모바일: diary-modal-header 안의 button도 클릭 시 동그란 배경 */
+    .diary-modal-header button:active {
+        background: #EFEBE9 !important; /* 클릭 시 동그란 배경 */
+        border-radius: 50% !important; /* 동그란 모양 */
+        width: 36px !important;
+        height: 36px !important;
+        transform: none !important; /* 회전 효과 제거 */
+    }
+    
+    /* 모바일: 저장한 대사 목록 카드 텍스트 영역 확대 */
+    .template-item {
+        gap: 8px; /* 아이콘과 텍스트 사이 간격 줄이기 (12px -> 8px) */
+    }
+    
+    .template-icon {
+        width: 40px; /* 아이콘 크기 줄이기 (48px -> 40px) */
+        height: 40px;
+    }
+    
+    .template-icon svg {
+        width: 20px; /* 아이콘 내부 SVG 크기 줄이기 (24px -> 20px) */
+        height: 20px;
+    }
+    
+    .template-content {
+        flex: 1;
+        min-width: 0;
+        max-width: 85%; /* 텍스트 영역 최대 너비 설정 (85%) */
+        padding-right: 4px; /* 오른쪽 여백 최소화 */
+    }
+    
+    .template-arrow {
+        font-size: 1rem; /* 화살표 크기 줄이기 (1.2rem -> 1rem) */
+        flex-shrink: 0;
+        margin-left: 4px; /* 화살표 왼쪽 여백 최소화 */
+    }
+    
 }
 
 /* 메시지 하트 뱃지 - 말풍선 우측 하단에 겹쳐서 */

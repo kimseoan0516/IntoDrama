@@ -816,7 +816,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     fontWeight: '700',
                                     color: '#5D4037',
                                     letterSpacing: '1px',
-                                    textShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                                    textShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                                    textAlign: 'center'
                                 }}>
                                     Weekly Recap
                                 </div>
@@ -824,7 +825,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     marginTop: '8px',
                                     fontSize: '0.85rem',
                                     color: '#8D6E63',
-                                    opacity: 0.8
+                                    opacity: 0.8,
+                                    textAlign: 'center'
                                 }}>
                                     주별 통계 보기
                                 </div>
@@ -1129,73 +1131,76 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                         })}
                                             
                                             {/* 페이지네이션 */}
-                                            {totalPages > 1 && (
-                                                <div style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    gap: '8px',
-                                                    marginTop: '20px',
-                                                    paddingTop: '16px',
-                                                    borderTop: '1px solid #E8E0DB'
-                                                }}>
-                                                    <button
-                                                        onClick={() => setCurrentQuotePage(prev => Math.max(1, prev - 1))}
-                                                        disabled={currentQuotePage === 1}
-                                                        style={{
-                                                            padding: '6px 12px',
-                                                            fontSize: '0.85rem',
-                                                            color: currentQuotePage === 1 ? '#BDBDBD' : '#8D6E63',
-                                                            background: currentQuotePage === 1 ? '#F5F5F5' : '#FFFFFF',
-                                                            border: `1px solid ${currentQuotePage === 1 ? '#E0E0E0' : '#E8E0DB'}`,
-                                                            borderRadius: '6px',
-                                                            cursor: currentQuotePage === 1 ? 'not-allowed' : 'pointer',
-                                                            transition: 'all 0.2s'
-                                                        }}
-                                                    >
-                                                        이전
-                                                    </button>
-                                                    
-                                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                                            {(() => {
+                                                const totalPages = Math.ceil(quotes.length / quotesPerPage);
+                                                return totalPages > 1 ? (
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        marginTop: '20px',
+                                                        paddingTop: '16px',
+                                                        borderTop: '1px solid #E8E0DB'
+                                                    }}>
                                                         <button
-                                                            key={pageNum}
-                                                            onClick={() => setCurrentQuotePage(pageNum)}
+                                                            onClick={() => setCurrentQuotePage(prev => Math.max(1, prev - 1))}
+                                                            disabled={currentQuotePage === 1}
                                                             style={{
-                                                                minWidth: '32px',
-                                                                height: '32px',
-                                                                padding: '0 8px',
+                                                                padding: '6px 12px',
                                                                 fontSize: '0.85rem',
-                                                                fontWeight: currentQuotePage === pageNum ? '600' : '400',
-                                                                color: currentQuotePage === pageNum ? '#FFFFFF' : '#8D6E63',
-                                                                background: currentQuotePage === pageNum ? '#8D6E63' : '#FFFFFF',
-                                                                border: `1px solid ${currentQuotePage === pageNum ? '#8D6E63' : '#E8E0DB'}`,
+                                                                color: currentQuotePage === 1 ? '#BDBDBD' : '#8D6E63',
+                                                                background: currentQuotePage === 1 ? '#F5F5F5' : '#FFFFFF',
+                                                                border: `1px solid ${currentQuotePage === 1 ? '#E0E0E0' : '#E8E0DB'}`,
                                                                 borderRadius: '6px',
-                                                                cursor: 'pointer',
+                                                                cursor: currentQuotePage === 1 ? 'not-allowed' : 'pointer',
                                                                 transition: 'all 0.2s'
                                                             }}
                                                         >
-                                                            {pageNum}
+                                                            이전
                                                         </button>
-                                                    ))}
-                                                    
-                                                    <button
-                                                        onClick={() => setCurrentQuotePage(prev => Math.min(totalPages, prev + 1))}
-                                                        disabled={currentQuotePage === totalPages}
-                                                        style={{
-                                                            padding: '6px 12px',
-                                                            fontSize: '0.85rem',
-                                                            color: currentQuotePage === totalPages ? '#BDBDBD' : '#8D6E63',
-                                                            background: currentQuotePage === totalPages ? '#F5F5F5' : '#FFFFFF',
-                                                            border: `1px solid ${currentQuotePage === totalPages ? '#E0E0E0' : '#E8E0DB'}`,
-                                                            borderRadius: '6px',
-                                                            cursor: currentQuotePage === totalPages ? 'not-allowed' : 'pointer',
-                                                            transition: 'all 0.2s'
-                                                        }}
-                                                    >
-                                                        다음
-                                    </button>
-                                </div>
-                            )}
+                                                        
+                                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                                                            <button
+                                                                key={pageNum}
+                                                                onClick={() => setCurrentQuotePage(pageNum)}
+                                                                style={{
+                                                                    minWidth: '32px',
+                                                                    height: '32px',
+                                                                    padding: '0 8px',
+                                                                    fontSize: '0.85rem',
+                                                                    fontWeight: currentQuotePage === pageNum ? '600' : '400',
+                                                                    color: currentQuotePage === pageNum ? '#FFFFFF' : '#8D6E63',
+                                                                    background: currentQuotePage === pageNum ? '#8D6E63' : '#FFFFFF',
+                                                                    border: `1px solid ${currentQuotePage === pageNum ? '#8D6E63' : '#E8E0DB'}`,
+                                                                    borderRadius: '6px',
+                                                                    cursor: 'pointer',
+                                                                    transition: 'all 0.2s'
+                                                                }}
+                                                            >
+                                                                {pageNum}
+                                                            </button>
+                                                        ))}
+                                                        
+                                                        <button
+                                                            onClick={() => setCurrentQuotePage(prev => Math.min(totalPages, prev + 1))}
+                                                            disabled={currentQuotePage === totalPages}
+                                                            style={{
+                                                                padding: '6px 12px',
+                                                                fontSize: '0.85rem',
+                                                                color: currentQuotePage === totalPages ? '#BDBDBD' : '#8D6E63',
+                                                                background: currentQuotePage === totalPages ? '#F5F5F5' : '#FFFFFF',
+                                                                border: `1px solid ${currentQuotePage === totalPages ? '#E0E0E0' : '#E8E0DB'}`,
+                                                                borderRadius: '6px',
+                                                                cursor: currentQuotePage === totalPages ? 'not-allowed' : 'pointer',
+                                                                transition: 'all 0.2s'
+                                                            }}
+                                                        >
+                                                            다음
+                                                        </button>
+                                                    </div>
+                                                ) : null;
+                                            })()}
                         </>
                                     );
                                 })()}

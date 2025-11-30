@@ -47,7 +47,7 @@ export const ArchetypeMapModal = ({ data, characterData, onClose }) => {
     if (!data || !data.characters || data.characters.length === 0) {
         return (
             <div className="modal-overlay" onClick={onClose}>
-                <div className="my-page-modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
+                <div className="my-page-modal" style={{ maxWidth: '380px' }} onClick={(e) => e.stopPropagation()}>
                     <button className="close-button" onClick={onClose}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -64,7 +64,7 @@ export const ArchetypeMapModal = ({ data, characterData, onClose }) => {
     
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="my-page-modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="my-page-modal" style={{ maxWidth: '380px' }} onClick={(e) => e.stopPropagation()}>
                 <button className="close-button" onClick={onClose}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>

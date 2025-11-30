@@ -1197,8 +1197,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                             }}
                                                         >
                                                             다음
-                                                        </button>
-                                                    </div>
+                                    </button>
+                                </div>
                                                 ) : null;
                                             })()}
                         </>

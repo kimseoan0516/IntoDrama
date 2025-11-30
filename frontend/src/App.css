@@ -8015,20 +8015,37 @@ body {
         position: absolute !important;
     }
     
-    /* 모바일: 닫기 버튼 hover 효과 제거 (터치 시 회전 방지) - PC와 동일하게 */
+    /* 모바일: 닫기 버튼 기본 스타일 초기화 */
+    .close-button {
+        background: transparent !important;
+        border-radius: 0 !important;
+        width: auto !important;
+        height: auto !important;
+    }
+    
+    /* 모바일: 닫기 버튼 hover 효과 제거 (터치 시 회전 방지) */
+    .close-button:hover,
     .close-button:hover:not(:active) {
         background: transparent !important; /* hover 시 배경 없음 */
         transform: none !important; /* 회전 효과 완전 제거 (모바일에서는 회전 없음) */
         color: #8D6E63 !important;
+        border-radius: 0 !important;
     }
     
-    /* 모바일: 닫기 버튼 클릭 시 원형 배경 - PC와 완전히 동일하게 */
-    .close-button:active {
+    /* 모바일: 닫기 버튼 클릭 시 원형 배경 - 강제 적용 */
+    .close-button:active,
+    .close-button:focus:active {
         background: #EFEBE9 !important; /* 클릭 시 동그란 배경 */
         border-radius: 50% !important; /* 동그란 모양 */
         width: 36px !important; /* 클릭 시 크기 고정 */
         height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        max-width: 36px !important;
+        max-height: 36px !important;
         transform: none !important; /* 회전 효과 제거 (바로 꺼지게) */
+        padding: 0 !important;
+        box-sizing: border-box !important;
     }
     
     /* 모바일: diary-modal-header 안의 button도 클릭 시 동그란 배경 */

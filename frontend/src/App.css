@@ -7664,6 +7664,14 @@ body {
     
     .select-title {
         font-size: 2.4rem; /* 모바일에서 제목 크기 증가 (1.8rem -> 2.4rem) */
+        margin-bottom: 8px; /* 제목과 부제 사이 간격 추가 */
+    }
+    
+    /* 모바일: 부제 색상을 더 옅은 회색/연한 브라운으로 변경 */
+    .select-description {
+        color: #BCAAA4 !important; /* 더 옅은 연한 브라운 (#8D6E63 -> #BCAAA4) */
+        opacity: 0.85 !important; /* 약간 더 투명하게 */
+        margin-bottom: 32px !important; /* 부제와 필터 영역 사이 충분한 간격 (20px -> 32px) */
     }
     
     .user-info {

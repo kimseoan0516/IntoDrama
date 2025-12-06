@@ -8354,6 +8354,14 @@ body {
         max-width: 100% !important;
         padding-right: 50px !important; /* 아이콘 공간 확보 */
         position: relative !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: Weekly Recap 버튼 내부 div 너비 확대 */
+    .weekly-recap-box > div > div:first-of-type {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     .weekly-recap-box > div > div:first-child {
@@ -8440,6 +8448,33 @@ body {
         font-size: 1rem; /* 화살표 크기 줄이기 (1.2rem -> 1rem) */
         flex-shrink: 0;
         margin-left: 4px; /* 화살표 왼쪽 여백 최소화 */
+    }
+    
+    /* 모바일: 순위 카드 너비 확대 */
+    .top-character-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 저장한 대사 목록 카드 너비 확대 */
+    .stats-quote-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 저장한 대사 목록 리스트 컨테이너 너비 확대 */
+    .stats-quotes-list {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .stats-quotes-items {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
     
 }

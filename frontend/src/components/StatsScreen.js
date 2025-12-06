@@ -528,7 +528,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 background: 'linear-gradient(180deg, #FFFEF5 0%, #FFFFFF 100%)',
                                                 border: '2px solid #D4AF37',
                                                 marginBottom: '16px',
-                                                maxWidth: '100%',
+                                                maxWidth: '300px',
                                                 width: '100%',
                                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                             }}
@@ -726,8 +726,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                     backgroundColor: '#FFFFFF',
                                                     border: `2px solid ${rankColor.border}`,
                                                     flex: '1',
-                                                    maxWidth: 'calc(50% - 6px)',
-                                                    minWidth: 'calc(50% - 6px)',
+                                                    maxWidth: '140px',
                                                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                                 }}
                                             >
@@ -948,7 +947,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     textAlign: 'center',
                                     position: 'relative',
                                     overflow: 'visible',
-                                    width: '100%', /* 모바일에서 전체 너비 */
+                                    width: 'calc(100% - 4px)', /* 통계 카드 3개 전체 폭보다 아주 살짝 작게 */
                                     maxWidth: '100%',
                                     boxSizing: 'border-box'
                                 }}

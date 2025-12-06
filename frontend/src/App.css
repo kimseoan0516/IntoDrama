@@ -8136,7 +8136,7 @@ body {
     .debate-modal {
         margin: 0 auto; /* 중앙 정렬 */
         width: 100%; /* width: 100% 기준으로 중앙 정렬 */
-        max-width: calc(100% - 40px); /* 좌우 20px씩 여백 */
+        max-width: calc(100% - 20px); /* 좌우 10px씩 여백 (40px -> 20px로 줄여서 더 넓게) */
     }
     
     /* 모바일: 스크롤바 보정용 padding-right 제거 (왼쪽 치우침 방지) */
@@ -8146,8 +8146,8 @@ body {
     }
     
     .stats-content {
-        padding-right: 20px !important; /* 좌우 대칭 패딩 */
-        padding-left: 20px !important; /* 좌우 대칭 패딩 */
+        padding-right: 12px !important; /* 좌우 대칭 패딩 (20px -> 12px로 줄여서 더 넓게) */
+        padding-left: 12px !important; /* 좌우 대칭 패딩 (20px -> 12px로 줄여서 더 넓게) */
         padding-top: 4px !important; /* 상단 여백 */
         padding-bottom: 4px !important; /* 하단 여백 */
     }
@@ -8234,8 +8234,8 @@ body {
     }
     
     .stats-content {
-        padding-right: 20px !important; /* 좌우 대칭 패딩 */
-        padding-left: 20px !important; /* 좌우 대칭 패딩 */
+        padding-right: 12px !important; /* 좌우 대칭 패딩 (20px -> 12px로 줄여서 더 넓게) */
+        padding-left: 12px !important; /* 좌우 대칭 패딩 (20px -> 12px로 줄여서 더 넓게) */
         padding-top: 4px !important; /* 상단 여백 */
         padding-bottom: 4px !important; /* 하단 여백 */
     }
@@ -8337,7 +8337,7 @@ body {
     
     /* 모바일: weekly recap 버튼 가로 길이 확대 및 레이아웃 조정 */
     .weekly-recap-box {
-        padding: 20px !important; /* 넉넉한 패딩 */
+        padding: 12px !important; /* 패딩 줄여서 더 넓게 (20px -> 12px) */
         margin-left: 0 !important; /* 음수 마진 제거 */
         margin-right: 0 !important; /* 음수 마진 제거 */
         overflow: visible !important; /* 그림자와 호버 효과가 잘리지 않도록 */
@@ -8362,6 +8362,16 @@ body {
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
+    }
+    
+    /* 모바일: Weekly Recap 버튼 너비 확대 */
+    .weekly-recap-box > div {
+        width: 100% !important;
+    }
+    
+    .weekly-recap-box > div > div:first-of-type {
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     .weekly-recap-box > div > div:first-child {
@@ -8450,11 +8460,22 @@ body {
         margin-left: 4px; /* 화살표 왼쪽 여백 최소화 */
     }
     
-    /* 모바일: 순위 카드 너비 확대 */
-    .top-character-card {
-        width: 100% !important;
-        max-width: 100% !important;
+    /* 모바일: 순위 카드 너비 확대 - 구조는 유지하고 너비만 조절 */
+    .stats-content .top-character-card {
         box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 1위 카드 너비 확대 - 첫 번째 div 안의 카드 */
+    .stats-content > div > div:first-child > div:first-child .top-character-card {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* 모바일: 2위, 3위 카드 너비 확대 - 가로로 나란히 배치된 카드들 (마지막 div 안의 카드들) */
+    .stats-content > div > div:first-child > div:last-child .top-character-card {
+        max-width: calc(50% - 6px) !important;
+        min-width: calc(50% - 6px) !important;
+        flex: 1 !important;
     }
     
     /* 모바일: 저장한 대사 목록 카드 너비 확대 */

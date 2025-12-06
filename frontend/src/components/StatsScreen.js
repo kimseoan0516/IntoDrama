@@ -436,7 +436,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                 </button>
                 <div className="stats-content">
                     {/* 주간 통계 섹션 */}
-                    <div className="weekly-stats-header" style={{ marginBottom: '8px' }}>
+                    <div className="weekly-stats-header" style={{ marginBottom: '8px', textAlign: 'center', width: '100%' }}>
                         <h3 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#5D4037', marginBottom: '4px' }}>이번주 가장 많이 대화한 캐릭터</h3>
                         <p style={{ fontSize: '0.85rem', color: '#8D6E63', margin: 0 }}>가장 티키타카가 잘 맞는 파트너를 모았어요</p>
                     </div>
@@ -811,7 +811,9 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                 display: 'grid', 
                                 gridTemplateColumns: 'repeat(3, 1fr)', 
                                 gap: '12px',
-                                marginTop: '12px'
+                                marginTop: '12px',
+                                width: '100%',
+                                maxWidth: '100%'
                             }}>
                                 <div style={{
                                     padding: '16px',
@@ -861,7 +863,9 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     display: 'grid', 
                                     gridTemplateColumns: 'repeat(3, 1fr)', 
                                     gap: '12px',
-                                    marginTop: '12px'
+                                    marginTop: '12px',
+                                    width: '100%',
+                                    maxWidth: '100%'
                                 }}>
                                     <div style={{
                                         padding: '16px',
@@ -991,8 +995,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                     )}
                     
                     {/* 저장한 대사 목록 - 항상 표시 */}
-                    <div className="stats-quotes-list" style={{ marginTop: '32px', paddingTop: '24px', borderTop: '2px solid #E8E0DB' }}>
-                        <div style={{ marginBottom: '16px' }}>
+                    <div className="stats-quotes-list" style={{ marginTop: '32px', paddingTop: '24px', borderTop: '2px solid #E8E0DB', width: '100%' }}>
+                        <div style={{ marginBottom: '16px', textAlign: 'center' }}>
                             <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: '#5D4037', margin: 0 }}>저장한 대사 목록</h3>
                                     </div>
                         {loading ? (

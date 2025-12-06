@@ -3776,9 +3776,10 @@ body {
     overflow-x: hidden;
     max-height: calc(80vh - 120px);
     padding-right: 20px; /* 원래대로 복원 */
-    padding-left: 0px;
+    padding-left: 20px;
     padding-top: 4px; /* 상단 여백 추가 */
     padding-bottom: 4px; /* 하단 여백 추가 */
+    align-items: center;
 }
 
 /* Weekly Recap 버튼 박스 - PC */
@@ -6320,6 +6321,8 @@ body {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    max-width: 90%;
+    margin: 0 auto;
 }
 
 .diary-list-item:hover {
@@ -8324,9 +8327,9 @@ body {
     }
     
     .diary-modal-header button {
-        position: static !important; /* 원래 위치 (헤더의 justify-content: space-between으로 오른쪽 배치) */
-        top: auto !important;
-        right: auto !important;
+        position: absolute !important; /* 절대 위치로 변경 */
+        top: 0 !important;
+        right: 0 !important;
         z-index: 10 !important;
         margin: 0 !important;
         padding: 0 !important;

@@ -1259,7 +1259,7 @@ ${cleanContent}
                             </div>
                         )}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', position: 'relative' }}>
                         <button 
                             onClick={onClose}
                             style={{
@@ -1275,7 +1275,10 @@ ${cleanContent}
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 borderRadius: '50%',
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                position: 'absolute',
+                                top: '0',
+                                right: '0'
                             }}
                             onMouseEnter={(e) => e.target.style.background = '#EFEBE9'}
                             onMouseLeave={(e) => e.target.style.background = 'none'}

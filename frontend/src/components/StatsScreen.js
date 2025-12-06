@@ -465,7 +465,13 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                             ) : (
                                 <>
                             {/* 상위 3명 캐릭터 카드 - 1위 위에, 2·3위 아래 가로로 */}
-                            <div style={{ marginBottom: '12px' }}>
+                            <div style={{ 
+                                marginBottom: '12px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                width: '100%'
+                            }}>
                                 {/* 1위 카드 */}
                                 {weeklyStats.top_characters[0] && (() => {
                                     const char = weeklyStats.top_characters[0];
@@ -523,7 +529,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 border: '2px solid #D4AF37',
                                                 marginBottom: '16px',
                                                 maxWidth: '300px',
-                                                margin: '0 auto 16px auto',
+                                                width: '100%',
                                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                             }}
                                         >
@@ -641,7 +647,14 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                 })()}
                                 
                                 {/* 2위, 3위 카드 - 가로로 나란히 */}
-                                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                                <div style={{ 
+                                    display: 'flex', 
+                                    gap: '12px', 
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    flexWrap: 'wrap'
+                                }}>
                                     {weeklyStats.top_characters.slice(1, 3).map((char, index) => {
                                         const charInfo = characterData && char.character_id ? characterData[char.character_id] : null;
                                         const charName = charInfo?.name?.split(' (')[0] || '알 수 없음';

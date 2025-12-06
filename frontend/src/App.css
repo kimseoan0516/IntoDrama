@@ -8146,8 +8146,8 @@ body {
     }
     
     .stats-content {
-        padding-right: 0 !important; /* 원래대로 복원 */
-        padding-left: 0 !important;
+        padding-right: 20px !important; /* 좌우 대칭 패딩 */
+        padding-left: 20px !important; /* 좌우 대칭 패딩 */
         padding-top: 4px !important; /* 상단 여백 */
         padding-bottom: 4px !important; /* 하단 여백 */
     }
@@ -8234,8 +8234,8 @@ body {
     }
     
     .stats-content {
-        padding-right: 28px !important; /* 그림자와 호버 효과를 위한 충분한 오른쪽 여백 (0px -> 28px) */
-        padding-left: 0 !important;
+        padding-right: 20px !important; /* 좌우 대칭 패딩 */
+        padding-left: 20px !important; /* 좌우 대칭 패딩 */
         padding-top: 4px !important; /* 상단 여백 */
         padding-bottom: 4px !important; /* 하단 여백 */
     }

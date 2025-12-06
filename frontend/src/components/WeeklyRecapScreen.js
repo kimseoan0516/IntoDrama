@@ -131,13 +131,19 @@ export const WeeklyRecapScreen = ({ onClose, token, refreshTrigger, onWeekClick 
             firstMonday.setDate(firstMonday.getDate() + daysToMonday);
         }
         
-        // 모든 주 생성 (최대 5주)
+        // 모든 주 생성 (최대 5주, 단 미래 주차는 제외)
         const allWeeks = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
         for (let i = 0; i < 5; i++) {
             const weekStart = new Date(firstMonday);
             weekStart.setDate(weekStart.getDate() + (i * 7));
             
             if (weekStart > monthEnd) break;
+            
+            // 미래 주차는 건너뛰기 (주의 시작일이 오늘보다 이후면 제외)
+            if (weekStart > today) break;
             
             // 해당 주의 데이터 찾기 (같은 주의 월요일인지 확인)
             const weekData = actualWeeks.find(w => {

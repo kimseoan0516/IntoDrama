@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // 날짜 포맷팅 함수
 export const formatMonthYear = (date) => {
@@ -246,13 +246,13 @@ export const InterpretationCard = ({ interpretation, userProfile }) => {
                 ✉️
             </div>
             <h5 style={{
-                fontSize: '1rem',
-                fontWeight: '700',
-                color: '#4A3B32',
-                margin: '0 0 12px 0'
-            }}>
-                {userProfile?.nickname || '서안'}님께
-            </h5>
+            fontSize: '1rem',
+            fontWeight: '700',
+            color: '#4A3B32',
+            margin: '0 0 12px 0'
+        }}>
+            {userProfile?.nickname || '사용자'}님께
+        </h5>
             <p style={{
                 fontSize: '0.9rem',
                 color: '#5D4037',
@@ -266,7 +266,80 @@ export const InterpretationCard = ({ interpretation, userProfile }) => {
 };
 
 // 활동 바텀시트 컴포넌트
-export const ActivityBottomSheet = ({ selectedActivity, isMobile, onClose }) => {
+export const ActivityBottomSheet = ({ selectedActivity, isMobile, onClose, topCharacter, topCharacterId, charName, userNickname }) => {
+    const [characterComment, setCharacterComment] = useState('');
+    const [loadingComment, setLoadingComment] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const prevActivityKey = useRef('');
+    const commentCache = useRef({});
+    
+    // 컴포넌트 마운트 시 캐릭터 코멘트 가져오기
+    useEffect(() => {
+        const fetchCharacterComment = async () => {
+            if (!topCharacterId || !selectedActivity) return;
+            
+            // 활동이 바뀌었는지 확인
+            const currentActivityKey = `${topCharacterId}-${selectedActivity.activity}`;
+            
+            // 캐시에 있으면 즉시 표시
+            if (commentCache.current[currentActivityKey]) {
+                setCharacterComment(commentCache.current[currentActivityKey]);
+                setIsVisible(true);
+                setLoadingComment(false);
+                prevActivityKey.current = currentActivityKey;
+                return;
+            }
+            
+            // 다른 활동으로 바뀌었을 때만 페이드 아웃
+            if (prevActivityKey.current && prevActivityKey.current !== currentActivityKey) {
+                setIsVisible(false);
+                // 약간의 딜레이 후 로딩 시작 (부드러운 전환)
+                await new Promise(resolve => setTimeout(resolve, 150));
+            }
+            
+            prevActivityKey.current = currentActivityKey;
+            setLoadingComment(true);
+            
+            try {
+                const response = await fetch('http://localhost:8000/chat/activity-comment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        character_id: topCharacterId,
+                        activity_name: selectedActivity.activity,
+                        user_nickname: userNickname || '사용자'
+                    })
+                });
+                
+                let newComment;
+                if (response.ok) {
+                    const data = await response.json();
+                    newComment = data.comment;
+                } else {
+                    newComment = `${userNickname || '사용자'}, 이 활동을 실천해 보면 좋을 것 같아. 네 마음이 편안해지길 바라.`;
+                }
+                
+                // 캐시에 저장
+                commentCache.current[currentActivityKey] = newComment;
+                setCharacterComment(newComment);
+            } catch (error) {
+                console.error('캐릭터 코멘트 로드 실패:', error);
+                const fallbackComment = `${userNickname || '사용자'}, 이 활동을 실천해 보면 좋을 것 같아. 네 마음이 편안해지길 바라.`;
+                commentCache.current[currentActivityKey] = fallbackComment;
+                setCharacterComment(fallbackComment);
+            } finally {
+                setLoadingComment(false);
+                // 페이드 인
+                setTimeout(() => setIsVisible(true), 50);
+            }
+        };
+        
+        fetchCharacterComment();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [topCharacterId, selectedActivity?.activity, userNickname]);
+    
     if (!selectedActivity) return null;
 
     return (
@@ -431,9 +504,13 @@ export const ActivityBottomSheet = ({ selectedActivity, isMobile, onClose }) => 
                                     fontSize: '0.85rem',
                                     fontWeight: '600',
                                     color: '#8D6E63',
-                                    marginBottom: '8px'
+                                    marginBottom: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
                                 }}>
-                                    💡 오늘 바로 시작하기
+                                    <img src="/lightbulb.png" alt="lightbulb" style={{ width: '16px', height: '16px' }} />
+                                    오늘 바로 시작하기
                                 </div>
                                 <p style={{
                                     fontSize: '0.9rem',
@@ -446,6 +523,168 @@ export const ActivityBottomSheet = ({ selectedActivity, isMobile, onClose }) => 
                             </div>
                         )}
                     </div>
+                    
+                    {/* 캐릭터 코멘트 섹션 - 말풍선 스타일 */}
+                    {topCharacter && topCharacterId && (
+                        <div style={{
+                            display: 'flex',
+                            gap: '12px',
+                            alignItems: 'flex-start'
+                        }}>
+                            {/* 캐릭터 아바타 - 박스 밖으로 */}
+                            <div style={{
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '50%',
+                                overflow: 'hidden',
+                                border: '3px solid #FFFFFF',
+                                boxShadow: '0 3px 8px rgba(0, 0, 0, 0.15)',
+                                flexShrink: 0
+                            }}>
+                                <img 
+                                    src={topCharacter.image || '/default-character.png'}
+                                    alt={charName}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover'
+                                    }}
+                                    onError={(e) => {
+                                        e.target.src = '/default-character.png';
+                                    }}
+                                />
+                            </div>
+                            
+                            {/* 말풍선 */}
+                            <div style={{
+                                flex: 1,
+                                position: 'relative'
+                            }}>
+                                {/* 캐릭터 이름 라벨 */}
+                                <div style={{
+                                    fontSize: '0.75rem',
+                                    fontWeight: '600',
+                                    color: '#8D6E63',
+                                    marginBottom: '6px',
+                                    marginLeft: '4px'
+                                }}>
+                                    {charName}
+                                </div>
+                                
+                                {/* 말풍선 박스 */}
+                                <div style={{
+                                    position: 'relative',
+                                    padding: '14px 16px',
+                                    background: '#FFFFFF',
+                                    borderRadius: '16px',
+                                    border: '2px solid #E8E0DB',
+                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+                                    // 말풍선 꼬리 (CSS)
+                                    '::before': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        left: '-10px',
+                                        top: '16px',
+                                        width: '0',
+                                        height: '0',
+                                        borderTop: '8px solid transparent',
+                                        borderBottom: '8px solid transparent',
+                                        borderRight: '10px solid #E8E0DB'
+                                    }
+                                }}>
+                                    {/* 말풍선 꼬리 (실제 구현) */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        left: '-10px',
+                                        top: '16px',
+                                        width: '0',
+                                        height: '0',
+                                        borderStyle: 'solid',
+                                        borderWidth: '8px 10px 8px 0',
+                                        borderColor: 'transparent #E8E0DB transparent transparent'
+                                    }} />
+                                    <div style={{
+                                        position: 'absolute',
+                                        left: '-7px',
+                                        top: '18px',
+                                        width: '0',
+                                        height: '0',
+                                        borderStyle: 'solid',
+                                        borderWidth: '6px 8px 6px 0',
+                                        borderColor: 'transparent #FFFFFF transparent transparent'
+                                    }} />
+                                    
+                                    {/* 말풍선 내용 - 최소 높이 설정으로 레이아웃 시프트 방지 */}
+                                    <div style={{
+                                        minHeight: '48px',
+                                        transition: 'opacity 0.3s ease-in-out',
+                                        opacity: loadingComment ? 1 : (isVisible ? 1 : 0)
+                                    }}>
+                                        {loadingComment ? (
+                                            <div style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: '8px'
+                                            }}>
+                                                {/* 스켈레톤 라인 1 */}
+                                                <div style={{
+                                                    height: '12px',
+                                                    background: 'linear-gradient(90deg, #E8E0DB 25%, #F5F1EB 50%, #E8E0DB 75%)',
+                                                    backgroundSize: '200% 100%',
+                                                    borderRadius: '6px',
+                                                    animation: 'skeleton-loading 1.5s ease-in-out infinite',
+                                                    width: '100%'
+                                                }} />
+                                                {/* 스켈레톤 라인 2 */}
+                                                <div style={{
+                                                    height: '12px',
+                                                    background: 'linear-gradient(90deg, #E8E0DB 25%, #F5F1EB 50%, #E8E0DB 75%)',
+                                                    backgroundSize: '200% 100%',
+                                                    borderRadius: '6px',
+                                                    animation: 'skeleton-loading 1.5s ease-in-out infinite',
+                                                    animationDelay: '0.1s',
+                                                    width: '85%'
+                                                }} />
+                                                {/* 스켈레톤 라인 3 */}
+                                                <div style={{
+                                                    height: '12px',
+                                                    background: 'linear-gradient(90deg, #E8E0DB 25%, #F5F1EB 50%, #E8E0DB 75%)',
+                                                    backgroundSize: '200% 100%',
+                                                    borderRadius: '6px',
+                                                    animation: 'skeleton-loading 1.5s ease-in-out infinite',
+                                                    animationDelay: '0.2s',
+                                                    width: '70%'
+                                                }} />
+                                                
+                                                <style>
+                                                    {`
+                                                        @keyframes skeleton-loading {
+                                                            0% {
+                                                                background-position: 200% 0;
+                                                            }
+                                                            100% {
+                                                                background-position: -200% 0;
+                                                            }
+                                                        }
+                                                    `}
+                                                </style>
+                                            </div>
+                                        ) : characterComment ? (
+                                            <p style={{
+                                                fontSize: '0.9rem',
+                                                color: '#3E2723',
+                                                margin: 0,
+                                                lineHeight: '1.6',
+                                                transition: 'opacity 0.3s ease-in-out'
+                                            }}>
+                                                {characterComment}
+                                            </p>
+                                        ) : null}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>
@@ -458,12 +697,23 @@ export const ReportDetailModal = ({
     userProfile, 
     generatePersona, 
     generateTendencyData, 
-    onClose 
+    onClose,
+    onDelete
 }) => {
     if (!selectedReport) return null;
 
-    const savedPersona = generatePersona(selectedReport);
+    // 저장된 리포트에 persona 정보가 있으면 그것을 사용, 없으면 새로 생성
+    const savedPersona = selectedReport.persona || generatePersona(selectedReport);
     const savedTendencyData = generateTendencyData(selectedReport);
+
+    const handleDelete = () => {
+        if (window.confirm('이 리포트를 삭제하시겠습니까?')) {
+            if (onDelete) {
+                onDelete(selectedReport.id);
+            }
+            onClose();
+        }
+    };
 
     return (
         <div className="modal-overlay" 
@@ -526,16 +776,44 @@ export const ReportDetailModal = ({
                             <path d="M17 18l-8-6 8-6"/>
                         </svg>
                     </button>
-                    <h2 style={{
-                        color: '#4A3B32',
-                        margin: 0,
-                        fontSize: '1.1rem',
-                        fontWeight: '700',
-                        width: '100%',
-                        textAlign: 'center'
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        width: '100%'
                     }}>
-                        심리 리포트 Ep.{selectedReport.episode}
-                    </h2>
+                        <h2 style={{
+                            color: '#4A3B32',
+                            margin: 0,
+                            fontSize: '1.1rem',
+                            fontWeight: '700',
+                            textAlign: 'center'
+                        }}>
+                            심리 리포트
+                        </h2>
+                        {selectedReport.date && (
+                            <div style={{
+                                fontSize: '0.85rem',
+                                color: '#8D6E63',
+                                marginTop: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}>
+                                <span>{new Date(selectedReport.date).toLocaleDateString('ko-KR')}</span>
+                                {selectedReport.episodeNumber && (
+                                    <span style={{
+                                        fontSize: '0.75rem',
+                                        fontFamily: 'Georgia, "Times New Roman", serif',
+                                        fontStyle: 'italic',
+                                        opacity: 0.7
+                                    }}>
+                                        ep.{selectedReport.episodeNumber}
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
                 
                 {/* 리포트 콘텐츠 */}
@@ -568,6 +846,48 @@ export const ReportDetailModal = ({
                         interpretation={selectedReport.interpretation} 
                         userProfile={userProfile} 
                     />
+                    
+                    {/* 삭제 버튼 */}
+                    <button
+                        onClick={handleDelete}
+                        style={{
+                            width: '100%',
+                            padding: '12px 20px',
+                            marginTop: '3px',
+                            background: 'transparent',
+                            color: '#D32F2F',
+                            border: '1px solid #EF5350',
+                            borderRadius: '12px',
+                            fontSize: '0.9rem',
+                            fontWeight: '500',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            opacity: 0.8
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#FFEBEE';
+                            e.currentTarget.style.color = '#C62828';
+                            e.currentTarget.style.borderColor = '#E57373';
+                            e.currentTarget.style.opacity = '1';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.color = '#D32F2F';
+                            e.currentTarget.style.borderColor = '#EF5350';
+                            e.currentTarget.style.opacity = '0.8';
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                        삭제하기
+                    </button>
                 </div>
             </div>
         </div>

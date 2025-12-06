@@ -158,6 +158,7 @@ export const api = {
   convertToNovel: (chatData) => apiCall('/chat/convert-to-novel', { method: 'POST', body: chatData }),
   startDebate: (data) => apiCall('/chat/debate', { method: 'POST', body: data, requiresAuth: true }),
   getDebateSummary: (data) => apiCall('/chat/debate/summary', { method: 'POST', body: data, requiresAuth: true }),
+  getBgmComment: (data) => apiCall('/chat/bgm-comment', { method: 'POST', body: data }),
 
   // 인증
   register: (userData) => apiCall('/auth/register', { method: 'POST', body: userData }),
@@ -190,6 +191,11 @@ export const api = {
   
   // 저장된 대사 목록
   getSavedQuotes: () => apiCall('/chat/quotes', { requiresAuth: true }),
+  updateQuote: (quoteId, quoteData) => apiCall(`/chat/quotes/${quoteId}`, { method: 'PUT', body: quoteData, requiresAuth: true }),
+  deleteQuote: (quoteId) => apiCall(`/chat/quotes/${quoteId}`, { method: 'DELETE', requiresAuth: true }),
+  
+  // 모든 채팅 히스토리 (수동 + 자동, 대사 제외)
+  getAllChatHistories: () => apiCall('/chat/histories/all', { requiresAuth: true }),
   
   // 교환일기
   createExchangeDiary: (data) => apiCall('/exchange-diary/create', { method: 'POST', body: data, requiresAuth: true }),

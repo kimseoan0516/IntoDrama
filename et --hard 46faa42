@@ -1,0 +1,33 @@
+[33mcec9635[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: reset: moving to origin/main
+[33mcec9635[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{1}: commit: Update commit status
+[33m46faa42[m HEAD@{2}: commit: Vercel 재배포 트리거
+[33m931d404[m[33m ([m[1;31mspace/main[m[33m)[m HEAD@{3}: Branch: renamed refs/heads/fresh_deploy to refs/heads/main
+[33m931d404[m[33m ([m[1;31mspace/main[m[33m)[m HEAD@{5}: commit (initial): Clean deploy without history
+[33mebf62bd[m HEAD@{6}: commit: Deploy: Clean push without favicon binary
+[33ma1d04b3[m HEAD@{7}: reset: moving to HEAD~2
+[33mbe6c0df[m HEAD@{8}: commit: Setup Git LFS for ico files
+[33m700aba8[m HEAD@{9}: commit: 수정
+[33ma1d04b3[m HEAD@{10}: reset: moving to origin/main
+[33mcf9d407[m HEAD@{11}: reset: moving to HEAD~1
+[33m9ce75ff[m HEAD@{12}: commit: Move files to root and fix LFS
+[33mcf9d407[m HEAD@{13}: reset: moving to HEAD~1
+[33ma1765ce[m HEAD@{14}: reset: moving to HEAD~1
+[33ma1d04b3[m HEAD@{15}: commit: 수정
+[33ma1765ce[m HEAD@{16}: commit: 수정
+[33mcf9d407[m HEAD@{17}: commit: 수정
+[33mb770aa3[m HEAD@{18}: commit (merge): Resolve merge conflict in favicon.ico
+[33mc426720[m HEAD@{19}: commit: 중복된 루트 파비콘 삭제
+[33m7919da2[m HEAD@{20}: commit: 수정
+[33ma03144d[m HEAD@{21}: commit: 수정
+[33m7d5cab7[m HEAD@{22}: commit: 수정
+[33m1a610c7[m HEAD@{23}: commit: 아이콘 수정
+[33m6fa5ad6[m HEAD@{24}: commit: 수정
+[33m33d54f9[m HEAD@{25}: commit: favicon수정
+[33mdfc2338[m HEAD@{26}: commit: 태그 수정
+[33mdd8d22b[m HEAD@{27}: commit: Change favicon from .ico to .svg for Hugging Face compatibility
+[33m2c586a1[m HEAD@{28}: filter-branch: rewrite
+[33mb386110[m HEAD@{29}: commit: Remove favicon.ico binary file
+[33m20e5250[m HEAD@{30}: reset: moving to HEAD
+[33m20e5250[m HEAD@{31}: commit: 수정
+[33m20789d2[m HEAD@{32}: Branch: renamed refs/heads/master to refs/heads/main
+[33m20789d2[m HEAD@{34}: commit (initial): First Commit

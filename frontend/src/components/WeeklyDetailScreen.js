@@ -137,14 +137,75 @@ const PhotocardModal = ({ quote, character, onClose }) => {
     // 드라마별 그라데이션 배경색
     const getGradientByDrama = (dramaTitle) => {
         const gradients = {
-            '나의 아저씨': 'linear-gradient(135deg, #6B4E3D 0%, #8D6E63 50%, #A1887F 100%)',
+            // 신비롭고 우아한 블루-그레이 (도깨비)
+            '도깨비': 'linear-gradient(135deg, #2C3E50 0%, #34495E 50%, #5D6D7E 100%)',
+            
+            // 따뜻한 밀리터리 브라운-오렌지 (태양의 후예)
+            '태양의 후예': 'linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%)',
+            
+            // 활기찬 청춘 코랄-오렌지 (거침없이 하이킥)
+            '거침없이 하이킥': 'linear-gradient(135deg, #E67E22 0%, #D35400 50%, #BA4A00 100%)',
+            
+            // 따뜻한 레트로 골드-베이지 (응답하라 1994)
+            '응답하라 1994': 'linear-gradient(135deg, #D4A574 0%, #C19A6B 50%, #9B7E52 100%)',
+            
+            // 고급스러운 네이비-다크블루 (상속자들)
+            '상속자들': 'linear-gradient(135deg, #1B1B2F 0%, #162447 50%, #1F4068 100%)',
+            
+            // 화려한 퍼플-핑크 (꽃보다 남자)
+            '꽃보다 남자': 'linear-gradient(135deg, #6A1B9A 0%, #8E24AA 50%, #AB47BC 100%)',
+            
+            // 역사적 다크 브라운 (미스터 션샤인)
             '미스터 션샤인': 'linear-gradient(135deg, #3E2723 0%, #5D4037 50%, #795548 100%)',
+            
+            // 청량한 스카이블루-민트 (선재 업고 튀어)
+            '선재 업고 튀어': 'linear-gradient(135deg, #00ACC1 0%, #26C6DA 50%, #4DD0E1 100%)',
+            
+            // 열정적인 다크 레드-마룬 (이태원 클라쓰)
+            '이태원 클라쓰': 'linear-gradient(135deg, #C0392B 0%, #922B21 50%, #7B241C 100%)',
+            
+            // 우아한 에메랄드 그린 (시크릿 가든)
+            '시크릿 가든': 'linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%)',
+            
+            // 자연스러운 포레스트 그린 (갯마을 차차차)
+            '갯마을 차차차': 'linear-gradient(135deg, #4A5D4A 0%, #5C6F5C 50%, #7A8A7A 100%)',
+            
+            // 차분한 슬레이트 그레이-블루 (미생)
+            '미생': 'linear-gradient(135deg, #37474F 0%, #455A64 50%, #546E7A 100%)',
+            
+            // 따뜻하고 부드러운 갈색 (나의 아저씨)
+            '나의 아저씨': 'linear-gradient(135deg, #6B4E3D 0%, #8D6E63 50%, #A1887F 100%)',
+            
+            // 빈티지 세피아-브라운 (네 멋대로 해라)
+            '네 멋대로 해라': 'linear-gradient(135deg, #6D4C41 0%, #8D6E63 50%, #A1887F 100%)',
+            
+            // 생기 넘치는 핑크-로즈 (스물다섯 스물하나)
+            '스물다섯 스물하나': 'linear-gradient(135deg, #FF6B9D 0%, #C44569 50%, #8B3A62 100%)',
+            
+            // 따스한 올리브-베이지 (동백꽃 필 무렵)
+            '동백꽃 필 무렵': 'linear-gradient(135deg, #827717 0%, #9E9D24 50%, #AFB42B 100%)',
+            
+            // 깊이 있는 틸-그린 (괜찮아 사랑이야)
+            '괜찮아 사랑이야': 'linear-gradient(135deg, #00695C 0%, #00897B 50%, #26A69A 100%)',
+            
+            // 기본값
             '기본값': 'linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%)'
         };
         return gradients[dramaTitle] || gradients['기본값'];
     };
 
+    // 텍스트 길이에 따른 폰트 크기 계산
+    const calculateFontSize = (text) => {
+        const length = text.length;
+        if (length < 50) return '1.5rem';
+        if (length < 100) return '1.3rem';
+        if (length < 150) return '1.1rem';
+        if (length < 200) return '1rem';
+        return '0.9rem';
+    };
+
     const gradient = getGradientByDrama(character?.dramaTitle || '');
+    const fontSize = calculateFontSize(quote.text);
 
     return (
         <div className="modal-overlay" onClick={onClose} style={{
@@ -176,10 +237,9 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         height: '640px', // 9:16 비율
                         background: gradient,
                         borderRadius: '20px',
-                        padding: '40px 30px',
+                        padding: '50px 35px 35px 35px',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between',
                         position: 'relative',
                         overflow: 'hidden',
                         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
@@ -207,54 +267,63 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         filter: 'blur(40px)'
                     }}></div>
 
-                    {/* 상단 여백 */}
-                    <div style={{ flex: 1 }}></div>
-
                     {/* 명대사 텍스트 */}
                     <div style={{
-                        flex: 2,
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
+                        justifyContent: 'flex-start',
                         alignItems: 'center',
                         textAlign: 'center',
                         position: 'relative',
-                        zIndex: 1
+                        zIndex: 1,
+                        flex: 1,
+                        padding: '40px 10px 220px 10px',
+                        minHeight: 0,
+                        maxHeight: 'calc(100% - 220px)',
+                        overflow: 'hidden'
                     }}>
                         {/* 큰 따옴표 장식 */}
                         <div style={{
-                            fontSize: '4rem',
+                            fontSize: '3.5rem',
                             color: 'rgba(255, 255, 255, 0.2)',
                             fontFamily: 'Georgia, serif',
                             lineHeight: '1',
-                            marginBottom: '20px'
+                            marginBottom: '20px',
+                            fontWeight: '700',
+                            flexShrink: 0
                         }}>
-                            "
+                            ❝
                         </div>
                         
                         <div style={{
                             color: '#FFFFFF',
-                            fontSize: '1.5rem',
+                            fontSize: fontSize,
                             lineHeight: '1.6',
                             fontWeight: '500',
                             wordBreak: 'keep-all',
                             textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                            fontFamily: '"Noto Serif KR", "Nanum Myeongjo", serif'
+                            fontFamily: '"Noto Serif KR", "Nanum Myeongjo", serif',
+                            padding: '0',
+                            flexShrink: 0,
+                            width: '100%'
                         }}>
                             {quote.text}
                         </div>
                     </div>
 
-                    {/* 하단 정보 */}
+                    {/* 하단 정보 - 고정 위치 */}
                     <div style={{
-                        flex: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'flex-end',
                         alignItems: 'center',
                         gap: '12px',
-                        position: 'relative',
-                        zIndex: 1
+                        position: 'absolute',
+                        bottom: '60px',
+                        left: '35px',
+                        right: '35px',
+                        zIndex: 2,
+                        backgroundColor: 'transparent',
+                        pointerEvents: 'none'
                     }}>
                         {/* 캐릭터 이름 */}
                         <div style={{
@@ -290,10 +359,10 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                     style={{
                         width: '360px',
                         padding: '16px 24px',
-                        backgroundColor: saving ? '#D7CCC8' : '#8D6E63',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        borderRadius: '12px',
+                        backgroundColor: saving ? '#A1887F' : '#FFFFFF',
+                        color: saving ? '#FFFFFF' : '#4A3B32',
+                        border: saving ? 'none' : '2px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: '16px',
                         fontSize: '1rem',
                         fontWeight: '600',
                         cursor: saving ? 'not-allowed' : 'pointer',
@@ -302,18 +371,21 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '8px',
-                        boxShadow: saving ? 'none' : '0 4px 12px rgba(141, 110, 99, 0.3)'
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+                        backdropFilter: 'blur(10px)'
                     }}
                     onMouseEnter={(e) => {
                         if (!saving) {
-                            e.currentTarget.style.backgroundColor = '#6B4E3D';
+                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
                             e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.2)';
                         }
                     }}
                     onMouseLeave={(e) => {
                         if (!saving) {
-                            e.currentTarget.style.backgroundColor = '#8D6E63';
+                            e.currentTarget.style.backgroundColor = '#FFFFFF';
                             e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
                         }
                     }}
                 >
@@ -331,7 +403,11 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         </>
                     ) : (
                         <>
-                            <span>↓</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
                             <span>갤러리에 저장</span>
                         </>
                     )}
@@ -341,11 +417,9 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                 <button
                     onClick={onClose}
                     style={{
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: 'none',
                         border: 'none',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
+                        padding: '8px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -353,13 +427,13 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)';
+                        e.currentTarget.style.transform = 'scale(1.1)';
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                        e.currentTarget.style.transform = 'scale(1)';
                     }}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
@@ -375,6 +449,100 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
     const [selectedPhotocard, setSelectedPhotocard] = useState(null);
     const [selectedCharacterIndex, setSelectedCharacterIndex] = useState(0); // 중앙에 표시할 캐릭터 인덱스
     const [hoveredCharacterIndex, setHoveredCharacterIndex] = useState(null); // hover 중인 캐릭터 인덱스
+    const [editingQuote, setEditingQuote] = useState(null); // 편집 중인 명대사
+    const [editText, setEditText] = useState(''); // 편집 텍스트
+    const [deletingQuoteIndex, setDeletingQuoteIndex] = useState(null); // 삭제 중인 명대사 인덱스
+    
+    // 명대사 편집 핸들러
+    const handleEditQuote = (quote, index) => {
+        setEditingQuote({ ...quote, index });
+        setEditText(quote.text);
+    };
+    
+    // 명대사 수정 저장
+    const handleSaveEdit = async () => {
+        if (!editingQuote || !editText.trim()) return;
+        
+        try {
+            // 사용자가 저장한 명대사만 수정 가능
+            if (editingQuote.source === 'user' && editingQuote.id) {
+                await api.updateQuote(editingQuote.id, { text: editText.trim() });
+            }
+            
+            // 로컬 상태 업데이트
+            const updatedQuotes = [...detailData.top_quotes];
+            updatedQuotes[editingQuote.index] = {
+                ...updatedQuotes[editingQuote.index],
+                text: editText.trim()
+            };
+            
+            setDetailData({
+                ...detailData,
+                top_quotes: updatedQuotes
+            });
+            
+            setEditingQuote(null);
+            setEditText('');
+        } catch (error) {
+            console.error('명대사 수정 실패:', error);
+            alert('명대사 수정 중 오류가 발생했습니다.');
+        }
+    };
+    
+    // 명대사 삭제 핸들러
+    const handleDeleteQuote = async (quote, index) => {
+        if (!window.confirm('이 명대사를 삭제하시겠습니까? 삭제하면 AI가 다른 명대사로 자동으로 대체합니다.')) {
+            return;
+        }
+        
+        setDeletingQuoteIndex(index);
+        
+        try {
+            // 사용자가 저장한 명대사는 DB에서 삭제
+            if (quote.source === 'user' && quote.id) {
+                await api.deleteQuote(quote.id);
+            }
+            
+            // 주간 날짜 범위 계산
+            const weekStartDate = new Date(weekStart);
+            const weekEndDate = new Date(weekStartDate);
+            weekEndDate.setDate(weekEndDate.getDate() + 6);
+            weekEndDate.setHours(23, 59, 59, 999);
+            
+            // AI가 다른 명대사로 대체
+            let chatHistories = [];
+            try {
+                const allHistoriesData = await api.getAllChatHistories();
+                chatHistories = allHistoriesData.histories || allHistoriesData;
+            } catch (error) {
+                console.error('대화 로그 불러오기 실패:', error);
+            }
+            
+            // 현재 명대사 목록에서 삭제할 명대사 제외
+            const currentQuotes = detailData.top_quotes.filter((q, i) => i !== index);
+            const usedTexts = new Set(currentQuotes.map(q => q.text));
+            
+            // AI가 추천한 명대사 중에서 새로운 명대사 찾기
+            const aiQuotes = extractEmotionalQuotes(chatHistories, weekStartDate, weekEndDate);
+            const newQuote = aiQuotes.find(q => !usedTexts.has(q.text));
+            
+            // 새로운 명대사가 있으면 추가, 없으면 그냥 삭제
+            const updatedQuotes = [...currentQuotes];
+            if (newQuote && updatedQuotes.length < 3) {
+                updatedQuotes.push(newQuote);
+            }
+            
+            setDetailData({
+                ...detailData,
+                top_quotes: updatedQuotes
+            });
+        } catch (error) {
+            console.error('명대사 삭제 실패:', error);
+            alert('명대사 삭제 중 오류가 발생했습니다.');
+        } finally {
+            setDeletingQuoteIndex(null);
+        }
+    };
     
     // AI가 감정적인/인상적인 대사를 추출하는 함수
     const extractEmotionalQuotes = (chatHistories, weekStartDate, weekEndDate) => {
@@ -476,41 +644,90 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
             
             let score = 50; // 기본 중립 점수
             
-            // 긍정 키워드
+            // 강한 긍정 키워드 (더 높은 가중치)
+            const strongPositiveKeywords = [
+                '사랑', '행복', '기쁨', '설레', '두근', '사랑해', '좋아해', 
+                '완전', '최고', '너무좋아', '진짜좋아', '대박', '신나', '즐거워'
+            ];
+            
+            // 일반 긍정 키워드
             const positiveKeywords = [
-                '좋아', '사랑', '행복', '기쁨', '웃음', '미소', '설레', '떨려', '두근',
-                '고마워', '감사', '축하', '응원', '안심', '위로', '괜찮', '힘내', '잘될',
-                '믿어', '기대', '소중', '특별', '의미', '보고싶', '그리워', '사랑해'
+                '좋아', '웃음', '미소', '떨려', '고마워', '감사', '축하', '응원', 
+                '안심', '위로', '괜찮', '힘내', '잘될', '믿어', '기대', '소중', 
+                '특별', '의미', '보고싶', '그리워', '기쁨', '평화', '편안', '즐거',
+                '재밌', '재미있', '멋져', '좋네', '좋구나', '좋다', '예쁘'
             ];
             
-            // 부정 키워드
+            // 강한 부정 키워드 (더 높은 가중치)
+            const strongNegativeKeywords = [
+                '힘들어', '너무힘들', '정말힘들', '죽겠', '못하겠', '우울', '슬퍼',
+                '아파', '외로워', '괴로워', '고통', '불안', '두려워', '무서워',
+                '최악', '싫어', '미워', '화나', '짜증'
+            ];
+            
+            // 일반 부정 키워드
             const negativeKeywords = [
-                '슬퍼', '아파', '힘들', '외로워', '불안', '걱정', '두려워', '무서워',
-                '화나', '짜증', '답답', '서운', '실망', '후회', '아쉽', '미안',
-                '그만', '안돼', '싫어', '못해', '어려워', '힘들어'
+                '힘들', '걱정', '답답', '서운', '실망', '후회', '아쉽', '미안',
+                '그만', '안돼', '못해', '어려워', '피곤', '지쳐', '지친',
+                '슬픔', '외로움', '불안함', '부담', '스트레스', '힘듦'
             ];
             
-            // 긍정 키워드 체크
+            // 강한 긍정 키워드 체크 (가중치: 12점)
+            strongPositiveKeywords.forEach(keyword => {
+                if (text.includes(keyword)) {
+                    score += 12;
+                }
+            });
+            
+            // 일반 긍정 키워드 체크 (가중치: 8점)
             positiveKeywords.forEach(keyword => {
                 if (text.includes(keyword)) {
-                    score += 3;
+                    score += 8;
                 }
             });
             
-            // 부정 키워드 체크
+            // 강한 부정 키워드 체크 (가중치: -12점)
+            strongNegativeKeywords.forEach(keyword => {
+                if (text.includes(keyword)) {
+                    score -= 12;
+                }
+            });
+            
+            // 일반 부정 키워드 체크 (가중치: -8점)
             negativeKeywords.forEach(keyword => {
                 if (text.includes(keyword)) {
-                    score -= 3;
+                    score -= 8;
                 }
             });
             
-            // 감탄사나 강조 표현
-            if (/[!?]{2,}/.test(text)) score += 2;
-            if (/\.{3,}/.test(text)) score -= 1; // 말줄임표는 약간 부정적
+            // 긍정 감탄사나 강조 표현 (가중치: 5점)
+            if (/[!]{2,}/.test(text) && !strongNegativeKeywords.some(k => text.includes(k))) {
+                score += 5;
+            }
             
-            // 이모지 체크
-            if (/[😊😄😁😃😀😆😍🥰😘💕💖❤️💗]/g.test(text)) score += 5;
-            if (/[😢😭😔😞😟😕🙁☹️😣😖😫]/g.test(text)) score -= 5;
+            // 부정적 감탄사 (가중치: -5점)
+            if (/[?]{2,}/.test(text) || /\.{3,}/.test(text)) {
+                score -= 5;
+            }
+            
+            // 긍정 이모지 체크 (가중치: 10점)
+            const positiveEmojiCount = (text.match(/[😊😄😁😃😀😆😍🥰😘💕💖❤️💗🎉✨🌟😎🤗😌☺️🙂]/g) || []).length;
+            score += positiveEmojiCount * 10;
+            
+            // 부정 이모지 체크 (가중치: -10점)
+            const negativeEmojiCount = (text.match(/[😢😭😔😞😟😕🙁☹️😣😖😫😩😤😠😡💔]/g) || []).length;
+            score -= negativeEmojiCount * 10;
+            
+            // 복합 표현 보너스
+            // "너무 좋아", "정말 행복" 같은 강조 표현
+            if (/(너무|정말|진짜|완전|엄청).{0,3}(좋아|행복|기쁨|설레|사랑)/.test(text)) {
+                score += 8;
+            }
+            
+            // "너무 힘들", "정말 슬프" 같은 강조 표현
+            if (/(너무|정말|진짜|완전|엄청).{0,3}(힘들|슬퍼|아파|외로|우울)/.test(text)) {
+                score -= 8;
+            }
             
             // 점수 범위 제한 (0-100)
             return Math.max(0, Math.min(100, score));
@@ -615,20 +832,27 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                 // 해당 주의 저장된 대사 필터링
                 const weekSavedQuotes = savedQuotes
                     .filter(quote => {
-                        if (!quote.date) return false;
-                        const quoteDate = new Date(quote.date);
-                        return quoteDate >= weekStartDate && quoteDate <= weekEndDate;
+                        // created_at 또는 updated_at을 date로 사용
+                        const quoteDate = quote.created_at || quote.updated_at;
+                        if (!quoteDate) return false;
+                        const date = new Date(quoteDate);
+                        return date >= weekStartDate && date <= weekEndDate;
                     })
                     .map(quote => ({
-                        ...quote,
+                        id: quote.id,
+                        text: quote.message?.text || quote.text || '',
+                        character_id: Array.isArray(quote.character_ids) ? quote.character_ids[0] : quote.character_ids,
+                        date: quote.created_at || quote.updated_at,
                         source: 'user' // 사용자 저장
-                    }));
+                    }))
+                    .filter(quote => quote.text); // 텍스트가 있는 것만
                 
                 // 2. AI Pick: 해당 주의 대화 로그 가져오기
                 let aiQuotes = [];
                 let chatHistories = [];
                 try {
-                    chatHistories = await api.getChatHistories();
+                    const allHistoriesData = await api.getAllChatHistories();
+                    chatHistories = allHistoriesData.histories || allHistoriesData;
                     aiQuotes = extractEmotionalQuotes(chatHistories, weekStartDate, weekEndDate);
                 } catch (error) {
                     console.error('대화 로그 불러오기 실패:', error);
@@ -679,10 +903,19 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                         ? "이번 주는 지금까지 따뜻하고 진솔한 대화가 있었어요. 캐릭터들과 깊이 있는 이야기를 나누며 서로를 더 잘 이해하게 되고 있습니다. 이번 주가 끝나면 더 자세한 분석이 제공됩니다."
                         : "이번 주는 따뜻하고 진솔한 대화가 많았어요. 캐릭터들과 깊이 있는 이야기를 나누며 서로를 더 잘 이해하게 되었습니다.";
                 
+                // 백엔드에서 감정 타임라인 가져오기 (하루 전체 채팅방 통합)
+                let backendEmotionTimeline = null;
+                try {
+                    const weekDetailData = await api.getWeekDetail(weekStart);
+                    backendEmotionTimeline = weekDetailData.emotion_timeline || null;
+                } catch (error) {
+                    console.error('주간 상세 통계 불러오기 실패:', error);
+                }
+                
                 const tempData = {
                     ai_summary: weekData?.ai_summary || defaultSummary,
                     character_ratio: weekData?.top_characters || [],
-                    emotion_timeline: generateEmotionTimeline(weekStart, chatHistories),
+                    emotion_timeline: backendEmotionTimeline || generateEmotionTimeline(weekStart, chatHistories), // 백엔드 데이터 우선, 없으면 프론트엔드 계산
                     top_quotes: finalQuotes
                 };
                 
@@ -782,7 +1015,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                             left: 0,
                             right: 0,
                             textAlign: 'center',
-                            paddingLeft: '48px',
                             zIndex: 1
                         }}>
                             {formatWeekTitle(weekStart)}
@@ -1035,18 +1267,7 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                 fontWeight: '700',
                                 textAlign: 'center'
                             }}>
-                                {(() => {
-                                    if (!weekStart) return '캐릭터 대화 비율';
-                                    const start = new Date(weekStart);
-                                    const end = new Date(start);
-                                    end.setDate(end.getDate() + 6);
-                                    const today = new Date();
-                                    today.setHours(0, 0, 0, 0);
-                                    start.setHours(0, 0, 0, 0);
-                                    end.setHours(23, 59, 59, 999);
-                                    const isCurrentWeek = today >= start && today <= end;
-                                    return '캐릭터 대화 비율';
-                                })()}
+                                캐릭터 대화 비율
                             </h3>
                             <div style={{ position: 'relative', width: '100%', height: '200px' }}>
                                 <ResponsiveContainer width="100%" height={200}>
@@ -1226,18 +1447,7 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                 fontWeight: '700',
                                 textAlign: 'center'
                             }}>
-                                {(() => {
-                                    if (!weekStart) return '감정 변화';
-                                    const start = new Date(weekStart);
-                                    const end = new Date(start);
-                                    end.setDate(end.getDate() + 6);
-                                    const today = new Date();
-                                    today.setHours(0, 0, 0, 0);
-                                    start.setHours(0, 0, 0, 0);
-                                    end.setHours(23, 59, 59, 999);
-                                    const isCurrentWeek = today >= start && today <= end;
-                                    return '감정 변화';
-                                })()}
+                                감정 변화
                             </h3>
                             <ResponsiveContainer width="100%" height={200}>
                                 <AreaChart 
@@ -1364,8 +1574,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                 {detailData.top_quotes.slice(0, 3).map((quote, idx) => {
                                     const charInfo = characterData[quote.character_id];
                                     const rankEmojis = ['🥇', '🥈', '🥉'];
-                                    const isUserPick = quote.source === 'user';
-                                    const sourceIcon = isUserPick ? '🔖' : '✨';
                                     
                                     return (
                                         <div 
@@ -1374,12 +1582,14 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                                 background: '#FFFFFF',
                                                 borderRadius: '12px',
                                                 padding: '16px',
+                                                paddingBottom: '52px',
                                                 border: '1.5px solid #E8E0DB',
                                                 boxShadow: '0 2px 6px rgba(0, 0, 0, 0.06)',
                                                 display: 'flex',
                                                 gap: '12px',
                                                 alignItems: 'flex-start',
-                                                position: 'relative'
+                                                position: 'relative',
+                                                minHeight: 'fit-content'
                                             }}
                                         >
                                             <div style={{
@@ -1393,12 +1603,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                                     fontSize: '1.5rem'
                                                 }}>
                                                     {rankEmojis[idx]}
-                                                </div>
-                                                <div style={{
-                                                    fontSize: '1rem',
-                                                    opacity: 0.8
-                                                }}>
-                                                    {sourceIcon}
                                                 </div>
                                             </div>
                                             <div style={{
@@ -1432,7 +1636,8 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                                     color: '#3E2723',
                                                     fontSize: '0.9rem',
                                                     lineHeight: '1.5',
-                                                    wordBreak: 'break-word'
+                                                    wordBreak: 'break-word',
+                                                    marginBottom: '8px'
                                                 }}>
                                                     "{quote.text}"
                                                 </div>
@@ -1440,7 +1645,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                                     <div style={{
                                                         color: '#8D6E63',
                                                         fontSize: '0.75rem',
-                                                        marginTop: '6px',
                                                         opacity: 0.7
                                                     }}>
                                                         {new Date(quote.date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
@@ -1448,9 +1652,96 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                                 )}
                                             </div>
                                             
+                                            {/* 편집/삭제 버튼 (우측 상단) */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '12px',
+                                                right: '12px',
+                                                display: 'flex',
+                                                gap: '6px'
+                                            }}>
+                                                {/* 편집 버튼 */}
+                                                <button
+                                                    onClick={() => handleEditQuote(quote, idx)}
+                                                    disabled={deletingQuoteIndex === idx}
+                                                    style={{
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        padding: '6px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        cursor: deletingQuoteIndex === idx ? 'not-allowed' : 'pointer',
+                                                        transition: 'all 0.2s ease',
+                                                        opacity: deletingQuoteIndex === idx ? 0.5 : 1
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        if (deletingQuoteIndex !== idx) {
+                                                            e.currentTarget.style.opacity = '0.7';
+                                                        }
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        if (deletingQuoteIndex !== idx) {
+                                                            e.currentTarget.style.opacity = '1';
+                                                        }
+                                                    }}
+                                                    title="명대사 수정"
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8D6E63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                    </svg>
+                                                </button>
+                                                
+                                                {/* 삭제 버튼 */}
+                                                <button
+                                                    onClick={() => handleDeleteQuote(quote, idx)}
+                                                    disabled={deletingQuoteIndex === idx}
+                                                    style={{
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        padding: '6px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        cursor: deletingQuoteIndex === idx ? 'not-allowed' : 'pointer',
+                                                        transition: 'all 0.2s ease',
+                                                        opacity: deletingQuoteIndex === idx ? 0.5 : 1
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        if (deletingQuoteIndex !== idx) {
+                                                            e.currentTarget.style.opacity = '0.7';
+                                                        }
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        if (deletingQuoteIndex !== idx) {
+                                                            e.currentTarget.style.opacity = '1';
+                                                        }
+                                                    }}
+                                                    title="명대사 삭제"
+                                                >
+                                                    {deletingQuoteIndex === idx ? (
+                                                        <div style={{
+                                                            width: '14px',
+                                                            height: '14px',
+                                                            border: '2px solid rgba(244, 67, 54, 0.3)',
+                                                            borderTop: '2px solid #F44336',
+                                                            borderRadius: '50%',
+                                                            animation: 'spin 0.8s linear infinite'
+                                                        }}></div>
+                                                    ) : (
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F44336" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <path d="M3 6h18"></path>
+                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                        </svg>
+                                                    )}
+                                                </button>
+                                            </div>
+                                            
                                             {/* 포토카드 버튼 */}
                                             <button
                                                 onClick={() => setSelectedPhotocard({ quote, character: charInfo })}
+                                                disabled={deletingQuoteIndex === idx}
                                                 style={{
                                                     position: 'absolute',
                                                     bottom: '12px',
@@ -1462,23 +1753,31 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     gap: '4px',
-                                                    cursor: 'pointer',
+                                                    cursor: deletingQuoteIndex === idx ? 'not-allowed' : 'pointer',
                                                     transition: 'all 0.2s ease',
-                                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                                    opacity: deletingQuoteIndex === idx ? 0.5 : 1
                                                 }}
                                                 onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = '#6B4E3D';
-                                                    e.currentTarget.style.transform = 'translateY(-1px)';
-                                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                                                    if (deletingQuoteIndex !== idx) {
+                                                        e.currentTarget.style.backgroundColor = '#6B4E3D';
+                                                        e.currentTarget.style.transform = 'translateY(-1px)';
+                                                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                                                    }
                                                 }}
                                                 onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = '#8D6E63';
-                                                    e.currentTarget.style.transform = 'translateY(0)';
-                                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                                    if (deletingQuoteIndex !== idx) {
+                                                        e.currentTarget.style.backgroundColor = '#8D6E63';
+                                                        e.currentTarget.style.transform = 'translateY(0)';
+                                                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                                    }
                                                 }}
                                                 title="포토카드 만들기"
                                             >
-                                                <span style={{ fontSize: '0.9rem' }}>📷</span>
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M21 19V8a2 2 0 0 0-2-2h-4l-2-3H9L7 6H3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2z"></path>
+                                                    <circle cx="11.0" cy="13" r="4"></circle>
+                                                </svg>
                                                 <span style={{
                                                     color: '#FFFFFF',
                                                     fontSize: '0.7rem',
@@ -1525,6 +1824,118 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                     character={selectedPhotocard.character}
                     onClose={() => setSelectedPhotocard(null)}
                 />
+            )}
+            
+            {/* 명대사 편집 모달 */}
+            {editingQuote && (
+                <div className="modal-overlay" onClick={() => setEditingQuote(null)} style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 10001,
+                    padding: '20px'
+                }}>
+                    <div onClick={(e) => e.stopPropagation()} style={{
+                        background: '#FFFFFF',
+                        borderRadius: '16px',
+                        padding: '24px',
+                        maxWidth: '400px',
+                        width: '100%',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+                    }}>
+                        <h3 style={{
+                            color: '#5D4037',
+                            margin: '0 0 16px 0',
+                            fontSize: '1.1rem',
+                            fontWeight: '700'
+                        }}>
+                            명대사 수정
+                        </h3>
+                        <textarea
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            placeholder="명대사를 입력하세요"
+                            style={{
+                                width: '100%',
+                                minHeight: '120px',
+                                padding: '12px',
+                                border: '1.5px solid #E8E0DB',
+                                borderRadius: '8px',
+                                fontSize: '0.9rem',
+                                lineHeight: '1.5',
+                                color: '#3E2723',
+                                fontFamily: 'inherit',
+                                resize: 'vertical',
+                                marginBottom: '16px'
+                            }}
+                            autoFocus
+                        />
+                        <div style={{
+                            display: 'flex',
+                            gap: '8px',
+                            justifyContent: 'flex-end'
+                        }}>
+                            <button
+                                onClick={() => {
+                                    setEditingQuote(null);
+                                    setEditText('');
+                                }}
+                                style={{
+                                    padding: '10px 20px',
+                                    background: '#F5F5F5',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600',
+                                    color: '#5D4037',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = '#E8E0DB';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = '#F5F5F5';
+                                }}
+                            >
+                                취소
+                            </button>
+                            <button
+                                onClick={handleSaveEdit}
+                                disabled={!editText.trim()}
+                                style={{
+                                    padding: '10px 20px',
+                                    background: editText.trim() ? '#8D6E63' : '#D7CCC8',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600',
+                                    color: '#FFFFFF',
+                                    cursor: editText.trim() ? 'pointer' : 'not-allowed',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (editText.trim()) {
+                                        e.currentTarget.style.background = '#6B4E3D';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (editText.trim()) {
+                                        e.currentTarget.style.background = '#8D6E63';
+                                    }
+                                }}
+                            >
+                                저장
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

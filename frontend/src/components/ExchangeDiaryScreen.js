@@ -11,6 +11,7 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
     const [openMenuId, setOpenMenuId] = useState(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
     const [fadingOutId, setFadingOutId] = useState(null);
+    const [hasWaitingReply, setHasWaitingReply] = useState(false); // 답장 대기 중인 편지가 있는지
     
     // 사용자 정보 가져오기
     const user = auth.getUser();
@@ -37,6 +38,12 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
                     return dateB - dateA;
                 });
                 setReplies(repliesOnly);
+                
+                // 답장 대기 중인 편지가 있는지 확인
+                const waitingForReply = allDiaries.some(diary => 
+                    diary && diary.reply_received === false && diary.request_reply === true
+                );
+                setHasWaitingReply(waitingForReply);
             } catch (error) {
                 console.error('답장 목록 불러오기 실패:', error);
                 setReplies([]);
@@ -47,6 +54,39 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
         
         fetchReplies();
     }, [token]);
+    
+    // 답장 대기 중이면 주기적으로 확인 (5초마다)
+    useEffect(() => {
+        if (!hasWaitingReply || !token) return;
+        
+        const intervalId = setInterval(async () => {
+            try {
+                const data = await api.getExchangeDiaryList();
+                const allDiaries = data.diaries || [];
+                const repliesOnly = allDiaries.filter(diary => 
+                    diary && diary.reply_received === true
+                );
+                repliesOnly.sort((a, b) => {
+                    const dateA = new Date(a.reply_created_at || a.updated_at);
+                    const dateB = new Date(b.reply_created_at || b.updated_at);
+                    return dateB - dateA;
+                });
+                setReplies(repliesOnly);
+                
+                // 답장 대기 중인 편지가 있는지 확인
+                const waitingForReply = allDiaries.some(diary => 
+                    diary && diary.reply_received === false && diary.request_reply === true
+                );
+                setHasWaitingReply(waitingForReply);
+            } catch (error) {
+                console.error('답장 목록 새로고침 실패:', error);
+            }
+        }, 5000); // 5초마다 확인
+        
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [hasWaitingReply, token]);
 
     // 메뉴 외부 클릭 시 닫기
     useEffect(() => {
@@ -114,6 +154,35 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
 
     return (
         <div className="modal-overlay">
+            {/* 답장 작성 중 로딩 화면 (소설 형식 저장할 때처럼) */}
+            {hasWaitingReply && (
+                <div style={{
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                    color: 'white',
+                    padding: '12px 20px',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500'
+                }}>
+                    <div style={{
+                        width: '16px',
+                        height: '16px',
+                        border: '2px solid rgba(255, 255, 255, 0.3)',
+                        borderTop: '2px solid white',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite'
+                    }}></div>
+                    답장 작성 중...
+                </div>
+            )}
             <div style={{
                 backgroundColor: '#FBF9F7',
                 borderRadius: '20px',
@@ -125,7 +194,8 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
                 overflow: 'hidden',
                 maxWidth: '380px',
                 width: '90%',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                position: 'relative'
             }}>
                 {/* 헤더 */}
                 <div style={{
@@ -691,6 +761,15 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
             
             {/* CSS 애니메이션 */}
             <style>{`
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+                
                 @keyframes dropdownFadeIn {
                     from {
                         opacity: 0;
@@ -759,7 +838,7 @@ export const WriteDiaryScreen = ({ onBack, token, characterId, onSuccess }) => {
             if (!token) return;
             try {
                 const data = await api.getTodayTopic();
-                if (data.has_topic) {
+                if (data && data.topic) {
                     setTodayTopic(data);
                 }
             } catch (error) {
@@ -963,62 +1042,92 @@ export const WriteDiaryScreen = ({ onBack, token, characterId, onSuccess }) => {
                 </div>
 
                 {/* 오늘의 주제 배지 */}
-                {todayTopic && (
+                {todayTopic && todayTopic.topic && (
                     <div style={{
                         flexShrink: 0,
-                        padding: '12px 20px',
-                        background: 'linear-gradient(135deg, #FFF8F0 0%, #FFFBF5 100%)',
+                        padding: '16px 20px',
+                        background: 'linear-gradient(135deg, #FFFFFF 0%, #FBF9F7 100%)',
                         borderBottom: '1px solid #E8E0DB'
                     }}>
                         <div style={{
                             display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            padding: '12px 16px',
+                            alignItems: 'flex-start',
+                            gap: '12px',
+                            padding: '14px 18px',
                             background: '#FFFFFF',
-                            borderRadius: '12px',
-                            border: '1.5px solid #D7C4B8',
-                            boxShadow: '0 2px 8px rgba(141, 110, 99, 0.1)'
+                            borderRadius: '14px',
+                            border: '1px solid #E8E0DB',
+                            boxShadow: '0 2px 8px rgba(74, 59, 50, 0.06)'
                         }}>
                             <div style={{
-                                fontSize: '1.2rem',
-                                flexShrink: 0
-                            }}>✨</div>
-                            <div style={{ flex: 1 }}>
+                                width: '32px',
+                                height: '32px',
+                                borderRadius: '8px',
+                                background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                                boxShadow: '0 2px 6px rgba(141, 110, 99, 0.2)'
+                            }}>
+                                <span style={{ fontSize: '1rem' }}>📝</span>
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{
                                     fontSize: '0.75rem',
                                     color: '#8D6E63',
-                                    marginBottom: '4px',
-                                    fontWeight: '600'
+                                    marginBottom: '8px',
+                                    fontWeight: '600',
+                                    letterSpacing: '0.3px',
+                                    textTransform: 'uppercase'
                                 }}>
-                                    {todayTopic.character_name}이(가) 기다리는 이야기
+                                    오늘의 주제미션
                                 </div>
                                 <div style={{
                                     fontSize: '0.95rem',
                                     color: '#4A3B32',
-                                    fontWeight: '700'
+                                    fontWeight: '600',
+                                    lineHeight: '1.5',
+                                    letterSpacing: '-0.01em',
+                                    marginBottom: '8px'
                                 }}>
                                     {todayTopic.topic}
                                 </div>
+                                {todayTopic.has_topic && todayTopic.character_name && (
+                                    <div style={{
+                                        fontSize: '0.75rem',
+                                        color: '#A1887F',
+                                        fontWeight: '500',
+                                        marginBottom: '8px'
+                                    }}>
+                                        {todayTopic.character_name}이(가) 기다리는 이야기
+                                    </div>
+                                )}
+                                <label style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    cursor: 'pointer',
+                                    gap: '6px',
+                                    marginTop: '4px'
+                                }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={topicUsed}
+                                        onChange={(e) => setTopicUsed(e.target.checked)}
+                                        style={{
+                                            width: '16px',
+                                            height: '16px',
+                                            cursor: 'pointer',
+                                            accentColor: '#8D6E63'
+                                        }}
+                                    />
+                                    <span style={{
+                                        fontSize: '0.8rem',
+                                        color: '#8D6E63',
+                                        fontWeight: '500'
+                                    }}>이 주제로 작성하기</span>
+                                </label>
                             </div>
-                            <label style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                cursor: 'pointer',
-                                flexShrink: 0
-                            }}>
-                                <input
-                                    type="checkbox"
-                                    checked={topicUsed}
-                                    onChange={(e) => setTopicUsed(e.target.checked)}
-                                    style={{
-                                        width: '18px',
-                                        height: '18px',
-                                        cursor: 'pointer',
-                                        accentColor: '#8D6E63'
-                                    }}
-                                />
-                            </label>
                         </div>
                     </div>
                 )}
@@ -1286,6 +1395,10 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
     const [whisperMessage, setWhisperMessage] = useState('');
     const [nextTopic, setNextTopic] = useState('');
     const [loadingMessage, setLoadingMessage] = useState('');
+    
+    // 사용자 정보 가져오기
+    const user = auth.getUser();
+    const userNickname = user?.nickname || user?.name || '사용자';
 
     useEffect(() => {
         // 답장 로딩 메시지 랜덤 선택
@@ -1335,35 +1448,75 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
     const handleReaction = async () => {
         if (reacted) return;
         
-        try {
-            const response = await api.reactToReply(diaryId, 'heart');
-            setReacted(true);
+        // 버튼 상태를 즉시 변경하여 즉각적인 피드백 제공
+        setReacted(true);
+        
+        // 랜덤 whisper_message 목록
+        const whisperMessages = [
+            "고마워, 네 마음이 전해졌어.",
+            "너의 이야기가 내 마음에 와닿았어.",
+            "항상 네 편이야.",
+            "네가 있어서 행복해.",
+            "오늘도 고생 많았어.",
+            "내일도 함께해줘.",
+            "네 마음을 잘 알고 있어.",
+            "항상 응원하고 있을게.",
+            "고마워, 정말 고마워.",
+            "너는 소중한 사람이야.",
+            "네 이야기가 내게 힘이 돼.",
+            "항상 여기 있을게.",
+            "고마워, 정말 고마워해.",
+            "네가 있어서 따뜻해.",
+            "오늘도 수고했어."
+        ];
+        
+        // 랜덤으로 whisper_message 선택하여 바로 표시
+        const randomWhisper = whisperMessages[Math.floor(Math.random() * whisperMessages.length)];
+        setWhisperMessage(randomWhisper);
+        setShowWhisper(true);
+        
+        // 1.5초 후 whisper 사라지기
+        setTimeout(() => {
+            setShowWhisper(false);
+        }, 1500);
+        
+        // 내일 주제 추천 목록
+        const nextTopics = [
+            "오늘 하루 중 가장 행복했던 순간",
+            "내일 하고 싶은 일 한 가지",
+            "요즘 가장 많이 생각하는 것",
+            "오늘 느꼈던 감정에 대해",
+            "내일의 나에게 전하고 싶은 말",
+            "요즘 가장 듣고 싶은 말",
+            "오늘 하루를 한 단어로 표현한다면",
+            "내일의 나에게 바라는 것",
+            "요즘 가장 고민되는 것",
+            "오늘 하루 중 가장 아쉬웠던 순간",
+            "내일 새롭게 시작하고 싶은 것",
+            "요즘 가장 감사한 것",
+            "오늘 하루를 다시 살 수 있다면",
+            "내일의 나에게 응원의 말",
+            "요즘 가장 기대되는 것"
+        ];
+        
+        // whisper_message 표시 후 2초 후에 내일 주제 추천 표시
+        setTimeout(() => {
+            const randomTopic = nextTopics[Math.floor(Math.random() * nextTopics.length)];
+            setNextTopic(randomTopic);
+            setShowTopic(true);
             
-            // whisper_message와 next_topic 받아오기
-            if (response.whisper_message) {
-                setWhisperMessage(response.whisper_message);
-                setShowWhisper(true);
-                
-                // 0.8초 후 whisper 사라지기 시작
-                setTimeout(() => {
-                    setShowWhisper(false);
-                }, 800);
-                
-                // next_topic이 있으면 1초 후 표시
-                if (response.next_topic) {
-                    setNextTopic(response.next_topic);
-                    setTimeout(() => {
-                        setShowTopic(true);
-                        
-                        // 1.5초 후 topic 사라지기 시작
-                        setTimeout(() => {
-                            setShowTopic(false);
-                        }, 1500);
-                    }, 1000);
-                }
-            }
+            // 2.5초 후 topic 사라지기
+            setTimeout(() => {
+                setShowTopic(false);
+            }, 2500);
+        }, 2000);
+        
+        // API 호출은 백그라운드에서 처리 (에러가 나도 UI에는 영향 없음)
+        try {
+            await api.reactToReply(diaryId, 'heart');
         } catch (error) {
             console.error('리액션 전송 실패:', error);
+            // 에러가 나도 이미 UI는 표시되었으므로 버튼 상태는 유지
         }
     };
 
@@ -1415,10 +1568,42 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
 
     const charInfo = diary ? characterData[diary.character_id] : null;
     const diaryTitle = diary && diary.title ? `[ ${diary.title} ]` : null;
-    const sanitizedReplyContent = reply ? sanitizeCharacterText(reply.content) : '';
+    const sanitizedReplyContent = reply ? sanitizeCharacterText(reply.content, userNickname) : '';
+    
+    // 답장이 오는 중인지 확인 (일기가 있고, 답장 요청했지만 아직 답장이 없을 때)
+    const isWaitingForReply = diary && !reply && diary.request_reply && !diary.reply_received;
 
     return (
         <div className="modal-overlay">
+            {/* 답장 오는 중 로딩 화면 (소설 형식 저장할 때처럼) */}
+            {isWaitingForReply && (
+                <div style={{
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                    color: 'white',
+                    padding: '12px 20px',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500'
+                }}>
+                    <div style={{
+                        width: '16px',
+                        height: '16px',
+                        border: '2px solid rgba(255, 255, 255, 0.3)',
+                        borderTop: '2px solid white',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite'
+                    }}></div>
+                    {loadingMessage || '답장 작성 중...'}
+                </div>
+            )}
             <div style={{
                 backgroundColor: '#FEFCF9',
                 borderRadius: '20px',
@@ -1680,42 +1865,64 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
                         borderTop: '2px solid #E8E0DB',
                         background: '#FFFFFF',
                         borderRadius: '0 0 20px 20px',
-                        position: 'relative'
+                        position: 'relative',
+                        zIndex: 10
                     }}>
                         <button
                             onClick={handleReaction}
                             disabled={reacted}
                             style={{
                                 width: '100%',
-                                padding: '12px 20px',
+                                padding: '16px 20px',
                                 backgroundColor: reacted ? '#D7CCC8' : '#8D6E63',
                                 color: '#FFFFFF',
                                 border: 'none',
-                                borderRadius: '12px',
-                                fontSize: '0.95rem',
-                                fontWeight: '600',
+                                borderRadius: '14px',
+                                fontSize: '1rem',
+                                fontWeight: '700',
                                 cursor: reacted ? 'not-allowed' : 'pointer',
                                 transition: 'all 0.2s ease',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: '8px'
+                                gap: '10px',
+                                boxShadow: reacted ? 'none' : '0 4px 12px rgba(141, 110, 99, 0.25)',
+                                position: 'relative',
+                                zIndex: 1000,
+                                userSelect: 'none',
+                                WebkitTapHighlightColor: 'transparent'
                             }}
                             onMouseEnter={(e) => {
                                 if (!reacted) {
                                     e.currentTarget.style.backgroundColor = '#6B4E3D';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(141, 110, 99, 0.35)';
                                 }
                             }}
                             onMouseLeave={(e) => {
                                 if (!reacted) {
                                     e.currentTarget.style.backgroundColor = '#8D6E63';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(141, 110, 99, 0.25)';
+                                }
+                            }}
+                            onMouseDown={(e) => {
+                                if (!reacted) {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(141, 110, 99, 0.2)';
+                                }
+                            }}
+                            onMouseUp={(e) => {
+                                if (!reacted) {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(141, 110, 99, 0.35)';
                                 }
                             }}
                         >
-                            <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>
+                            <span style={{ fontSize: '1.5rem', lineHeight: 1, display: 'flex', alignItems: 'center' }}>
                                 {reacted ? '❤️' : '🤍'}
                             </span>
-                            <span style={{ fontWeight: '600', letterSpacing: '0.3px' }}>
+                            <span style={{ fontWeight: '700', letterSpacing: '0.3px' }}>
                                 {reacted ? '마음 잘 받았어요' : '잘 받았어요'}
                             </span>
                         </button>
@@ -1726,22 +1933,34 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
                 {showWhisper && (
                     <div style={{
                         position: 'fixed',
-                        bottom: '180px',
+                        bottom: showTopic ? '280px' : '200px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        zIndex: 9999,
+                        zIndex: 10000,
                         pointerEvents: 'none',
-                        animation: showWhisper ? 'whisperFadeIn 0.8s ease-out forwards' : 'whisperFadeOut 0.5s ease-out forwards'
+                        animation: 'whisperFadeIn 1.5s ease-out forwards',
+                        maxWidth: '85%',
+                        padding: '0 20px'
                     }}>
                         <div style={{
-                            color: '#5D4037',
-                            fontSize: '0.9rem',
-                            fontWeight: '500',
-                            textAlign: 'center',
-                            opacity: 0.7,
-                            letterSpacing: '0.3px'
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(251, 249, 247, 0.98) 100%)',
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)',
+                            padding: '16px 24px',
+                            borderRadius: '16px',
+                            boxShadow: '0 8px 32px rgba(74, 59, 50, 0.25), 0 4px 16px rgba(141, 110, 99, 0.15)',
+                            border: '1.5px solid rgba(232, 224, 219, 0.8)',
+                            textAlign: 'center'
                         }}>
-                            {whisperMessage}
+                            <div style={{
+                                color: '#4A3B32',
+                                fontSize: '1rem',
+                                fontWeight: '600',
+                                letterSpacing: '0.3px',
+                                lineHeight: '1.5'
+                            }}>
+                                {whisperMessage}
+                            </div>
                         </div>
                     </div>
                 )}
@@ -1750,43 +1969,46 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
                 {showTopic && nextTopic && (
                     <div style={{
                         position: 'fixed',
-                        bottom: '140px',
+                        bottom: '200px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        zIndex: 9999,
+                        zIndex: 10000,
                         pointerEvents: 'none',
-                        animation: showTopic ? 'topicFadeIn 1.5s ease-out forwards' : 'topicFadeOut 0.5s ease-out forwards',
+                        animation: 'topicFadeIn 2.5s ease-out forwards',
                         maxWidth: '85%',
-                        textAlign: 'center'
+                        padding: '0 20px'
                     }}>
                         <div style={{
-                            color: '#6B5B4F',
-                            fontSize: '0.88rem',
-                            fontWeight: '400',
-                            marginBottom: '8px',
-                            opacity: 0.65,
-                            letterSpacing: '0.2px'
+                            background: 'rgba(255, 255, 255, 0.98)',
+                            backdropFilter: 'blur(24px)',
+                            WebkitBackdropFilter: 'blur(24px)',
+                            padding: '24px 32px',
+                            borderRadius: '20px',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
+                            border: '1px solid rgba(232, 224, 219, 0.4)',
+                            textAlign: 'center'
                         }}>
-                            그리고 내일은…
-                        </div>
-                        <div style={{
-                            color: '#4A3B32',
-                            fontSize: '1rem',
-                            fontWeight: '700',
-                            opacity: 0.8,
-                            letterSpacing: '0.3px'
-                        }}>
-                            '{nextTopic}'
-                        </div>
-                        <div style={{
-                            color: '#6B5B4F',
-                            fontSize: '0.88rem',
-                            fontWeight: '400',
-                            marginTop: '6px',
-                            opacity: 0.65,
-                            letterSpacing: '0.2px'
-                        }}>
-                            에 대해 써줄래?
+                            <div style={{
+                                color: '#8D6E63',
+                                fontSize: '0.8rem',
+                                fontWeight: '500',
+                                marginBottom: '12px',
+                                letterSpacing: '0.5px',
+                                textTransform: 'uppercase',
+                                opacity: 0.7
+                            }}>
+                                내일의 주제
+                            </div>
+                            <div style={{
+                                color: '#3E2723',
+                                fontSize: '1.05rem',
+                                fontWeight: '600',
+                                letterSpacing: '-0.02em',
+                                lineHeight: '1.6',
+                                marginBottom: '4px'
+                            }}>
+                                {nextTopic}
+                            </div>
                         </div>
                     </div>
                 )}
@@ -1797,14 +2019,19 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
                 @keyframes whisperFadeIn {
                     0% {
                         opacity: 0;
-                        transform: translateX(-50%) translateY(3px);
+                        transform: translateX(-50%) translateY(10px) scale(0.95);
                     }
-                    50% {
-                        opacity: 0.7;
+                    15% {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0) scale(1);
+                    }
+                    85% {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0) scale(1);
                     }
                     100% {
                         opacity: 0;
-                        transform: translateX(-50%) translateY(-1px);
+                        transform: translateX(-50%) translateY(-5px) scale(0.95);
                     }
                 }
                 
@@ -1821,19 +2048,19 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
                 @keyframes topicFadeIn {
                     0% {
                         opacity: 0;
-                        transform: translateX(-50%) translateY(3px);
+                        transform: translateX(-50%) translateY(8px) scale(0.96);
                     }
-                    20% {
-                        opacity: 0.85;
-                        transform: translateX(-50%) translateY(0);
+                    10% {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0) scale(1);
                     }
-                    80% {
-                        opacity: 0.85;
-                        transform: translateX(-50%) translateY(0);
+                    90% {
+                        opacity: 1;
+                        transform: translateX(-50%) translateY(0) scale(1);
                     }
                     100% {
                         opacity: 0;
-                        transform: translateX(-50%) translateY(-1px);
+                        transform: translateX(-50%) translateY(-4px) scale(0.98);
                     }
                 }
                 

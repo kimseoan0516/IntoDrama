@@ -148,20 +148,27 @@ export const ArchetypeMapModal = ({ data, characterData, isLoading, onClose }) =
                         
                         {/* 축 레이블 */}
                         <text x={width / 2} y={height - 20} textAnchor="middle" fill="#8D6E63" fontSize="14" fontWeight="600">따뜻함 ← → 차가움</text>
-                        <text x={35} y={height / 2} textAnchor="middle" fill="#8D6E63" fontSize="14" fontWeight="600" transform={`rotate(-90, 35, ${height / 2})`}>현실적 ← → 이상적</text>
+                        <text x={35} y={height / 2} textAnchor="middle" fill="#8D6E63" fontSize="14" fontWeight="600" transform={`rotate(-90, 35, ${height / 2})`}>이상적 ← → 현실적</text>
                         
                         {/* 캐릭터 포인트 */}
                         {data.characters && data.characters.map((char, idx) => {
-                            // 성향 지도 좌표 계산: 따뜻함(왼쪽) ← → 차가움(오른쪽), 현실적(위) ← → 이상적(아래)
-                            const x = padding + ((1 - char.warmth) * (width - 2 * padding));
-                            const y = padding + (char.realism * (height - 2 * padding));
-                            const charInfo = characterData[char.character_id];
+                            // 백엔드에서 x(warmth: 0.0=차가움, 1.0=따뜻함), y(realism: 0.0=이상적, 1.0=현실적)를 반환
+                            // x축: 따뜻함(왼쪽) ← → 차가움(오른쪽) - warmth가 높을수록 왼쪽
+                            // y축: 이상적(아래) ← → 현실적(위) - realism이 높을수록 위
+                            const warmth = char.x !== undefined ? char.x : (char.warmth !== undefined ? char.warmth : 0.5);
+                            const realism = char.y !== undefined ? char.y : (char.realism !== undefined ? char.realism : 0.5);
+                            
+                            // 따뜻함이 왼쪽이므로: warmth가 1.0이면 왼쪽(0), 0.0이면 오른쪽(1)
+                            const x = padding + ((1 - warmth) * (width - 2 * padding));
+                            // 이상적이 아래이므로: realism이 0.0이면 아래(1), 1.0이면 위(0)
+                            const y = padding + ((1 - realism) * (height - 2 * padding));
+                            const charInfo = characterData[char.id || char.character_id];
                             
                             return (
                                 <g key={idx}>
                                     <circle cx={x} cy={y} r="8" fill="#8D6E63" />
                                     <text x={x} y={y - 15} textAnchor="middle" fill="#3E2723" fontSize="12" fontWeight="600">
-                                        {charInfo ? charInfo.name.split(' (')[0] : char.name}
+                                        {charInfo ? charInfo.name.split(' (')[0] : (char.name || '')}
                                     </text>
                                 </g>
                             );
@@ -423,6 +430,7 @@ export const DiaryModal = ({ diaryData, diaryList, isGenerating, onGenerate, onC
     const [customHour, setCustomHour] = useState('8');
     const [customMinute, setCustomMinute] = useState('00');
     const keywordTextareaRef = useRef(null);
+    const [todayTopic, setTodayTopic] = useState(null); // 오늘의 주제
     
     const hourOptions = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     const minuteOptions = ['00', '10', '20', '30', '40', '50'];
@@ -520,8 +528,33 @@ export const DiaryModal = ({ diaryData, diaryList, isGenerating, onGenerate, onC
                 const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                 setSelectedCalendarDate(dateStr);
             }
+        } else {
+            // diaryData가 null일 때도 selectedDiary를 null로 설정
+            setSelectedDiary(null);
         }
     }, [diaryData, isGenerating]);
+    
+    // 오늘의 주제 가져오기
+    useEffect(() => {
+        const fetchTodayTopic = async () => {
+            if (!token) return;
+            try {
+                const data = await api.getTodayTopic();
+                console.log('오늘의 주제 데이터:', data);
+                // 주제가 있으면 표시 (답장에서 받은 주제 또는 랜덤 주제)
+                if (data && data.topic) {
+                    setTodayTopic(data);
+                } else {
+                    setTodayTopic(null);
+                }
+            } catch (error) {
+                console.error('오늘의 주제 가져오기 실패:', error);
+                setTodayTopic(null);
+            }
+        };
+        
+        fetchTodayTopic();
+    }, [token]);
     
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -1158,9 +1191,73 @@ ${cleanContent}
         <div className="modal-overlay" onClick={onClose}>
             <div className="my-page-modal diary-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="diary-modal-header">
-                    <div>
-                        <span>🌿</span>
-                        <h2>마음 기록 노트</h2>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span>🌿</span>
+                            <h2>마음 기록 노트</h2>
+                        </div>
+                        {/* 오늘의 주제 표시 */}
+                        {todayTopic && todayTopic.topic && !selectedDiary && !isWritingMode && !showAIOptions && (
+                            <div style={{
+                                marginTop: '16px',
+                                padding: '16px 20px',
+                                background: 'linear-gradient(135deg, #FFFFFF 0%, #FBF9F7 100%)',
+                                borderRadius: '16px',
+                                border: '1px solid #E8E0DB',
+                                boxShadow: '0 2px 12px rgba(74, 59, 50, 0.08)'
+                            }}>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '12px'
+                                }}>
+                                    <div style={{
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '8px',
+                                        background: 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexShrink: 0,
+                                        boxShadow: '0 2px 6px rgba(141, 110, 99, 0.2)'
+                                    }}>
+                                        <span style={{ fontSize: '1rem' }}>📝</span>
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{
+                                            fontSize: '0.75rem',
+                                            color: '#8D6E63',
+                                            marginBottom: '8px',
+                                            fontWeight: '600',
+                                            letterSpacing: '0.3px',
+                                            textTransform: 'uppercase'
+                                        }}>
+                                            오늘의 주제미션
+                                        </div>
+                                        <div style={{
+                                            fontSize: '0.95rem',
+                                            color: '#4A3B32',
+                                            fontWeight: '600',
+                                            lineHeight: '1.5',
+                                            letterSpacing: '-0.01em'
+                                        }}>
+                                            {todayTopic.topic}
+                                        </div>
+                                        {todayTopic.has_topic && todayTopic.character_name && (
+                                            <div style={{
+                                                fontSize: '0.75rem',
+                                                color: '#A1887F',
+                                                marginTop: '6px',
+                                                fontWeight: '500'
+                                            }}>
+                                                {todayTopic.character_name}이(가) 기다리는 이야기
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <button 
@@ -1263,7 +1360,6 @@ ${cleanContent}
                                                     key={diary.id}
                                                     className="diary-list-item"
                                                     onClick={async () => {
-                                                        setSelectedDiary(null);
                                                         await onDiarySelect(diary.id);
                                                     }}
                                                 >

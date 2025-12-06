@@ -108,7 +108,8 @@ body {
     flex-direction: column;
     padding: 10px 0 0 0;
     border-radius: 40px;  /* PC 원래 디자인: app-container와 동일한 둥근 모서리 */
-    overflow-y: hidden; /* PC 원래 디자인: 스크롤 없음 */
+    overflow-y: hidden !important; /* PC 원래 디자인: 스크롤 완전히 막기 */
+    overflow-x: hidden;
     /* 입체감 있는 베이지 배경 - 위/아래 명암 그라데이션 + 아주 옅은 종이 질감 */
     background: 
         /* 아주 옅은 종이 질감 노이즈 - 전체 배경에 3% opacity */
@@ -136,17 +137,16 @@ body {
             rgba(242, 238, 233, 1) 100%     /* 하단: 약간 어두운 베이지 */
         );
     background-size: 250px 250px, 3px 3px, 3px 3px, 100% 100%;
+    background-attachment: scroll; /* 배경을 컨테이너에 고정 (스크롤 없으므로 효과적으로 고정됨) */
     text-align: center;
     position: relative; 
-    overflow-y: auto; /* 내용이 많으면 카드 안에서만 스크롤 */
-    overflow-x: hidden;
     min-height: 0;
     height: 100%;
 }
 
 .character-select-screen::before {
     content: '';
-    position: absolute;
+    position: absolute; /* 부모 요소 기준으로 고정 */
     top: 0;
     left: 0;
     right: 0;
@@ -162,6 +162,7 @@ body {
             transparent 65%
         );
     background-size: 100% 100%;
+    background-attachment: local; /* 배경을 컨테이너에 고정 */
     pointer-events: none;
     z-index: 0;
     opacity: 1;
@@ -171,7 +172,7 @@ body {
 /* 전체 배경에 종이 질감 적용 */
 .character-select-screen::after {
     content: '';
-    position: absolute;
+    position: absolute; /* 부모 요소 기준으로 고정 */
     top: 0;
     left: 0;
     right: 0;
@@ -205,6 +206,7 @@ body {
         );
     background-size: 200px 200px, 3px 3px, 3px 3px, 4px 4px;
     background-position: 0 0, 0 0, 0 0, 0 0;
+    background-attachment: local; /* 배경을 컨테이너에 고정 */
     pointer-events: none;
     z-index: 0;
     opacity: 1;
@@ -2321,9 +2323,17 @@ body {
 
 .debate-intervention-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     margin-bottom: 8px;
+    gap: 12px;
+}
+
+.debate-intervention-header-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .debate-intervention-hide-btn {
@@ -2385,14 +2395,24 @@ body {
 }
 
 .debate-intervention-title {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #3E2723;
-    text-align: center;
+    text-align: left;
     letter-spacing: -0.3px;
-    flex: 1;
     word-break: keep-all;
     overflow-wrap: break-word;
+}
+
+.debate-intervention-subtitle {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #8D6E63;
+    text-align: left;
+    letter-spacing: -0.2px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    opacity: 0.8;
 }
 
 .debate-intervention-buttons {
@@ -3590,6 +3610,14 @@ body {
     color: #3E2723;
     margin-bottom: 4px;
     word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    max-height: 2.8em;
+    padding-right: 35px;
 }
 
 .history-info p {
@@ -3618,8 +3646,8 @@ body {
 /* 삭제 버튼 - 우측 상단 */
 .history-delete-btn {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 15px;
+    right: 15px;
     border: none;
     background: transparent;
     color: #D32F2F;

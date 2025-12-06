@@ -5,7 +5,9 @@ import DebateModal from './components/DebateModal';
 import CharacterSelectScreen from './components/CharacterSelectScreen';
 import { TypingText, SettingsScreen, TemplateScreen } from './components/CommonComponents';
 import { GiftModal, ArchetypeMapModal, DiaryModal, AuthModal } from './components/ModalComponents';
-import { MyPageScreen, HistoryScreen, StatsScreen, ReportScreen } from './components/ScreenComponents';
+import { MyPageScreen, HistoryScreen } from './components/ProfileAndHistoryScreens';
+import { StatsScreen } from './components/StatsScreen';
+import { ReportScreen } from './components/ReportScreens';
 import { WeeklyRecapScreen } from './components/WeeklyRecapScreen';
 import { WeeklyDetailScreen } from './components/WeeklyDetailScreen';
 import { ExchangeDiaryScreen } from './components/ExchangeDiaryScreen';
@@ -484,11 +486,23 @@ const ChatScreen = ({
 
     const detectConflictLevel = (text) => {
         if (!text) return 0;
-        const conflictKeywords = ['화나', '싫어', '미워', '이해 못해', '짜증', '화', '분노', '실망', '아쉬워', '서운', '섭섭', '억울', '원망'];
-        const conflictWithTired = ['화나', '싫어', '미워', '짜증', '화', '분노', '실망', '아쉬워', '서운', '섭섭', '억울', '원망', '답답'];
+        // 갈등 키워드 - "짜증"은 제외 (별도 처리)
+        const conflictKeywords = ['화나', '싫어', '미워', '이해 못해', '화', '분노', '실망', '아쉬워', '서운', '섭섭', '억울', '원망'];
+        // "지친다"와 함께 갈등으로 판단할 키워드 - "짜증" 제외
+        const conflictWithTired = ['화나', '싫어', '미워', '화', '분노', '실망', '아쉬워', '서운', '섭섭', '억울', '원망', '답답'];
         
         let score = 0;
         const hasTired = text.includes('지치') || text.includes('피곤') || text.includes('힘들');
+        
+        // "짜증"은 실제로 화를 내거나 짜증을 내는 표현일 때만 갈등으로 판단
+        // "짜증나", "짜증난다", "짜증나서", "짜증내", "짜증낸다", "짜증나는" 같은 동사 형태
+        // 또는 상대를 향한 화난 표현과 함께 있을 때
+        const hasActualAnnoyance = /짜증(나|내|낸|나는|났|날)/.test(text) || 
+                                    /(너|당신|네|니|그쪽).{0,5}(때문|탓|잘못|화나|짜증)/.test(text);
+        
+        if (hasActualAnnoyance) {
+            score += 0.3; // 실제 짜증 표현이 있을 때만 갈등 점수 추가
+        }
         
         conflictKeywords.forEach(k => {
             if (text.includes(k)) {
@@ -499,6 +513,10 @@ const ChatScreen = ({
         if (hasTired) {
             const hasConflictWithTired = conflictWithTired.some(k => text.includes(k));
             if (hasConflictWithTired) {
+                score += 0.2;
+            }
+            // "지친다" + 실제 짜증 표현이 함께 있을 때도 갈등으로 판단
+            if (hasActualAnnoyance) {
                 score += 0.2;
             }
         }
@@ -1545,7 +1563,10 @@ const ChatScreen = ({
             {showDebateIntervention && !isInterventionPanelHidden && (
                 <div className="debate-intervention-panel">
                     <div className="debate-intervention-header">
-                        <div className="debate-intervention-title">어떤 의견에 더 공감하시나요?</div>
+                        <div className="debate-intervention-header-text">
+                            <div className="debate-intervention-title">토론에 대한 의견을 말해주세요</div>
+                            <div className="debate-intervention-subtitle">아래 입력창에 직접 입력하거나, 빠른 선택지를 사용하세요</div>
+                        </div>
                         <button 
                             className="debate-intervention-hide-btn"
                             onClick={() => setIsInterventionPanelHidden(true)}
@@ -1867,7 +1888,7 @@ const ChatScreen = ({
                                 // 대사 저장 및 전체 대화 자동 저장
                                 if (token) {
                                     try {
-                                        // 단일 대사 저장
+                                        // 1. 단일 대사 저장 (대화 통계의 "저장한 대사 목록"에만 표시됨)
                                         const charName = characterData[msg.characterId]?.name.split(' (')[0] || '캐릭터';
                                         const quoteData = {
                                             title: `${charName}의 대사`,
@@ -1879,29 +1900,27 @@ const ChatScreen = ({
                                                 characterId: msg.characterId,
                                                 timestamp: msg.timestamp || new Date()
                                             }],
-                                            is_manual_quote: 1
+                                            is_manual_quote: 1  // 대사 저장 플래그 - 대화 보관함에 표시 안 됨
                                         };
                                         await api.saveChat(quoteData);
                                         
-                                        // 전체 대화 자동 저장 (대화 흐름 추적용)
-                                        const charIds = messages
-                                            .filter(m => m.characterId || m.sender === 'user')
-                                            .map(m => m.characterId || m.sender)
-                                            .filter((id, index, self) => self.indexOf(id) === index && id)
-                                            .filter(id => id && id !== 'user');
-                                        const charNames = charIds.map(id => characterData[id]?.name.split(' (')[0]).filter(Boolean);
+                                        // 2. 전체 대화 자동 저장 (대화 보관함에는 표시 안 됨, 대화 흐름 추적용)
+                                        const charNames = selectedChars.map(c => c.name.split(' (')[0]);
+                                        const defaultTitle = joinNamesWithJosa(charNames, '의 대화');
+                                        const messagesToSave = messages.map(m => ({
+                                            ...m,
+                                            sender: m.sender || (m.characterId ? 'ai' : 'user'),
+                                            text: m.text || '',
+                                            timestamp: m.timestamp || new Date().toISOString(),
+                                            id: m.id || Date.now() + Math.random()
+                                        }));
+                                        
                                         const fullChatData = {
-                                            title: charNames.length > 0 ? joinNamesWithJosa(charNames, '의 대화') : '대화',
-                                            character_ids: charIds,
-                                            messages: messages.map(m => ({
-                                                sender: m.sender,
-                                                text: m.text,
-                                                characterId: m.characterId,
-                                                timestamp: m.timestamp || m.date || new Date(),
-                                                id: m.id
-                                            })),
-                                            is_manual_quote: 1,
-                                            quote_message_id: msg.id
+                                            title: defaultTitle,
+                                            character_ids: selectedCharIds,
+                                            messages: messagesToSave,
+                                            is_manual: 1,  // 수동 저장 플래그
+                                            is_manual_quote: 0  // 대화 보관함에 표시 안 됨 (하트로 저장된 대화)
                                         };
                                         await api.saveChat(fullChatData);
                                         
@@ -2057,7 +2076,7 @@ const ChatScreen = ({
                             : '';
                         
                         const isLiked = likedMessages.has(msg.id);
-                        const sanitizedText = msg.sender === 'ai' ? sanitizeCharacterText(msg.text) : msg.text;
+                        const sanitizedText = msg.sender === 'ai' ? sanitizeCharacterText(msg.text, userProfile?.nickname) : msg.text;
                         
                         return (
                             <div 
@@ -2402,7 +2421,7 @@ const ChatScreen = ({
                             handleKeyPress(e);
                         }
                     }}
-                    data-placeholder={captureMode ? "캡쳐 모드: 메시지를 선택하세요" : (currentTurn === 'USER' ? (sceneState.mood !== 'neutral' ? getPlaceholderByMood(sceneState.mood, userProfile.nickname) : (randomPlaceholder ? randomPlaceholder.replace('{USER_NICKNAME}', userProfile.nickname) : "이야기하고 싶은 게 있어?")) : "")}
+                    data-placeholder={captureMode ? "캡쳐 모드: 메시지를 선택하세요" : (debateMode && waitingForUserInput ? "토론에 대한 의견을 입력하세요..." : (currentTurn === 'USER' ? (sceneState.mood !== 'neutral' ? getPlaceholderByMood(sceneState.mood, userProfile.nickname) : (randomPlaceholder ? randomPlaceholder.replace('{USER_NICKNAME}', userProfile.nickname) : "이야기하고 싶은 게 있어?")) : ""))}
                     style={{
                         flex: 1,
                         border: '2px solid #D7CCC8',
@@ -2423,7 +2442,7 @@ const ChatScreen = ({
                         whiteSpace: 'pre-wrap',
                         wordWrap: 'break-word'
                     }}
-                    className={(!debateMode && currentTurn !== 'USER') || captureMode ? 'disabled' : ''}
+                    className={(!debateMode && currentTurn !== 'USER') || (debateMode && !waitingForUserInput && currentTurn !== 'USER') || captureMode ? 'disabled' : ''}
                 />
                 <button 
                     onClick={handleSend} 
@@ -2704,6 +2723,7 @@ function App() {
     const [debateTopic, setDebateTopic] = useState('');
     const [debateMode, setDebateMode] = useState(false); // 토론 모드 활성화 여부
     const [debateRound, setDebateRound] = useState(0); // 현재 토론 라운드
+    const debateRoundRef = useRef(0); // debateRound의 최신 값을 참조하기 위한 ref
     const [waitingForUserInput, setWaitingForUserInput] = useState(false); // 사용자 입력 대기 중
     const [debateCharPositions, setDebateCharPositions] = useState({}); // 토론 모드 캐릭터 위치 (left/right)
     const [showDebateIntervention, setShowDebateIntervention] = useState(false); // 사용자 개입 선택지 표시
@@ -2779,9 +2799,19 @@ function App() {
         }
         
         const charNames = selectedChars.map(c => c.name.split(' (')[0]);
-        const title = prompt('대화 제목을 입력하세요:', 
-            joinNamesWithJosa(charNames, '의 대화'));
-        if (!title) return;
+        const defaultTitle = joinNamesWithJosa(charNames, '의 대화');
+        let title = prompt('대화 제목을 입력하세요 (최대 20자, 비워두면 자동 생성):', 
+            defaultTitle);
+        
+        // 취소 버튼을 누른 경우에만 리턴
+        if (title === null) return;
+
+        // 제목이 입력된 경우 20자로 제한
+        title = title.trim();
+        if (title.length > 20) {
+            alert('제목은 최대 20자까지 입력 가능합니다.');
+            return;
+        }
 
         try {
             // 모든 메시지를 그대로 저장 (필터링하지 않음)
@@ -2794,7 +2824,7 @@ function App() {
             }));
             
             const data = await api.saveChat({
-                    title,
+                    title: title || '',
                     character_ids: selectedCharIds,
                     messages: messagesToSave,
                     is_manual: 1,
@@ -3000,6 +3030,7 @@ function App() {
         
         setDebateMode(true);
         setDebateRound(1);
+        debateRoundRef.current = 1;
         setShowDebate(false);
         setWaitingForUserInput(false);
         setShowDebateIntervention(false);
@@ -3131,7 +3162,11 @@ function App() {
                 let errorMessage = '토론 생성 실패';
                 try {
                     const errorData = await response.json();
-                    errorMessage = errorData.detail || errorData.message || errorMessage;
+                    if (errorData.detail) {
+                        errorMessage = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+                    } else if (errorData.message) {
+                        errorMessage = typeof errorData.message === 'string' ? errorData.message : JSON.stringify(errorData.message);
+                    }
                 } catch (e) {
                     errorMessage = `서버 오류 (HTTP ${response.status})`;
                 }
@@ -3145,8 +3180,8 @@ function App() {
                 for (let i = 0; i < data.responses.length; i++) {
                     const res = data.responses[i];
                     if (res.texts && Array.isArray(res.texts) && res.texts.length > 0) {
-                        // 각 캐릭터의 첫 번째 텍스트만 사용
-                        const text = res.texts[0];
+                        // 각 캐릭터의 첫 번째 텍스트만 사용 (템플릿 치환 및 텍스트 정제)
+                        const text = sanitizeCharacterText(res.texts[0], userProfile.nickname);
                             const debateMessage = {
                             id: Date.now() + Math.random() + i,
                                 sender: 'ai',
@@ -3173,11 +3208,13 @@ function App() {
                 if (isInitialStart && isFirstRound) {
                     // 첫 번째 라운드 완료: 두 번째 라운드로 자동 진행 (startInitialDebateRounds에서 처리)
                     setDebateRound(nextRound);
+                    debateRoundRef.current = nextRound;
                     setIsLoading(false);
                     // 두 번째 라운드는 startInitialDebateRounds에서 호출됨
                 } else if (isInitialStart && !isFirstRound && round === 2) {
                     // 두 번째 라운드 완료: 사용자 입력 가능하도록 설정하되 자동 진행은 하지 않음
                     setDebateRound(3);
+                    debateRoundRef.current = 3;
                     setTimeout(() => {
                         setCurrentTurn('USER');
                         setIsLoading(false);
@@ -3189,6 +3226,7 @@ function App() {
                 } else {
                     // 일반 라운드: 사용자 입력 가능하도록 설정하되 자동 진행은 하지 않음
                     setDebateRound(nextRound);
+                    debateRoundRef.current = nextRound;
                     setTimeout(() => {
                         setCurrentTurn('USER');
                         setIsLoading(false);
@@ -3212,9 +3250,9 @@ function App() {
                 errorMessage = error.message || errorMessage;
             } else if (error && typeof error === 'object') {
                 if (error.message) {
-                    errorMessage = error.message;
+                    errorMessage = typeof error.message === 'string' ? error.message : JSON.stringify(error.message);
                 } else if (error.detail) {
-                    errorMessage = error.detail;
+                    errorMessage = typeof error.detail === 'string' ? error.detail : JSON.stringify(error.detail);
                 } else {
                     try {
                         errorMessage = JSON.stringify(error);
@@ -3257,6 +3295,7 @@ function App() {
     const endDebate = async () => {
         setDebateMode(false);
         setDebateRound(0);
+        debateRoundRef.current = 0;
         setWaitingForUserInput(false);
         setShowDebateIntervention(false);
         setDebateJustEnded(true); // 토론 종료 직후 플래그 설정 (감정 UI 변화 방지)
@@ -3308,6 +3347,121 @@ function App() {
                         read: false
                     };
                     setMessages(prev => [...prev, summaryMessage]);
+                    
+                    // 요약 후 각 캐릭터의 최종변론 생성
+                    const addFinalStatements = async () => {
+                        try {
+                            // 첫 번째 캐릭터의 최종변론
+                            const finalStatement1Response = await fetch(`${API_BASE_URL}/chat/debate/final-statements`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': token ? `Bearer ${token}` : ''
+                                },
+                                body: JSON.stringify({
+                                    character_ids: selectedCharIds,
+                                    character_id: selectedCharIds[0],
+                                    topic: debateTopic,
+                                    messages: messages.filter(m => m.sender !== 'system').map(msg => ({
+                                        sender: msg.sender,
+                                        text: msg.text,
+                                        characterId: msg.characterId
+                                    }))
+                                })
+                            });
+                            
+                            if (finalStatement1Response.ok) {
+                                const finalStatement1Data = await finalStatement1Response.json();
+                                if (finalStatement1Data && finalStatement1Data.final_statement) {
+                                    const finalStatement1Message = {
+                                        id: Date.now() + 1000,
+                                        sender: 'ai',
+                                        text: finalStatement1Data.final_statement,
+                                        characterId: selectedCharIds[0],
+                                        timestamp: new Date(),
+                                        read: false
+                                    };
+                                    setMessages(prev => [...prev, finalStatement1Message]);
+                                }
+                            }
+                            
+                            // 약간의 딜레이 후 두 번째 캐릭터의 최종변론
+                            await new Promise(resolve => setTimeout(resolve, 800));
+                            
+                            const finalStatement2Response = await fetch(`${API_BASE_URL}/chat/debate/final-statements`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': token ? `Bearer ${token}` : ''
+                                },
+                                body: JSON.stringify({
+                                    character_ids: selectedCharIds,
+                                    character_id: selectedCharIds[1],
+                                    topic: debateTopic,
+                                    messages: messages.filter(m => m.sender !== 'system').map(msg => ({
+                                        sender: msg.sender,
+                                        text: msg.text,
+                                        characterId: msg.characterId
+                                    }))
+                                })
+                            });
+                            
+                            if (finalStatement2Response.ok) {
+                                const finalStatement2Data = await finalStatement2Response.json();
+                                if (finalStatement2Data && finalStatement2Data.final_statement) {
+                                    const finalStatement2Message = {
+                                        id: Date.now() + 2000,
+                                        sender: 'ai',
+                                        text: finalStatement2Data.final_statement,
+                                        characterId: selectedCharIds[1],
+                                        timestamp: new Date(),
+                                        read: false
+                                    };
+                                    setMessages(prev => [...prev, finalStatement2Message]);
+                                }
+                            }
+                            
+                            // 최종변론 후 종료 메시지 추가
+                            setTimeout(() => {
+                                const debateEndMessage = {
+                                    id: Date.now() + 3000,
+                                    sender: 'system',
+                                    text: '🎤 토론이 종료되었습니다.',
+                                    timestamp: new Date(),
+                                    read: false
+                                };
+                                setMessages(prev => {
+                                    const hasEndMessage = prev.some(msg => msg.text === '🎤 토론이 종료되었습니다.');
+                                    if (!hasEndMessage) {
+                                        return [...prev, debateEndMessage];
+                                    }
+                                    return prev;
+                                });
+                            }, 800);
+                        } catch (finalStatementError) {
+                            console.error('최종변론 생성 오류:', finalStatementError);
+                            // 오류 발생 시 바로 종료 메시지 추가
+                            const debateEndMessage = {
+                                id: Date.now() + 3000,
+                                sender: 'system',
+                                text: '🎤 토론이 종료되었습니다.',
+                                timestamp: new Date(),
+                                read: false
+                            };
+                            setMessages(prev => {
+                                const hasEndMessage = prev.some(msg => msg.text === '🎤 토론이 종료되었습니다.');
+                                if (!hasEndMessage) {
+                                    return [...prev, debateEndMessage];
+                                }
+                                return prev;
+                            });
+                        }
+                    };
+                    
+                    // 요약 표시 후 최종변론 추가
+                    setTimeout(() => {
+                        addFinalStatements();
+                    }, 500);
                 } else {
                     console.error('토론 요약 데이터가 없습니다:', summaryData);
                     // 요약이 없어도 오류 메시지 표시
@@ -3319,77 +3473,25 @@ function App() {
                         read: false
                     };
                     setMessages(prev => [...prev, errorMessage]);
-                }
-                
-                // 사용자가 직접 입력한 메시지 확인 (💭로 시작하지 않는 사용자 메시지)
-                const directUserMessages = messages
-                    .filter(msg => msg.sender === 'user' && !msg.text.startsWith('💭'))
-                    .map(msg => msg.text);
-                
-                // 사용자가 직접 입력한 의견이 있으면 캐릭터 감상평 요청
-                if (directUserMessages.length > 0) {
-                    try {
-                        const commentsResponse = await fetch(`${API_BASE_URL}/chat/debate/comments`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': token ? `Bearer ${token}` : ''
-                            },
-                            body: JSON.stringify({
-                                character_ids: selectedCharIds,
-                                topic: debateTopic,
-                                messages: messages.filter(m => m.sender !== 'system').map(msg => ({
-                                    sender: msg.sender,
-                                    text: msg.text,
-                                    characterId: msg.characterId
-                                })),
-                                user_inputs: directUserMessages
-                            })
-                        });
-                        
-                        if (commentsResponse.ok) {
-                            const commentsData = await commentsResponse.json();
-                            
-                            // 각 캐릭터의 감상평을 메시지로 추가
-                            if (commentsData.comments && commentsData.comments.length > 0) {
-                                for (const comment of commentsData.comments) {
-                                    if (comment.comment && comment.comment.trim()) {
-                                        const commentMessage = {
-                                            id: Date.now() + Math.random(),
-                                            sender: 'ai',
-                                            text: comment.comment,
-                                            characterId: comment.character_id,
-                                            timestamp: new Date(),
-                                            read: false
-                                        };
-                                        setMessages(prev => [...prev, commentMessage]);
-                                    }
-                                }
+                    
+                    // 오류 발생 시 바로 종료 메시지 추가
+                    setTimeout(() => {
+                        const debateEndMessage = {
+                            id: Date.now() + 1000,
+                            sender: 'system',
+                            text: '🎤 토론이 종료되었습니다.',
+                            timestamp: new Date(),
+                            read: false
+                        };
+                        setMessages(prev => {
+                            const hasEndMessage = prev.some(msg => msg.text === '🎤 토론이 종료되었습니다.');
+                            if (!hasEndMessage) {
+                                return [...prev, debateEndMessage];
                             }
-                        }
-                    } catch (commentsError) {
-                        console.error('감상평 생성 오류:', commentsError);
-                        // 오류 발생해도 계속 진행
-                    }
+                            return prev;
+                        });
+                    }, 500);
                 }
-                
-                // 모든 요약과 감상평이 추가된 후에 종료 메시지 추가
-                setTimeout(() => {
-                    const debateEndMessage = {
-                        id: Date.now() + 2000,
-                        sender: 'system',
-                        text: '🎤 토론이 종료되었습니다.',
-                        timestamp: new Date(),
-                        read: false
-                    };
-                    setMessages(prev => {
-                        const hasEndMessage = prev.some(msg => msg.text === '🎤 토론이 종료되었습니다.');
-                        if (!hasEndMessage) {
-                            return [...prev, debateEndMessage];
-                        }
-                        return prev;
-                    });
-                }, 500);
             } else {
                 // 요약 요청 실패
                 console.error('토론 요약 요청 실패:', response.status, response.statusText);
@@ -3443,9 +3545,9 @@ function App() {
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
-            setCurrentTurn('USER'); // 입력창 잠금 해제
-            
-            // 토론 종료 메시지는 이미 요약 후에 추가되었으므로 여기서는 추가하지 않음
+            setCurrentTurn('USER'); // 입력창 잠금 해제 - 일반 채팅으로 바로 전환 가능
+            setDebateMode(false); // 토론 모드 완전히 종료
+            setWaitingForUserInput(false); // 사용자 입력 대기 상태 해제
         }
     };
     
@@ -3516,12 +3618,14 @@ function App() {
                 }
             } else {
                 const errorData = await response.json().catch(() => ({ detail: '성향 지도 조회 실패' }));
-                alert(errorData.detail || '성향 지도 조회에 실패했습니다.');
+                const errorMsg = typeof errorData.detail === 'string' ? errorData.detail : (errorData.detail ? JSON.stringify(errorData.detail) : '성향 지도 조회에 실패했습니다.');
+                alert(errorMsg);
                 setShowArchetype(false);
             }
         } catch (error) {
             console.error('성향 지도 오류:', error);
-            alert('성향 지도 조회 중 오류가 발생했습니다: ' + error.message);
+            const errorMsg = error?.message || (typeof error === 'string' ? error : '알 수 없는 오류가 발생했습니다.');
+            alert('성향 지도 조회 중 오류가 발생했습니다: ' + errorMsg);
             setShowArchetype(false);
         } finally {
             setIsLoadingArchetype(false);
@@ -3735,7 +3839,8 @@ function App() {
             }
         } catch (error) {
             console.error('일기 생성 오류:', error);
-            alert(`일기 생성 중 오류가 발생했습니다: ${error.message || error}`);
+            const errorMsg = error?.message || (typeof error === 'string' ? error : '알 수 없는 오류가 발생했습니다.');
+            alert(`일기 생성 중 오류가 발생했습니다: ${errorMsg}`);
         } finally {
             setIsGeneratingDiary(false);
         }
@@ -3810,7 +3915,8 @@ function App() {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ detail: '알 수 없는 오류' }));
-                throw new Error(errorData.detail || `서버 오류 (${response.status})`);
+                const errorMsg = typeof errorData.detail === 'string' ? errorData.detail : (errorData.detail ? JSON.stringify(errorData.detail) : `서버 오류 (${response.status})`);
+                throw new Error(errorMsg);
             }
             
             const data = await response.json();
@@ -3840,7 +3946,7 @@ function App() {
             alert('소설 형식으로 변환되어 저장되었습니다!');
         } catch (error) {
             console.error('소설 변환 오류:', error);
-            const errorMessage = error.message || '소설 변환 중 오류가 발생했습니다.';
+            const errorMessage = error?.message || (typeof error === 'string' ? error : '소설 변환 중 오류가 발생했습니다.');
             alert(`소설 변환 실패: ${errorMessage}\n\n백엔드 서버가 실행 중인지 확인해주세요.`);
         } finally {
             setIsExportingNovel(false);
@@ -3867,11 +3973,19 @@ function App() {
         
         // 토론 모드일 때는 토론 계속 로직으로 처리
         if (debateMode) {
-            // 사용자 메시지 추가
+            const cleanText = currentText.trim();
+            if (!cleanText) return;
+            
+            // 선택지와 동일한 방식으로 처리
+            setShowDebateIntervention(false);
+            setIsInterventionPanelHidden(true);
+            setWaitingForUserInput(false);
+            
+            // 사용자 메시지 추가 (선택지와 동일한 형식)
             const userMessage = { 
                 id: Date.now(), 
                 sender: 'user', 
-                text: currentText.trim(),
+                text: cleanText, // 💬 없이 순수 텍스트만 (백엔드에서 일반 사용자 입력으로 인식)
                 timestamp: new Date(),
                 read: false
             };
@@ -3887,11 +4001,10 @@ function App() {
                 if (textarea) textarea.style.height = 'auto';
             }
             
-            // 토론 계속
-            setWaitingForUserInput(false);
+            // 선택지와 동일한 방식으로 토론 계속 (1초 후, debateRound 사용)
             setTimeout(() => {
                 continueDebateRound(debateRound);
-            }, 500);
+            }, 1000); // 선택지와 동일하게 1초로 변경
             return;
         }
         
@@ -4008,6 +4121,12 @@ function App() {
             const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
             setIsLoading(false);
+            
+            // chat_id가 있으면 currentChatId 업데이트 (자동 저장된 대화 ID)
+            if (data.chat_id && !currentChatId) {
+                setCurrentChatId(data.chat_id);
+                console.log('[자동 저장] chat_id 저장:', data.chat_id);
+            }
 
             // 사용자 메시지를 읽음으로 표시
             setMessages(prev => prev.map(msg => 
@@ -4016,7 +4135,8 @@ function App() {
 
             for (const res of data.responses) {
                 for (let i = 0; i < res.texts.length; i++) {
-                    const textChunk = res.texts[i];
+                    // 템플릿 치환 및 텍스트 정제 (백엔드에서 놓친 경우를 대비)
+                    const textChunk = sanitizeCharacterText(res.texts[i], userProfile.nickname);
                     const aiMessageChunk = {
                         id: Date.now() + Math.random() + i,
                         sender: 'ai',
@@ -4346,6 +4466,7 @@ function App() {
                         setDebateTopic('');
                         setDebateMode(false);
                         setDebateRound(0);
+                        debateRoundRef.current = 0;
                         setWaitingForUserInput(false);
                     }}
                 />
@@ -4412,7 +4533,8 @@ function App() {
                             }
                         } catch (error) {
                             console.error('일기 조회 오류:', error);
-                            alert(`일기 조회 중 오류가 발생했습니다: ${error.message || error}`);
+                            const errorMsg = error?.message || (typeof error === 'string' ? error : '알 수 없는 오류가 발생했습니다.');
+                            alert(`일기 조회 중 오류가 발생했습니다: ${errorMsg}`);
                         }
                     }}
                     onDeleteDiary={async (diaryId) => {
@@ -4432,7 +4554,8 @@ function App() {
                                 setDiaryData(null);
                             } else {
                                 const errorData = await response.json();
-                                alert(errorData.detail || '일기 삭제에 실패했습니다.');
+                                const errorMsg = typeof errorData.detail === 'string' ? errorData.detail : (errorData.detail ? JSON.stringify(errorData.detail) : '일기 삭제에 실패했습니다.');
+                                alert(errorMsg);
                             }
                         } catch (error) {
                             console.error('일기 삭제 오류:', error);

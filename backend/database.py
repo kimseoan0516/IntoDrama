@@ -112,8 +112,10 @@ class CharacterArchetype(Base):
     id = Column(Integer, primary_key=True, index=True)
     character_id = Column(String, unique=True, nullable=False, index=True)
     name = Column(String, nullable=False)
-    warmth = Column(String, nullable=False)  # 0.0 ~ 1.0
-    realism = Column(String, nullable=False)  # 0.0 ~ 1.0
+    warmth = Column(String, nullable=True)  # 0.0 ~ 1.0 (선택적)
+    realism = Column(String, nullable=True)  # 0.0 ~ 1.0 (선택적)
+    order_chaos = Column(String, nullable=True)  # -1.0 (혼돈) ~ 1.0 (질서)
+    good_evil = Column(String, nullable=True)  # -1.0 (악) ~ 1.0 (선)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class ExchangeDiary(Base):
@@ -252,11 +254,77 @@ def migrate_exchange_diaries():
                 except Exception as e:
                     print(f"마이그레이션 오류 (이미 존재할 수 있음): {e}")
             
+            if 'reply_created_at' not in columns:
+                try:
+                    conn.execute(text("ALTER TABLE exchange_diaries ADD COLUMN reply_created_at TIMESTAMP"))
+                    conn.commit()
+                    print("데이터베이스 마이그레이션 완료: exchange_diaries.reply_created_at 컬럼 추가됨")
+                except Exception as e:
+                    print(f"마이그레이션 오류 (이미 존재할 수 있음): {e}")
+            
             if 'topic_used' not in columns:
                 try:
                     conn.execute(text("ALTER TABLE exchange_diaries ADD COLUMN topic_used INTEGER DEFAULT 0"))
                     conn.commit()
                     print("데이터베이스 마이그레이션 완료: exchange_diaries.topic_used 컬럼 추가됨")
+                except Exception as e:
+                    print(f"마이그레이션 오류 (이미 존재할 수 있음): {e}")
+            
+            # 기존 답장 데이터에 대한 preview_message와 reply_created_at 업데이트
+            try:
+                # PostgreSQL과 SQLite 모두 호환되는 쿼리
+                # preview_message가 없는 답장들에 대해 첫 50자로 설정
+                conn.execute(text("""
+                    UPDATE exchange_diaries 
+                    SET preview_message = CASE 
+                        WHEN length(reply_content) > 50 THEN substring(reply_content, 1, 50) || '...'
+                        ELSE reply_content
+                    END
+                    WHERE reply_received = TRUE AND (preview_message IS NULL OR preview_message = '')
+                """))
+                
+                # reply_created_at가 없는 답장들에 대해 updated_at 또는 created_at으로 설정
+                conn.execute(text("""
+                    UPDATE exchange_diaries 
+                    SET reply_created_at = COALESCE(updated_at, created_at)
+                    WHERE reply_received = TRUE AND reply_created_at IS NULL
+                """))
+                
+                conn.commit()
+                print("기존 교환일기 답장 데이터 마이그레이션 완료")
+            except Exception as e:
+                print(f"기존 데이터 마이그레이션 오류 (무시 가능): {e}")
+                
+    except Exception as e:
+        print(f"마이그레이션 확인 중 오류 (무시 가능): {e}")
+
+# character_archetypes 테이블에 order_chaos, good_evil 컬럼 추가 (마이그레이션)
+def migrate_character_archetypes():
+    """기존 데이터베이스에 character_archetypes.order_chaos, good_evil 컬럼이 없으면 추가"""
+    from sqlalchemy import inspect, text
+    
+    try:
+        inspector = inspect(engine)
+        # 테이블이 존재하는지 확인
+        if 'character_archetypes' not in inspector.get_table_names():
+            return
+        
+        columns = [col['name'] for col in inspector.get_columns('character_archetypes')]
+        
+        with engine.connect() as conn:
+            if 'order_chaos' not in columns:
+                try:
+                    conn.execute(text("ALTER TABLE character_archetypes ADD COLUMN order_chaos VARCHAR"))
+                    conn.commit()
+                    print("데이터베이스 마이그레이션 완료: character_archetypes.order_chaos 컬럼 추가됨")
+                except Exception as e:
+                    print(f"마이그레이션 오류 (이미 존재할 수 있음): {e}")
+            
+            if 'good_evil' not in columns:
+                try:
+                    conn.execute(text("ALTER TABLE character_archetypes ADD COLUMN good_evil VARCHAR"))
+                    conn.commit()
+                    print("데이터베이스 마이그레이션 완료: character_archetypes.good_evil 컬럼 추가됨")
                 except Exception as e:
                     print(f"마이그레이션 오류 (이미 존재할 수 있음): {e}")
     except Exception as e:
@@ -267,6 +335,7 @@ migrate_database()
 migrate_emotion_diaries()
 migrate_chat_histories_quote()
 migrate_exchange_diaries()
+migrate_character_archetypes()
 
 def get_db():
     db = SessionLocal()

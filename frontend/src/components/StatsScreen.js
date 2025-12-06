@@ -545,8 +545,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 background: 'linear-gradient(180deg, #FFFEF5 0%, #FFFFFF 100%)',
                                                 border: '2px solid #D4AF37',
                                                 marginBottom: '16px',
-                                                maxWidth: '380px',
-                                                width: 'calc(100% - 20px)',
+                                                maxWidth: '300px',
+                                                width: 'calc(100% - 40px)',
                                                 boxSizing: 'border-box',
                                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                             }}
@@ -744,10 +744,9 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                     borderRadius: '12px',
                                                     backgroundColor: '#FFFFFF',
                                                     border: `2px solid ${rankColor.border}`,
-                                                    flex: '0 0 180px',
-                                                    width: '180px',
-                                                    maxWidth: '180px',
-                                                    minWidth: '180px',
+                                                    flex: '0 0 auto',
+                                                    maxWidth: '140px',
+                                                    minWidth: '120px',
                                                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                                 }}
                                             >
@@ -968,7 +967,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     textAlign: 'center',
                                     position: 'relative',
                                     overflow: 'visible',
-                                    width: '100%', /* 전체 너비 사용 */
+                                    width: 'calc(100% - 4px)', /* 통계 카드 3개 전체 폭보다 아주 살짝 작게 */
                                     maxWidth: '100%',
                                     boxSizing: 'border-box'
                                 }}
@@ -1084,10 +1083,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 border: '1px solid #E8E0DB', 
                                                 borderRadius: '8px', 
                                                 marginBottom: '8px', 
-                                                backgroundColor: '#FFFFFF',
-                                                width: '100%',
-                                                maxWidth: '100%',
-                                                boxSizing: 'border-box'
+                                                backgroundColor: '#FFFFFF'
                                             }}
                                         >
                                             <div style={{

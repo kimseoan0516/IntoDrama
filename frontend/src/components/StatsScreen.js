@@ -545,7 +545,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 background: 'linear-gradient(180deg, #FFFEF5 0%, #FFFFFF 100%)',
                                                 border: '2px solid #D4AF37',
                                                 marginBottom: '16px',
-                                                maxWidth: '100%',
+                                                maxWidth: '380px',
                                                 width: 'calc(100% - 20px)',
                                                 boxSizing: 'border-box',
                                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
@@ -744,11 +744,10 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                     borderRadius: '12px',
                                                     backgroundColor: '#FFFFFF',
                                                     border: `2px solid ${rankColor.border}`,
-                                                    flex: '0 0 auto',
-                                                    maxWidth: '48%',
-                                                    minWidth: '45%',
-                                                    width: '48%',
-                                                    boxSizing: 'border-box',
+                                                    flex: '0 0 180px',
+                                                    width: '180px',
+                                                    maxWidth: '180px',
+                                                    minWidth: '180px',
                                                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                                 }}
                                             >
@@ -1054,7 +1053,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', opacity: 0.6 }}>대화 중 마음에 드는 대사를 하트로 저장하면 여기에 표시됩니다.</p>
                                 </div>
                             ) : (
-                            <div className="stats-quotes-items" style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
+                            <div className="stats-quotes-items">
                                 {(() => {
                                     const totalPages = Math.ceil(quotes.length / quotesPerPage);
                                     const startIndex = (currentQuotePage - 1) * quotesPerPage;

@@ -8267,10 +8267,13 @@ body {
     .stats-content,
     .diary-modal-body,
     .debate-content {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* 콘텐츠 중앙 정렬 */
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important; /* 콘텐츠 중앙 정렬 */
+        justify-content: flex-start !important;
+        box-sizing: border-box !important;
     }
     
     /* 모바일: 일기 쓰기 페이지 중앙 정렬 */

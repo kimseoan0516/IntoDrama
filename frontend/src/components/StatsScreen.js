@@ -434,9 +434,21 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                     </svg>
                 </button>
-                <div className="stats-content">
+                <div className="stats-content" style={{ 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    width: '100%',
+                    boxSizing: 'border-box'
+                }}>
                     {/* 주간 통계 섹션 */}
-                    <div className="weekly-stats-header" style={{ marginBottom: '8px', textAlign: 'center', width: '100%' }}>
+                    <div className="weekly-stats-header" style={{ 
+                        marginBottom: '8px', 
+                        textAlign: 'center', 
+                        width: '100%',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box'
+                    }}>
                         <h3 style={{ fontSize: '1.2rem', fontWeight: '600', color: '#5D4037', marginBottom: '4px' }}>이번주 가장 많이 대화한 캐릭터</h3>
                         <p style={{ fontSize: '0.85rem', color: '#8D6E63', margin: 0 }}>가장 티키타카가 잘 맞는 파트너를 모았어요</p>
                     </div>
@@ -470,7 +482,12 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
-                                width: '100%'
+                                justifyContent: 'center',
+                                width: '100%',
+                                maxWidth: '100%',
+                                boxSizing: 'border-box',
+                                marginLeft: 'auto',
+                                marginRight: 'auto'
                             }}>
                                 {/* 1위 카드 */}
                                 {weeklyStats.top_characters[0] && (() => {
@@ -528,8 +545,9 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 background: 'linear-gradient(180deg, #FFFEF5 0%, #FFFFFF 100%)',
                                                 border: '2px solid #D4AF37',
                                                 marginBottom: '16px',
-                                                maxWidth: '300px',
-                                                width: '100%',
+                                                maxWidth: '100%',
+                                                width: 'calc(100% - 20px)',
+                                                boxSizing: 'border-box',
                                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                             }}
                                         >
@@ -653,7 +671,8 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     width: '100%',
-                                    flexWrap: 'wrap'
+                                    flexWrap: 'wrap',
+                                    margin: '0 auto'
                                 }}>
                                     {weeklyStats.top_characters.slice(1, 3).map((char, index) => {
                                         const charInfo = characterData && char.character_id ? characterData[char.character_id] : null;
@@ -725,8 +744,11 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                     borderRadius: '12px',
                                                     backgroundColor: '#FFFFFF',
                                                     border: `2px solid ${rankColor.border}`,
-                                                    flex: '1',
-                                                    maxWidth: '140px',
+                                                    flex: '0 0 auto',
+                                                    maxWidth: '48%',
+                                                    minWidth: '45%',
+                                                    width: '48%',
+                                                    boxSizing: 'border-box',
                                                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                                 }}
                                             >
@@ -947,7 +969,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     textAlign: 'center',
                                     position: 'relative',
                                     overflow: 'visible',
-                                    width: 'calc(100% - 4px)', /* 통계 카드 3개 전체 폭보다 아주 살짝 작게 */
+                                    width: '100%', /* 전체 너비 사용 */
                                     maxWidth: '100%',
                                     boxSizing: 'border-box'
                                 }}
@@ -1032,7 +1054,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                     <p style={{ margin: '8px 0 0 0', fontSize: '0.85rem', opacity: 0.6 }}>대화 중 마음에 드는 대사를 하트로 저장하면 여기에 표시됩니다.</p>
                                 </div>
                             ) : (
-                            <div className="stats-quotes-items">
+                            <div className="stats-quotes-items" style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
                                 {(() => {
                                     const totalPages = Math.ceil(quotes.length / quotesPerPage);
                                     const startIndex = (currentQuotePage - 1) * quotesPerPage;
@@ -1063,7 +1085,10 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                 border: '1px solid #E8E0DB', 
                                                 borderRadius: '8px', 
                                                 marginBottom: '8px', 
-                                                backgroundColor: '#FFFFFF'
+                                                backgroundColor: '#FFFFFF',
+                                                width: '100%',
+                                                maxWidth: '100%',
+                                                boxSizing: 'border-box'
                                             }}
                                         >
                                             <div style={{

@@ -11,6 +11,10 @@ pinned: false
 
 드라마 캐릭터와 대화할 수 있는 AI 챗봇 웹앱입니다. Google Gemini AI를 활용하여 드라마 캐릭터의 페르소나를 구현하고, 사용자와 자연스러운 대화를 제공합니다.
 
+## 🎥 데모 영상
+
+[![IntoDrama 데모 영상](https://img.youtube.com/vi/Ym6sf6DfoD8/maxresdefault.jpg)](https://www.youtube.com/watch?v=Ym6sf6DfoD8)
+
 ---
 
 ## 🎯 주요 기능

@@ -648,7 +648,37 @@ npm start
 
 ## 라이선스
 
-MIT
+### 프로젝트 라이선스
+본 프로젝트는 **MIT 라이선스**를 따릅니다.
+
+### 사용된 오픈소스 라이브러리 라이선스
+
+#### 백엔드
+- **FastAPI** (v0.121.1): MIT
+- **Uvicorn** (v0.38.0): BSD-3-Clause
+- **SQLAlchemy** (v2.0.36): MIT
+- **Pydantic** (v2.12.4): MIT
+- **python-jose** (v3.3.0): MIT
+- **passlib** (v1.7.4): BSD-3-Clause
+- **google-generativeai** (v0.8.5): Apache-2.0
+- **tenacity** (v9.1.2): Apache-2.0
+- **python-dotenv** (v1.0.0): BSD-3-Clause
+- **APScheduler** (v3.10.4): MIT
+- **pytz** (v2024.1): MIT
+
+#### 프론트엔드
+- **React** (v19.2.0): MIT
+- **react-scripts** (v5.0.1): MIT
+- **html2canvas** (v1.4.1): MIT
+- **Recharts** (v3.5.1): MIT
+- **@testing-library/react** (v16.3.0): MIT
+- **web-vitals** (v2.1.4): Apache-2.0
+
+#### 외부 API
+- **Google Gemini AI API**: Google API 서비스 약관
+- **OpenWeatherMap API**: OpenWeatherMap 서비스 약관 (선택사항)
+
+> **참고**: 각 라이브러리의 정확한 라이선스 정보는 해당 패키지의 공식 문서를 참고하세요.
 
 ---
 

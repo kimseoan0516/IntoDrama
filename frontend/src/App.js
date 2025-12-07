@@ -1293,16 +1293,55 @@ const ChatScreen = ({
                         // 감정 모드 배경 효과 제거 (::before, ::after 가상 요소) - 흐림 방지
                         const clonedChatContainer = clonedDoc.querySelector('.chat-container');
                         if (clonedChatContainer) {
-                            // ::before와 ::after 가상 요소를 제거하기 위해 스타일 추가
+                            // ::before와 ::after 가상 요소를 완전히 제거하기 위해 강력한 스타일 추가
                             const style = clonedDoc.createElement('style');
                             style.textContent = `
+                                /* 모든 감정 모드의 가상 요소 제거 */
                                 .chat-container::before,
-                                .chat-container::after {
+                                .chat-container::after,
+                                .chat-container.mood-romance::before,
+                                .chat-container.mood-romance::after,
+                                .chat-container.mood-comfort::before,
+                                .chat-container.mood-comfort::after,
+                                .chat-container.mood-conflict::before,
+                                .chat-container.mood-conflict::after,
+                                .chat-container.confession-scene::before,
+                                .chat-container.confession-scene::after,
+                                .chat-container.has-custom-background::before,
+                                .chat-container.has-custom-background::after {
                                     display: none !important;
                                     content: none !important;
                                     opacity: 0 !important;
                                     visibility: hidden !important;
                                     pointer-events: none !important;
+                                    position: absolute !important;
+                                    width: 0 !important;
+                                    height: 0 !important;
+                                    overflow: hidden !important;
+                                }
+                                
+                                /* 컨테이너 자체의 opacity와 filter 강제 설정 */
+                                .chat-container,
+                                .chat-container.mood-romance,
+                                .chat-container.mood-comfort,
+                                .chat-container.mood-conflict,
+                                .chat-container.confession-scene,
+                                .chat-container.has-custom-background {
+                                    opacity: 1 !important;
+                                    filter: none !important;
+                                    backdrop-filter: none !important;
+                                    -webkit-backdrop-filter: none !important;
+                                }
+                                
+                                /* 배경 그라데이션도 진하게 만들기 */
+                                .chat-container.mood-romance {
+                                    background: linear-gradient(180deg, #F9E7E2 0%, #F4EEE9 100%) !important;
+                                }
+                                .chat-container.mood-comfort {
+                                    background: linear-gradient(180deg, #FFF8E1 0%, #FFECB3 100%) !important;
+                                }
+                                .chat-container.mood-conflict {
+                                    background: linear-gradient(180deg, #FFE5E5 0%, #FFD5D5 100%) !important;
                                 }
                             `;
                             clonedDoc.head.appendChild(style);
@@ -1310,18 +1349,43 @@ const ChatScreen = ({
                             // 컨테이너 자체의 opacity와 filter도 확인
                             clonedChatContainer.style.opacity = '1';
                             clonedChatContainer.style.filter = 'none';
+                            clonedChatContainer.style.backdropFilter = 'none';
+                            clonedChatContainer.style.webkitBackdropFilter = 'none';
+                            
+                            // 모든 감정 모드 클래스 제거 (배경 효과 제거를 위해)
+                            clonedChatContainer.classList.remove('mood-romance', 'mood-comfort', 'mood-conflict', 'confession-scene');
                         }
                         
-                        // 모든 컨테이너와 윈도우의 opacity 확인
-                        const allContainers = clonedDoc.querySelectorAll('.chat-container, .chat-window, .message-list, .capture-temp-container');
+                        // 모든 컨테이너와 윈도우의 opacity 확인 및 강제 설정
+                        const allContainers = clonedDoc.querySelectorAll('.chat-container, .chat-window, .message-list, .capture-temp-container, body, html');
                         allContainers.forEach(container => {
-                            container.style.opacity = '1';
-                            container.style.filter = 'none';
-                            if (container.style.backdropFilter) {
-                                container.style.backdropFilter = 'none';
+                            // 인라인 스타일로 직접 설정하여 CSS 우선순위 문제 해결
+                            container.setAttribute('style', 
+                                (container.getAttribute('style') || '') + 
+                                'opacity: 1 !important; ' +
+                                'filter: none !important; ' +
+                                'backdrop-filter: none !important; ' +
+                                '-webkit-backdrop-filter: none !important; '
+                            );
+                        });
+                        
+                        // 모든 자식 요소도 확인
+                        const allElements = clonedDoc.querySelectorAll('*');
+                        allElements.forEach(el => {
+                            // opacity가 1보다 작으면 1로 설정
+                            const computedOpacity = window.getComputedStyle(el).opacity;
+                            if (computedOpacity && parseFloat(computedOpacity) < 1) {
+                                el.style.opacity = '1';
                             }
-                            if (container.style.webkitBackdropFilter) {
-                                container.style.webkitBackdropFilter = 'none';
+                            // filter나 backdrop-filter가 있으면 제거
+                            const computedFilter = window.getComputedStyle(el).filter;
+                            const computedBackdropFilter = window.getComputedStyle(el).backdropFilter;
+                            if (computedFilter && computedFilter !== 'none') {
+                                el.style.filter = 'none';
+                            }
+                            if (computedBackdropFilter && computedBackdropFilter !== 'none') {
+                                el.style.backdropFilter = 'none';
+                                el.style.webkitBackdropFilter = 'none';
                             }
                         });
                         

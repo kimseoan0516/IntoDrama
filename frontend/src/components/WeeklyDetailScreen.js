@@ -194,18 +194,46 @@ const PhotocardModal = ({ quote, character, onClose }) => {
         return gradients[dramaTitle] || gradients['기본값'];
     };
 
-    // 텍스트 길이에 따른 폰트 크기 계산
-    const calculateFontSize = (text) => {
+    // 텍스트 길이에 따른 폰트 크기 및 패딩 계산
+    const calculateTextStyle = (text) => {
         const length = text.length;
-        if (length < 50) return '1.5rem';
-        if (length < 100) return '1.3rem';
-        if (length < 150) return '1.1rem';
-        if (length < 200) return '1rem';
-        return '0.9rem';
+        let fontSize, topPadding, quoteMarginBottom;
+        
+        if (length < 50) {
+            fontSize = '1.5rem';
+            topPadding = '50px';
+            quoteMarginBottom = '20px';
+        } else if (length < 80) {
+            fontSize = '1.3rem';
+            topPadding = '45px';
+            quoteMarginBottom = '18px';
+        } else if (length < 120) {
+            fontSize = '1.1rem';
+            topPadding = '40px';
+            quoteMarginBottom = '16px';
+        } else if (length < 160) {
+            fontSize = '1rem';
+            topPadding = '35px';
+            quoteMarginBottom = '14px';
+        } else if (length < 200) {
+            fontSize = '0.9rem';
+            topPadding = '30px';
+            quoteMarginBottom = '12px';
+        } else if (length < 250) {
+            fontSize = '0.85rem';
+            topPadding = '25px';
+            quoteMarginBottom = '10px';
+        } else {
+            fontSize = '0.8rem';
+            topPadding = '20px';
+            quoteMarginBottom = '8px';
+        }
+        
+        return { fontSize, topPadding, quoteMarginBottom };
     };
 
     const gradient = getGradientByDrama(character?.dramaTitle || '');
-    const fontSize = calculateFontSize(quote.text);
+    const textStyle = calculateTextStyle(quote.text);
 
     return (
         <div className="modal-overlay" onClick={onClose} style={{
@@ -234,10 +262,11 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                     ref={photocardRef}
                     style={{
                         width: '360px',
-                        height: '640px', // 9:16 비율
+                        height: '640px', // 고정 높이
                         background: gradient,
                         borderRadius: '20px',
-                        padding: '50px 35px 35px 35px',
+                        padding: '0 35px 35px 35px',
+                        paddingTop: textStyle.topPadding,
                         display: 'flex',
                         flexDirection: 'column',
                         position: 'relative',
@@ -277,10 +306,10 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         position: 'relative',
                         zIndex: 1,
                         flex: 1,
-                        padding: '40px 10px 220px 10px',
+                        padding: '0 10px 180px 10px',
                         minHeight: 0,
-                        maxHeight: 'calc(100% - 220px)',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        width: '100%'
                     }}>
                         {/* 큰 따옴표 장식 */}
                         <div style={{
@@ -288,7 +317,7 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                             color: 'rgba(255, 255, 255, 0.2)',
                             fontFamily: 'Georgia, serif',
                             lineHeight: '1',
-                            marginBottom: '20px',
+                            marginBottom: textStyle.quoteMarginBottom,
                             fontWeight: '700',
                             flexShrink: 0
                         }}>
@@ -297,17 +326,28 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                         
                         <div style={{
                             color: '#FFFFFF',
-                            fontSize: fontSize,
+                            fontSize: textStyle.fontSize,
                             lineHeight: '1.6',
                             fontWeight: '500',
                             wordBreak: 'keep-all',
                             textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                             fontFamily: '"Noto Serif KR", "Nanum Myeongjo", serif',
                             padding: '0',
-                            flexShrink: 0,
-                            width: '100%'
+                            width: '100%',
+                            overflowWrap: 'break-word',
+                            whiteSpace: 'pre-wrap',
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            justifyContent: 'center',
+                            overflow: 'hidden'
                         }}>
-                            {quote.text}
+                            <span style={{
+                                width: '100%',
+                                display: 'block'
+                            }}>
+                                {quote.text}
+                            </span>
                         </div>
                     </div>
 
@@ -1009,7 +1049,7 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                         <h2 style={{ 
                             color: '#3E2723', 
                             margin: 0, 
-                            fontSize: '0.9rem',
+                            fontSize: '1.1rem',
                             fontWeight: '700',
                             position: 'absolute',
                             left: '48px',
@@ -1103,7 +1143,7 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                         <h2 style={{ 
                             color: '#3E2723', 
                             margin: 0, 
-                            fontSize: '0.9rem',
+                            fontSize: '1.1rem',
                             fontWeight: '700',
                             position: 'absolute',
                             left: '48px',
@@ -1205,7 +1245,7 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                     <h2 style={{ 
                         color: '#3E2723', 
                         margin: 0, 
-                        fontSize: '0.9rem',
+                        fontSize: '1.1rem',
                         fontWeight: '700',
                         position: 'absolute',
                         left: '48px',

@@ -347,20 +347,8 @@ def get_chat_histories(current_user: User = Depends(get_current_user), db: Sessi
     
     result = []
     for h in histories:
+        # 저장된 제목을 그대로 사용 (사용자가 수정한 제목은 덮어쓰지 않음)
         title = h.title
-        # 제목이 "~와의 대화" 형식이면 요약 생성
-        if title and (("와의 대화" in title or "과의 대화" in title) or len(title) < 5):
-            try:
-                messages = json.loads(h.messages) if isinstance(h.messages, str) else h.messages
-                if messages and len(messages) > 0:
-                    summary_result = summarize_chat({"messages": messages}, None)
-                    if summary_result and summary_result.get("summary"):
-                        title = summary_result["summary"]
-                        # DB 업데이트
-                        h.title = title
-                        db.commit()
-            except Exception as e:
-                print(f"요약 생성 실패: {e}")
         
         created_at_str = h.created_at.isoformat() + 'Z' if h.created_at else None
         updated_at_str = h.updated_at.isoformat() + 'Z' if h.updated_at else None

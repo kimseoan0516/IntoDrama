@@ -13,9 +13,7 @@ pinned: false
 
 ## 🎥 데모 영상
 
-[![IntoDrama 데모 영상](https://img.youtube.com/vi/Ym6sf6DfoD8/maxresdefault.jpg)](https://www.youtube.com/watch?v=Ym6sf6DfoD8&si=8mLsmnfsvyT_gxwo)
-
-> [YouTube에서 영상 보기](https://www.youtube.com/watch?v=Ym6sf6DfoD8&si=8mLsmnfsvyT_gxwo)
+[![IntoDrama 데모 영상](https://img.youtube.com/vi/Ym6sf6DfoD8/0.jpg)](https://www.youtube.com/watch?v=Ym6sf6DfoD8&si=NIAKo1OUNUAnBXw7)
 
 ---
 

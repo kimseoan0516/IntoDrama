@@ -1208,10 +1208,7 @@ const ChatScreen = ({
                     imageTimeout: 15000,
                     pixelRatio: Math.max(window.devicePixelRatio || 2, 2),
                     foreignObjectRendering: false,
-                    ignoreElements: (element) => {
-                        return element.classList && element.classList.contains('capture-controls');
-                    },
-                    onclone: (clonedDoc) => {
+                    onclone: (clonedDoc, element) => {
                         // 모든 요소의 스타일 명시적으로 복원
                         const clonedDocElements = clonedDoc.querySelectorAll('*');
                         clonedDocElements.forEach(el => {
@@ -1293,7 +1290,42 @@ const ChatScreen = ({
                             clonedMessageList.style.background = messageListStyle.background || '#F5F1EB';
                         }
                         
-                        // 메시지 버블 색상 강제 적용
+                        // 감정 모드 배경 효과 제거 (::before, ::after 가상 요소) - 흐림 방지
+                        const clonedChatContainer = clonedDoc.querySelector('.chat-container');
+                        if (clonedChatContainer) {
+                            // ::before와 ::after 가상 요소를 제거하기 위해 스타일 추가
+                            const style = clonedDoc.createElement('style');
+                            style.textContent = `
+                                .chat-container::before,
+                                .chat-container::after {
+                                    display: none !important;
+                                    content: none !important;
+                                    opacity: 0 !important;
+                                    visibility: hidden !important;
+                                    pointer-events: none !important;
+                                }
+                            `;
+                            clonedDoc.head.appendChild(style);
+                            
+                            // 컨테이너 자체의 opacity와 filter도 확인
+                            clonedChatContainer.style.opacity = '1';
+                            clonedChatContainer.style.filter = 'none';
+                        }
+                        
+                        // 모든 컨테이너와 윈도우의 opacity 확인
+                        const allContainers = clonedDoc.querySelectorAll('.chat-container, .chat-window, .message-list, .capture-temp-container');
+                        allContainers.forEach(container => {
+                            container.style.opacity = '1';
+                            container.style.filter = 'none';
+                            if (container.style.backdropFilter) {
+                                container.style.backdropFilter = 'none';
+                            }
+                            if (container.style.webkitBackdropFilter) {
+                                container.style.webkitBackdropFilter = 'none';
+                            }
+                        });
+                        
+                        // 메시지 버블 색상 강제 적용 - 진하게 표시
                         const messageBubbles = clonedDoc.querySelectorAll('.message-bubble');
                         messageBubbles.forEach(bubble => {
                             const originalBubble = Array.from(captureRef.current.children).find(
@@ -1301,22 +1333,51 @@ const ChatScreen = ({
                                 child.classList.toString() === bubble.classList.toString()
                             );
                             if (originalBubble) {
-                                const computedStyle = window.getComputedStyle(originalBubble);
                                 const messageText = bubble.querySelector('.message-text');
                                 if (messageText) {
-                                    const textComputedStyle = window.getComputedStyle(originalBubble.querySelector('.message-text'));
-                                    if (textComputedStyle.background) {
-                                        messageText.style.background = textComputedStyle.background;
-                                    }
-                                    if (textComputedStyle.backgroundColor) {
-                                        messageText.style.backgroundColor = textComputedStyle.backgroundColor;
-                                    }
-                                    if (textComputedStyle.color) {
-                                        messageText.style.color = textComputedStyle.color;
+                                    const originalMessageText = originalBubble.querySelector('.message-text');
+                                    if (originalMessageText) {
+                                        const textComputedStyle = window.getComputedStyle(originalMessageText);
+                                        
+                                        // 배경색 강제 적용 (linear-gradient 포함)
+                                        if (textComputedStyle.background && textComputedStyle.background !== 'none' && textComputedStyle.background !== 'rgba(0, 0, 0, 0)') {
+                                            messageText.style.background = textComputedStyle.background;
+                                            messageText.style.backgroundColor = 'transparent'; // background가 있으면 backgroundColor는 transparent
+                                        } else if (textComputedStyle.backgroundColor && textComputedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)') {
+                                            messageText.style.backgroundColor = textComputedStyle.backgroundColor;
+                                        }
+                                        
+                                        // 텍스트 색상 강제 적용
+                                        if (textComputedStyle.color && textComputedStyle.color !== 'rgba(0, 0, 0, 0)') {
+                                            messageText.style.color = textComputedStyle.color;
+                                        }
+                                        
+                                        // border와 box-shadow도 복원
+                                        if (textComputedStyle.border) {
+                                            messageText.style.border = textComputedStyle.border;
+                                        }
+                                        if (textComputedStyle.boxShadow) {
+                                            messageText.style.boxShadow = textComputedStyle.boxShadow;
+                                        }
+                                        
+                                        // opacity를 1로 강제 설정하여 흐림 방지
+                                        messageText.style.opacity = '1';
+                                        messageText.style.filter = 'none';
+                                        
+                                        // backdrop-filter 제거 (캡처 시 불필요)
+                                        messageText.style.backdropFilter = 'none';
+                                        messageText.style.webkitBackdropFilter = 'none';
                                     }
                                 }
+                                
+                                // 버블 자체의 opacity도 1로 설정
+                                bubble.style.opacity = '1';
+                                bubble.style.filter = 'none';
                             }
                         });
+                    },
+                    ignoreElements: (element) => {
+                        return element.classList && element.classList.contains('capture-controls');
                     }
                 });
 

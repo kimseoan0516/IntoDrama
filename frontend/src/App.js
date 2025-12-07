@@ -1343,6 +1343,54 @@ const ChatScreen = ({
                                 .chat-container.mood-conflict {
                                     background: linear-gradient(180deg, #FFE5E5 0%, #FFD5D5 100%) !important;
                                 }
+                                
+                                /* 말풍선 배경색 강제 설정 - 투명도 완전 제거 */
+                                .message-bubble.user .message-text {
+                                    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%) !important;
+                                    opacity: 1 !important;
+                                    filter: none !important;
+                                    backdrop-filter: none !important;
+                                    -webkit-backdrop-filter: none !important;
+                                }
+                                
+                                .message-bubble.ai .message-text {
+                                    background: linear-gradient(135deg, #FEFEFE 0%, #F8F8F8 50%, #F3F3F3 100%) !important;
+                                    opacity: 1 !important;
+                                    filter: none !important;
+                                    backdrop-filter: none !important;
+                                    -webkit-backdrop-filter: none !important;
+                                }
+                                
+                                .message-bubble.ai-b .message-text {
+                                    background: linear-gradient(135deg, #FEFEFE 0%, #FAFAFA 50%, #F6F6F6 100%) !important;
+                                    opacity: 1 !important;
+                                    filter: none !important;
+                                    backdrop-filter: none !important;
+                                    -webkit-backdrop-filter: none !important;
+                                }
+                                
+                                /* 모든 감정 모드의 말풍선도 진하게 */
+                                .chat-container.mood-romance .message-bubble.user .message-text,
+                                .chat-container.mood-comfort .message-bubble.user .message-text,
+                                .chat-container.mood-conflict .message-bubble.user .message-text,
+                                .chat-container.confession-scene .message-bubble.user .message-text {
+                                    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%) !important;
+                                    opacity: 1 !important;
+                                    filter: none !important;
+                                    backdrop-filter: none !important;
+                                    -webkit-backdrop-filter: none !important;
+                                }
+                                
+                                .chat-container.mood-romance .message-bubble.ai .message-text,
+                                .chat-container.mood-comfort .message-bubble.ai .message-text,
+                                .chat-container.mood-conflict .message-bubble.ai .message-text,
+                                .chat-container.confession-scene .message-bubble.ai .message-text {
+                                    background: linear-gradient(135deg, #FEFEFE 0%, #F8F8F8 50%, #F3F3F3 100%) !important;
+                                    opacity: 1 !important;
+                                    filter: none !important;
+                                    backdrop-filter: none !important;
+                                    -webkit-backdrop-filter: none !important;
+                                }
                             `;
                             clonedDoc.head.appendChild(style);
                             
@@ -1389,7 +1437,24 @@ const ChatScreen = ({
                             }
                         });
                         
-                        // 메시지 버블 색상 강제 적용 - 진하게 표시
+                        // rgba 투명도를 rgb로 변환하는 함수
+                        const rgbaToRgb = (rgbaString) => {
+                            if (!rgbaString || !rgbaString.includes('rgba')) return rgbaString;
+                            const match = rgbaString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+                            if (match) {
+                                return `rgb(${match[1]}, ${match[2]}, ${match[3]})`;
+                            }
+                            return rgbaString;
+                        };
+                        
+                        // linear-gradient에서 rgba를 rgb로 변환하는 함수
+                        const fixGradientOpacity = (gradientString) => {
+                            if (!gradientString || !gradientString.includes('linear-gradient')) return gradientString;
+                            // rgba를 rgb로 변환 (투명도 제거)
+                            return gradientString.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)/g, 'rgb($1, $2, $3)');
+                        };
+                        
+                        // 메시지 버블 색상 강제 적용 - 진하게 표시 (투명도 완전 제거)
                         const messageBubbles = clonedDoc.querySelectorAll('.message-bubble');
                         messageBubbles.forEach(bubble => {
                             const originalBubble = Array.from(captureRef.current.children).find(
@@ -1403,24 +1468,54 @@ const ChatScreen = ({
                                     if (originalMessageText) {
                                         const textComputedStyle = window.getComputedStyle(originalMessageText);
                                         
-                                        // 배경색 강제 적용 (linear-gradient 포함)
-                                        if (textComputedStyle.background && textComputedStyle.background !== 'none' && textComputedStyle.background !== 'rgba(0, 0, 0, 0)') {
-                                            messageText.style.background = textComputedStyle.background;
-                                            messageText.style.backgroundColor = 'transparent'; // background가 있으면 backgroundColor는 transparent
-                                        } else if (textComputedStyle.backgroundColor && textComputedStyle.backgroundColor !== 'rgba(0, 0, 0, 0)') {
-                                            messageText.style.backgroundColor = textComputedStyle.backgroundColor;
+                                        // 배경색 강제 적용 - rgba 투명도 제거
+                                        let backgroundValue = textComputedStyle.background || textComputedStyle.backgroundColor;
+                                        
+                                        if (backgroundValue && backgroundValue !== 'none' && backgroundValue !== 'rgba(0, 0, 0, 0)' && backgroundValue !== 'transparent') {
+                                            // linear-gradient인 경우 rgba를 rgb로 변환
+                                            if (backgroundValue.includes('linear-gradient')) {
+                                                backgroundValue = fixGradientOpacity(backgroundValue);
+                                                messageText.style.background = backgroundValue;
+                                                messageText.style.backgroundColor = 'transparent';
+                                            } else if (backgroundValue.includes('rgba')) {
+                                                // rgba를 rgb로 변환
+                                                const rgbValue = rgbaToRgb(backgroundValue);
+                                                messageText.style.backgroundColor = rgbValue;
+                                                messageText.style.background = rgbValue;
+                                            } else {
+                                                messageText.style.background = backgroundValue;
+                                                messageText.style.backgroundColor = backgroundValue;
+                                            }
+                                        }
+                                        
+                                        // 기본 배경색이 없으면 클래스에 따라 직접 설정
+                                        if (!backgroundValue || backgroundValue === 'none' || backgroundValue === 'rgba(0, 0, 0, 0)' || backgroundValue === 'transparent') {
+                                            if (bubble.classList.contains('user')) {
+                                                // 사용자 메시지 - 진한 브라운
+                                                messageText.style.background = 'linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%)';
+                                                messageText.style.backgroundColor = '#8D6E63';
+                                            } else if (bubble.classList.contains('ai')) {
+                                                // AI 메시지 - 밝은 회색
+                                                if (bubble.classList.contains('ai-b')) {
+                                                    messageText.style.background = 'linear-gradient(135deg, #FEFEFE 0%, #FAFAFA 50%, #F6F6F6 100%)';
+                                                } else {
+                                                    messageText.style.background = 'linear-gradient(135deg, #FEFEFE 0%, #F8F8F8 50%, #F3F3F3 100%)';
+                                                }
+                                                messageText.style.backgroundColor = '#FEFEFE';
+                                            }
                                         }
                                         
                                         // 텍스트 색상 강제 적용
                                         if (textComputedStyle.color && textComputedStyle.color !== 'rgba(0, 0, 0, 0)') {
-                                            messageText.style.color = textComputedStyle.color;
+                                            const colorValue = rgbaToRgb(textComputedStyle.color);
+                                            messageText.style.color = colorValue;
                                         }
                                         
                                         // border와 box-shadow도 복원
-                                        if (textComputedStyle.border) {
+                                        if (textComputedStyle.border && textComputedStyle.border !== 'none') {
                                             messageText.style.border = textComputedStyle.border;
                                         }
-                                        if (textComputedStyle.boxShadow) {
+                                        if (textComputedStyle.boxShadow && textComputedStyle.boxShadow !== 'none') {
                                             messageText.style.boxShadow = textComputedStyle.boxShadow;
                                         }
                                         

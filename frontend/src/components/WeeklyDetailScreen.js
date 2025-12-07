@@ -194,46 +194,18 @@ const PhotocardModal = ({ quote, character, onClose }) => {
         return gradients[dramaTitle] || gradients['기본값'];
     };
 
-    // 텍스트 길이에 따른 폰트 크기 및 패딩 계산
-    const calculateTextStyle = (text) => {
+    // 텍스트 길이에 따른 폰트 크기 계산
+    const calculateFontSize = (text) => {
         const length = text.length;
-        let fontSize, topPadding, quoteMarginBottom;
-        
-        if (length < 50) {
-            fontSize = '1.5rem';
-            topPadding = '50px';
-            quoteMarginBottom = '20px';
-        } else if (length < 80) {
-            fontSize = '1.3rem';
-            topPadding = '45px';
-            quoteMarginBottom = '18px';
-        } else if (length < 120) {
-            fontSize = '1.1rem';
-            topPadding = '40px';
-            quoteMarginBottom = '16px';
-        } else if (length < 160) {
-            fontSize = '1rem';
-            topPadding = '35px';
-            quoteMarginBottom = '14px';
-        } else if (length < 200) {
-            fontSize = '0.9rem';
-            topPadding = '30px';
-            quoteMarginBottom = '12px';
-        } else if (length < 250) {
-            fontSize = '0.85rem';
-            topPadding = '25px';
-            quoteMarginBottom = '10px';
-        } else {
-            fontSize = '0.8rem';
-            topPadding = '20px';
-            quoteMarginBottom = '8px';
-        }
-        
-        return { fontSize, topPadding, quoteMarginBottom };
+        if (length < 50) return '1.5rem';
+        if (length < 100) return '1.3rem';
+        if (length < 150) return '1.1rem';
+        if (length < 200) return '1rem';
+        return '0.9rem';
     };
 
     const gradient = getGradientByDrama(character?.dramaTitle || '');
-    const textStyle = calculateTextStyle(quote.text);
+    const fontSize = calculateFontSize(quote.text);
 
     return (
         <div className="modal-overlay" onClick={onClose} style={{
@@ -262,19 +234,19 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                     ref={photocardRef}
                     style={{
                         width: '360px',
-                        height: '640px', // 고정 높이
+                        height: '640px',
                         background: gradient,
                         borderRadius: '20px',
-                        padding: '0 35px 35px 35px',
-                        paddingTop: textStyle.topPadding,
+                        padding: '50px 35px',
                         display: 'flex',
                         flexDirection: 'column',
+                        justifyContent: 'center',
                         position: 'relative',
                         overflow: 'hidden',
                         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
                     }}
                 >
-                    {/* 배경 장식 (흐릿한 원형) */}
+                    {/* 배경 장식 */}
                     <div style={{
                         position: 'absolute',
                         top: '-100px',
@@ -300,16 +272,13 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'flex-start',
+                        justifyContent: 'center',
                         alignItems: 'center',
                         textAlign: 'center',
                         position: 'relative',
                         zIndex: 1,
                         flex: 1,
-                        padding: '0 10px 180px 10px',
-                        minHeight: 0,
-                        overflow: 'hidden',
-                        width: '100%'
+                        padding: '40px 0'
                     }}>
                         {/* 큰 따옴표 장식 */}
                         <div style={{
@@ -317,53 +286,35 @@ const PhotocardModal = ({ quote, character, onClose }) => {
                             color: 'rgba(255, 255, 255, 0.2)',
                             fontFamily: 'Georgia, serif',
                             lineHeight: '1',
-                            marginBottom: textStyle.quoteMarginBottom,
-                            fontWeight: '700',
-                            flexShrink: 0
+                            marginBottom: '20px',
+                            fontWeight: '700'
                         }}>
                             ❝
                         </div>
                         
                         <div style={{
                             color: '#FFFFFF',
-                            fontSize: textStyle.fontSize,
+                            fontSize: fontSize,
                             lineHeight: '1.6',
                             fontWeight: '500',
                             wordBreak: 'keep-all',
                             textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                             fontFamily: '"Noto Serif KR", "Nanum Myeongjo", serif',
-                            padding: '0',
-                            width: '100%',
-                            overflowWrap: 'break-word',
-                            whiteSpace: 'pre-wrap',
-                            flex: 1,
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            justifyContent: 'center',
-                            overflow: 'hidden'
+                            padding: '0 10px'
                         }}>
-                            <span style={{
-                                width: '100%',
-                                display: 'block'
-                            }}>
-                                {quote.text}
-                            </span>
+                            {quote.text}
                         </div>
                     </div>
 
-                    {/* 하단 정보 - 고정 위치 */}
+                    {/* 하단 정보 */}
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '12px',
-                        position: 'absolute',
-                        bottom: '60px',
-                        left: '35px',
-                        right: '35px',
-                        zIndex: 2,
-                        backgroundColor: 'transparent',
-                        pointerEvents: 'none'
+                        position: 'relative',
+                        zIndex: 1,
+                        paddingTop: '30px'
                     }}>
                         {/* 캐릭터 이름 */}
                         <div style={{

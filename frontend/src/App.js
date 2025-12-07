@@ -2113,6 +2113,7 @@ const ChatScreen = ({
                                                 characterId: msg.characterId,
                                                 timestamp: msg.timestamp || new Date()
                                             }],
+                                            is_manual: 0,  // 자동 저장 (대사 저장으로 인한 자동 저장이므로 대화 보관함에 표시 안 됨)
                                             is_manual_quote: 1  // 대사 저장 플래그 - 대화 보관함에 표시 안 됨
                                         };
                                         await api.saveChat(quoteData);
@@ -2132,7 +2133,7 @@ const ChatScreen = ({
                                             title: defaultTitle,
                                             character_ids: selectedCharIds,
                                             messages: messagesToSave,
-                                            is_manual: 1,  // 수동 저장 플래그
+                                            is_manual: 0,  // 자동 저장 플래그 (대사 저장으로 인한 자동 저장이므로 대화 보관함에 표시 안 됨)
                                             is_manual_quote: 0  // 대화 보관함에 표시 안 됨 (하트로 저장된 대화)
                                         };
                                         await api.saveChat(fullChatData);

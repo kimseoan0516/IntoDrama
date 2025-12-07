@@ -338,11 +338,18 @@ def delete_quote(quote_id: int, current_user: User = Depends(get_current_user), 
 @router.get("/histories")
 def get_chat_histories(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """저장된 채팅 히스토리 조회"""
-    # 사용자가 직접 "서버에 저장" 버튼을 누른 대화만 반환 (대사가 아닌 것만)
+    # 사용자가 직접 "서버에 저장" 버튼을 누른 대화만 반환
+    # 조건:
+    # - is_manual == 1: 사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 것만
+    # - is_manual_quote == 0: 대사 저장으로 인한 자동 저장이 아닌 것만
+    # 제외되는 경우:
+    # - 자동 저장된 대화 (is_manual == 0)
+    # - 대사 저장으로 인한 자동 저장 (is_manual_quote == 1)
+    # - 하트 클릭으로 저장한 대사 (is_manual == 0, is_manual_quote == 1)
     histories = db.query(ChatHistory).filter(
         ChatHistory.user_id == current_user.id,
-        ChatHistory.is_manual == 1,
-        ChatHistory.is_manual_quote == 0
+        ChatHistory.is_manual == 1,  # 사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 것만
+        ChatHistory.is_manual_quote == 0  # 대사 저장이 아닌 것만 (하트 클릭으로 저장한 대사 제외)
     ).order_by(ChatHistory.updated_at.desc()).all()
     
     result = []
@@ -404,12 +411,18 @@ def save_chat_history(
     messages = chat_data.get("messages", [])
     character_ids = chat_data.get("character_ids", [])
     title = chat_data.get("title", "").strip()
+    is_manual = chat_data.get("is_manual", 1)  # 기본값은 1 (사용자가 직접 저장한 경우)
     is_manual_quote = chat_data.get("is_manual_quote", 0)
     quote_message_id = chat_data.get("quote_message_id", None)
     
+    # "서버에 저장" 버튼을 눌러 저장한 경우에만 is_manual=1
+    # 대사 저장으로 인한 자동 저장은 is_manual=0
+    # 따라서 프론트엔드에서 전달한 is_manual 값을 그대로 사용
+    
     # 제목이 비어있거나 기본 제목("대화" 또는 "~의 대화")인 경우 자동 요약 생성
     # 대사 저장(is_manual_quote=1)인 경우 제목 자동 생성 건너뛰기
-    if is_manual_quote != 1 and (not title or title == "대화" or ("의 대화" in title or "과의 대화" in title or "와의 대화" in title)):
+    # 사용자가 직접 저장한 경우(is_manual=1)에만 자동 요약 생성
+    if is_manual == 1 and is_manual_quote != 1 and (not title or title == "대화" or ("의 대화" in title or "과의 대화" in title or "와의 대화" in title)):
         try:
             summary_result = summarize_chat({"messages": messages}, None)
             if summary_result and summary_result.get("summary"):
@@ -434,7 +447,7 @@ def save_chat_history(
         character_ids=json.dumps(character_ids),
         messages=json.dumps(messages),
         title=title,
-        is_manual=1,
+        is_manual=is_manual,  # 프론트엔드에서 전달한 값 사용
         is_manual_quote=is_manual_quote,
         quote_message_id=quote_message_id
     )

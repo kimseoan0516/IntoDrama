@@ -1,0 +1,10 @@
+.git
+.gitignore
+venv
+node_modules
+__pycache__
+.env
+*.mp4
+*.jpg
+*.png
+# (필요하면 용량 큰 데이터 파일 확장자도 추가하세요)

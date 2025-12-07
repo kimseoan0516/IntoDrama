@@ -1,0 +1,3670 @@
+/* Noto Sans KR 폰트 임포트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+/* Nanum Pen Script 폰트 임포트 (손글씨 느낌) */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+/* Noto Serif KR 폰트 임포트 (명조체, 포토카드용) */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap');
+
+/* CSS 파일 import */
+@import './variables.css';
+@import './base.css';
+@import './layout.css';
+
+/* 일기 모달 스타일 */
+.diary-modal {
+    max-width: 380px; /* PC: 메인 화면(420px)보다 작게 */
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px 20px 32px 36px !important;
+    gap: 0 !important;
+    border-bottom: none;
+}
+
+.diary-modal-header {
+    margin-bottom: 20px;
+    padding-top: 8px;
+}
+
+.diary-modal::-webkit-scrollbar {
+    width: 4px;
+}
+
+.diary-modal::-webkit-scrollbar-track {
+    background: #F5F1EB;
+    border-radius: 3px;
+}
+
+.diary-modal::-webkit-scrollbar-thumb {
+    background: rgba(215, 204, 200, 0.8);
+    border-radius: 3px;
+    min-height: 5px;
+}
+
+.diary-modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(188, 170, 164, 0.9);
+}
+
+.diary-modal-body {
+    padding: 20px 20px 20px 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    /* 스크롤바를 오버레이 방식으로 표시 (콘텐츠 공간 차지 안 함) */
+    position: relative;
+    /* 스크롤바가 콘텐츠 위에 오버레이되도록 */
+    box-sizing: border-box;
+}
+
+.diary-modal-body::-webkit-scrollbar {
+    width: 4px;
+    /* 스크롤바를 더 얇게 */
+}
+
+.diary-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+    margin: 4px 0; /* 상하 여백 */
+    /* 스크롤바 트랙을 오른쪽 끝에 배치 */
+    margin-right: -20px; /* 패딩만큼 왼쪽으로 이동하여 오른쪽 끝에 배치 */
+}
+
+.diary-modal-body::-webkit-scrollbar-thumb {
+    background: rgba(215, 204, 200, 0.8);
+    border-radius: 4px;
+    min-height: 5px;
+    /* 스크롤바를 오른쪽 끝에 배치 */
+}
+
+.diary-modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(188, 170, 164, 0.9);
+}
+
+.diary-empty-state {
+    text-align: center;
+    padding: 32px 24px 56px 24px;
+}
+
+.diary-empty-state p {
+    font-size: 1.1rem;
+    color: #A1887F;
+    margin-bottom: 12px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.diary-empty-state p:first-child {
+    white-space: nowrap;
+}
+
+.diary-subtitle {
+    font-size: 1.1rem;
+    color: #A1887F;
+    margin-bottom: 48px !important;
+    margin-top: -8px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.diary-action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+}
+
+
+.diary-generate-button {
+    flex: 1 1 320px;
+    min-width: 280px;
+    width: 100%;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%);
+    color: white;
+    border: 1.5px solid #6B4E3D;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(107, 78, 61, 0.25), 0 2px 4px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: -0.01em;
+}
+
+.diary-generate-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.diary-generate-button:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.diary-generate-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #9B7A6B 0%, #7A5A4F 100%);
+    border-color: #7A5A4F;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(107, 78, 61, 0.35), 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.diary-generate-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 일기 생성 버튼 이모티콘 반짝이는 효과 */
+.diary-generate-button {
+    position: relative;
+}
+
+/* 일기 달력 스타일 */
+.diary-calendar {
+    margin-top: 0;
+    margin-bottom: 32px;
+    padding: 28px;
+    background: #FFFFFF;
+    border-radius: 18px;
+    border: 1px solid #E8E8E8;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
+    width: 100%;
+}
+
+.diary-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.diary-calendar-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid #E8E0DB;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #5D4037;
+}
+
+.diary-calendar-nav:hover {
+    background: #F5F1EB;
+    border-color: #8D6E63;
+    transform: scale(1.05);
+}
+
+.diary-calendar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3E2723;
+    margin: 0;
+}
+
+.diary-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.diary-calendar-weekday {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #8D6E63;
+    padding: 10px 0;
+}
+
+.diary-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.diary-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    color: #3E2723;
+    font-weight: 500;
+    border: 2px solid transparent;
+    background: #FFFFFF;
+    text-align: center;
+    line-height: 1;
+}
+
+.diary-calendar-day span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.diary-calendar-day:hover:not(.empty):not(.selected) {
+    background: #F5F1EB;
+    border-color: #E8E0DB;
+}
+
+.diary-calendar-day.empty {
+    cursor: default;
+}
+
+.diary-calendar-day.has-diary {
+    background: #FFFFFF;
+    border: 2px solid transparent;
+    font-weight: 500;
+    position: relative;
+}
+
+/* 일기 기록된 날짜 - 채워진 원 */
+.diary-calendar-day.has-diary::before {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 50%, #DDC9B8 100%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    box-shadow: 0 2px 4px rgba(141, 110, 99, 0.15);
+    margin: 0;
+    padding: 0;
+}
+
+.diary-calendar-day.has-diary span {
+    position: relative;
+    z-index: 1;
+    color: #3E2723;
+    font-weight: 500;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.diary-calendar-day.has-diary:hover::before {
+    background: linear-gradient(135deg, #F8EDE0 0%, #F5E6D3 50%, #E8D5C4 100%);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* 오늘 날짜 표시 - 테두리만 있는 원 */
+.diary-calendar-day.is-today::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #B8A389;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 일기 쓴 날짜와 오늘 날짜가 겹칠 때 */
+.diary-calendar-day.has-diary.is-today::after {
+    z-index: 1;
+    border-color: #A8957A;
+    width: 28px;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+.diary-calendar-day.selected {
+    background: transparent;
+    border: none;
+}
+
+.diary-calendar-day.selected::before {
+    background: linear-gradient(135deg, #E8D5C4 0%, #DDC9B8 50%, #D4BFA8 100%);
+    box-shadow: 0 2px 6px rgba(141, 110, 99, 0.25);
+}
+
+.diary-calendar-section {
+    margin-top: 40px;
+    text-align: left;
+    width: 100%;
+}
+
+.diary-calendar-section h3 {
+    font-size: 1.1rem;
+    color: #5D4037;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.diary-list-section {
+    margin-top: 40px;
+    text-align: left;
+    width: 100%;
+}
+
+.diary-list-section h3 {
+    font-size: 1.1rem;
+    color: #5D4037;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.diary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.diary-list-item {
+    padding: 16px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    border: 1px solid #E8E0DB;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.diary-list-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #8D6E63;
+}
+
+.diary-list-date {
+    font-size: 0.85rem;
+    color: #8D6E63;
+    margin-bottom: 6px;
+}
+
+.diary-list-title {
+    font-size: 1rem;
+    color: #3E2723;
+    font-weight: 500;
+}
+
+.diary-content {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px 20px 24px 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-width: 100%;
+    width: 100%;
+}
+
+.diary-content-export {
+    background: #FFFFFF;
+    padding: 40px 60px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+    color: #3E2723;
+    font-size: 1rem;
+}
+
+.diary-header {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E8E0DB;
+}
+
+.diary-date {
+    font-size: 0.9rem;
+    color: #8D6E63;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+.diary-title {
+    font-size: 1.5rem;
+    color: #3E2723;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.diary-emotions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.emotion-tag {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    color: #5D4037;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.diary-text {
+    line-height: 1.8;
+    color: #3E2723;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    max-width: 100%;
+    padding: 0;
+}
+
+.diary-text p {
+    margin-bottom: 16px;
+}
+
+.diary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #E8E0DB;
+}
+
+.diary-actions-top {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.diary-icon-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    border: 1.5px solid #E8E0DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #5D4037;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.diary-icon-button:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    border-color: #8D6E63;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.diary-actions-bottom {
+    display: flex;
+    gap: 10px;
+}
+
+.diary-action-button {
+    flex: 1;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    color: #3E2723;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.diary-action-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    border-color: #D7CCC8;
+}
+
+.diary-action-button.delete-button {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    color: #E57373;
+    border-color: #E57373;
+}
+
+.diary-action-button.delete-button:hover {
+    background: linear-gradient(135deg, #FFEBEE 0%, #FCE4EC 100%);
+    border-color: #EF5350;
+    color: #EF5350;
+    box-shadow: 0 4px 12px rgba(229, 115, 115, 0.2);
+}
+
+.diary-action-button.back-button {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    color: #5D4037;
+    border-color: #E8E0DB;
+}
+
+/* 일기 작성 폼 스타일 */
+.diary-write-form {
+    padding: 8px 0 8px 0;
+    margin-left: 0;
+    overflow: visible;
+    animation: fadeIn 0.3s ease;
+    width: 100%;
+}
+
+.diary-form-section {
+    margin-bottom: 24px;
+    padding-left: 0;
+    margin-left: 0;
+    overflow: visible;
+    padding-right: 0;
+    text-align: left;
+    width: 100%;
+}
+
+.diary-form-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #5D4037;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.diary-label-hint {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: #8D6E63;
+    margin-left: 4px;
+}
+
+.diary-form-input,
+.diary-form-select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #3E2723;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFC 100%);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* 날짜 입력 필드 */
+.diary-date-input {
+    cursor: pointer;
+    position: relative;
+    padding-right: 44px;
+}
+
+.diary-date-input-wrapper {
+    position: relative;
+}
+
+.diary-date-input-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238D6E63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+    background-size: 18px 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.diary-date-input-wrapper:hover::after {
+    opacity: 1;
+}
+
+/* 날짜 선택 달력 팝업 */
+.date-picker-popup {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10001;
+}
+
+.date-picker-calendar {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFC 100%);
+    border-radius: 12px;
+    border: 2px solid #E8E0DB;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    padding: 12px;
+    min-width: 240px;
+    max-width: 240px;
+}
+
+.date-picker-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.date-picker-calendar-nav {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid #E8E0DB;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFC 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #5D4037;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.date-picker-calendar-nav:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    border-color: #8D6E63;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.date-picker-calendar-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #3E2723;
+    margin: 0;
+}
+
+.date-picker-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+.date-picker-calendar-weekday {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #8D6E63;
+    padding: 4px 0;
+}
+
+.date-picker-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 8px;
+}
+
+.date-picker-calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.75rem;
+    color: #3E2723;
+    font-weight: 500;
+    border: 2px solid transparent;
+    background: transparent;
+    position: relative;
+    min-height: 28px;
+}
+
+.date-picker-calendar-day span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.date-picker-calendar-day.empty {
+    cursor: default;
+}
+
+.date-picker-calendar-day:hover:not(.empty):not(.selected)::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 50%, #DDC9B8 100%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+    box-shadow: 0 2px 4px rgba(141, 110, 99, 0.15);
+}
+
+.date-picker-calendar-day:hover:not(.empty):not(.selected) span {
+    position: relative;
+    z-index: 1;
+}
+
+.date-picker-calendar-day.is-today:not(.selected) {
+    font-weight: 600;
+    color: #8D6E63;
+}
+
+.date-picker-calendar-day.is-today:not(.selected)::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #B8A389;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.date-picker-calendar-day.is-today:not(.selected) span {
+    position: relative;
+    z-index: 1;
+}
+
+.date-picker-calendar-day.selected {
+    color: #3E2723;
+    border: none;
+    font-weight: 600;
+}
+
+.date-picker-calendar-day.selected::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 50%, #DDC9B8 100%);
+    border: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+    box-shadow: 0 2px 4px rgba(141, 110, 99, 0.15);
+}
+
+.date-picker-calendar-day.selected span {
+    position: relative;
+    z-index: 1;
+}
+
+.date-picker-calendar-day.is-today.selected::after {
+    background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 50%, #DDC9B8 100%);
+    border: 2px solid #B8A389;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 2px 4px rgba(141, 110, 99, 0.15);
+}
+
+.date-picker-calendar-day.disabled {
+    opacity: 0.3;
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+}
+
+.date-picker-calendar-day.disabled span {
+    color: #BCAAA4 !important;
+}
+
+.date-picker-calendar-day.disabled:hover {
+    background: transparent !important;
+    transform: none !important;
+    cursor: not-allowed !important;
+}
+
+.date-picker-calendar-day.disabled:hover::after {
+    display: none !important;
+}
+
+.date-picker-calendar-day.disabled::after {
+    display: none !important;
+}
+
+.date-picker-calendar-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid #E8E0DB;
+}
+
+.date-picker-today-button {
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFC 100%);
+    color: #5D4037;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.date-picker-today-button:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    border-color: #8D6E63;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.diary-form-input:focus,
+.diary-form-select:focus {
+    outline: none;
+    border-color: #8D6E63;
+    background: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(141, 110, 99, 0.15), 0 0 0 3px rgba(141, 110, 99, 0.1);
+    transform: translateY(-1px);
+}
+
+.diary-form-input::placeholder {
+    color: #A1887F;
+    opacity: 0.6;
+}
+
+.diary-form-input-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.diary-form-select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238D6E63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 18px 18px;
+    padding-right: 48px;
+    position: relative;
+}
+
+.diary-form-select:hover {
+    border-color: #8D6E63;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFC 100%);
+    box-shadow: 0 4px 8px rgba(141, 110, 99, 0.1);
+    transform: translateY(-1px);
+}
+
+.diary-form-select:active {
+    transform: translateY(0);
+}
+
+.diary-form-select option {
+    padding: 12px 16px;
+    background: #FFFFFF;
+    color: #3E2723;
+    font-size: 1rem;
+    border: none;
+}
+
+.diary-form-select option:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+}
+
+.diary-form-select option:checked {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    color: #5D4037;
+    font-weight: 600;
+}
+
+.diary-emotion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    padding: 0;
+    margin: 4px 0 0 0;
+    overflow: visible;
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.diary-emotion-chip {
+    padding: 10px 18px;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFDFC 100%);
+    color: #8D6E63;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.diary-emotion-chip::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.4s ease;
+}
+
+.diary-emotion-chip:hover::before {
+    left: 100%;
+}
+
+.diary-emotion-chip:hover {
+    border-color: #8D6E63;
+    background: linear-gradient(135deg, #FEFDFC 0%, #FBF9F7 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(141, 110, 99, 0.15);
+}
+
+.diary-emotion-chip.selected {
+    border: none;
+    background: linear-gradient(135deg, #F5F0EB 0%, #EAE3DC 100%);
+    color: #3E2723;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.diary-emotion-chip.selected:hover {
+    background: linear-gradient(135deg, #F8F3EE 0%, #EFE8E1 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3), 0 5px 14px rgba(0, 0, 0, 0.18);
+}
+
+.diary-form-textarea {
+    resize: none;
+    width: 100%;
+    padding: 16px;
+    padding-top: 10px;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #3E2723;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(139, 110, 99, 0.12) 39px,
+        rgba(139, 110, 99, 0.12) 40px
+    ), #FEFCF9;
+    background-size: 100% 40px;
+    font-family: inherit;
+    line-height: 40px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.diary-form-textarea:focus {
+    outline: none;
+    border-color: #8D6E63;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(139, 110, 99, 0.12) 39px,
+        rgba(139, 110, 99, 0.12) 40px
+    ), #FEFCF9;
+    background-size: 100% 40px;
+    box-shadow: 0 4px 12px rgba(141, 110, 99, 0.15), 0 0 0 3px rgba(141, 110, 99, 0.1);
+    transform: translateY(-1px);
+}
+
+.diary-form-textarea::placeholder {
+    color: #A1887F;
+    opacity: 0.6;
+}
+
+.diary-form-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #E8E0DB;
+    align-items: center;
+}
+
+.diary-form-cancel-button {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    color: #5D4037;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.diary-form-cancel-button:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    border-color: #D7CCC8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.diary-form-save-button {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(107, 78, 61, 0.25), 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.diary-form-save-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.diary-form-save-button:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.diary-form-save-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #9B7A6B 0%, #7A5A4F 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 78, 61, 0.35), 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.diary-form-save-button:disabled {
+    background: linear-gradient(135deg, #D7CCC8 0%, #BCAAA4 100%);
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+
+.diary-write-button {
+    flex: 1 1 320px;
+    min-width: 280px;
+    width: 100%;
+    padding: 16px 28px;
+    background: #FAF6F0;
+    color: #3E2723;
+    border: 1.5px solid #E8E0DB;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: -0.01em;
+}
+
+.diary-write-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.diary-write-button:hover::before {
+    left: 100%;
+}
+
+.diary-write-button:hover {
+    background: #F5F1EB;
+    border-color: #D7CCC8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(141, 110, 99, 0.12), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.diary-write-button:hover::before {
+    background: linear-gradient(90deg, transparent, rgba(141, 110, 99, 0.2), transparent);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 토론 모드 스타일 */
+.debate-modal {
+    max-width: 380px; /* PC: 메인 화면(420px)보다 작게 */
+    max-height: 80vh;
+    overflow: hidden;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    margin: 5vh auto;
+    box-sizing: border-box;
+    align-items: stretch;
+}
+
+
+.debate-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden; /* 가로 스크롤 방지 */
+    box-sizing: border-box;
+    padding: 0 18px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(80vh - 120px);
+}
+
+.debate-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.debate-content::-webkit-scrollbar-track {
+    background: #F5F1EB;
+    border-radius: 3px;
+    margin-right: 16px;
+}
+
+.debate-content::-webkit-scrollbar-thumb {
+    background: rgba(215, 204, 200, 0.8);
+    border-radius: 3px;
+    margin-right: 16px;
+    min-height: 5px;
+}
+
+.debate-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(188, 170, 164, 0.9);
+}
+
+.debate-description {
+    font-size: 0.9rem;
+    color: #999999;
+    margin-bottom: 20px;
+    margin-top: 4px;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+.debate-topic-section {
+    margin-bottom: 24px;
+}
+
+.debate-topic-section {
+    margin-bottom: 24px;
+}
+
+.debate-topic-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #5D4037;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+/* 전광판 영역 */
+.debate-topic-billboard {
+    width: 100%;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #FBF9F7 0%, #FFFFFF 100%);
+    border: 2px solid #E8E0DB;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    margin-top: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    height: 120px; /* 고정 높이 증가 (100px -> 120px) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.billboard-selected {
+    animation: billboardFadeIn 0.4s ease-out;
+}
+
+@keyframes billboardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 슬롯머신 효과 */
+.debate-topic-billboard.slot-machine-active {
+    border-color: #8D6E63;
+    box-shadow: 0 4px 16px rgba(141, 110, 99, 0.25);
+    animation: billboardPulse 0.6s ease-in-out;
+}
+
+@keyframes billboardPulse {
+    0%, 100% {
+        box-shadow: 0 4px 16px rgba(141, 110, 99, 0.25);
+    }
+    50% {
+        box-shadow: 0 6px 20px rgba(141, 110, 99, 0.35);
+    }
+}
+
+.billboard-selected.slot-machine-text .billboard-text {
+    filter: blur(2px);
+    opacity: 0.6;
+    transition: filter 0.05s ease-out, opacity 0.05s ease-out;
+}
+
+.billboard-selected:not(.slot-machine-text) {
+    animation: billboardFadeIn 0.3s ease-out;
+}
+
+.billboard-selected:not(.slot-machine-text) .billboard-text {
+    filter: blur(0);
+    opacity: 1;
+}
+
+
+.billboard-selected,
+.billboard-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    text-align: center;
+}
+
+.billboard-quote-left,
+.billboard-quote-right {
+    font-size: 2rem;
+    color: #8D6E63;
+    opacity: 0.6;
+    line-height: 1;
+    font-family: Georgia, serif;
+}
+
+.billboard-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #5D4037;
+    line-height: 1.5;
+    flex: 1;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.billboard-placeholder .billboard-text {
+    color: #A1887F;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+/* 랜덤 뽑기 플로팅 버튼 */
+.debate-random-floating {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.random-topic-floating-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s ease-out, background 0.3s ease;
+    box-shadow: 0 2px 8px rgba(141, 110, 99, 0.3);
+    position: relative;
+    overflow: hidden;
+    height: 36px;
+    min-width: auto;
+}
+
+.random-topic-floating-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.random-topic-floating-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.random-topic-floating-btn:active {
+    transform: translateY(0px) scale(0.95);
+    box-shadow: 0 1px 4px rgba(141, 110, 99, 0.4);
+    background: linear-gradient(135deg, #6B4E3D 0%, #5D4037 100%);
+}
+
+.random-topic-floating-btn:active:hover {
+    transform: translateY(0px) scale(0.95);
+    box-shadow: 0 1px 4px rgba(141, 110, 99, 0.4);
+    background: linear-gradient(135deg, #6B4E3D 0%, #5D4037 100%);
+}
+
+.random-topic-floating-btn.shuffling {
+    transform: translateY(0px) scale(0.95);
+    box-shadow: 0 1px 4px rgba(141, 110, 99, 0.4);
+    background: linear-gradient(135deg, #6B4E3D 0%, #5D4037 100%);
+}
+
+.random-topic-floating-btn.shuffling:hover {
+    transform: translateY(0px) scale(0.95);
+    box-shadow: 0 1px 4px rgba(141, 110, 99, 0.4);
+    background: linear-gradient(135deg, #6B4E3D 0%, #5D4037 100%);
+}
+
+.random-topic-floating-btn:hover:not(:active):not(.shuffling) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(141, 110, 99, 0.4);
+}
+
+.random-topic-floating-btn.shuffling .dice-icon {
+    animation: diceSpin 0.6s ease-in-out;
+}
+
+@keyframes diceSpin {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.random-topic-floating-btn .dice-icon {
+    font-size: 1.2rem;
+    display: inline-block;
+}
+
+.refresh-topics-floating-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    color: #5D4037;
+    border: 1.5px solid #D7CCC8;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.refresh-topics-floating-btn:hover {
+    background: linear-gradient(135deg, #EFEBE9 0%, #E8E0DB 100%);
+    border-color: #8D6E63;
+    transform: translateY(-2px); /* 배경은 회전하지 않고 위로만 이동 */
+    color: #6B4E3D;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.refresh-topics-floating-btn:active {
+    transform: translateY(0); /* 배경은 회전하지 않음 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.refresh-topics-floating-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease; /* 아이콘 회전 애니메이션 */
+}
+
+.refresh-topics-floating-btn:hover svg {
+    transform: rotate(180deg); /* hover 시 아이콘만 회전 */
+}
+
+.refresh-topics-floating-btn:active svg {
+    transform: rotate(180deg); /* active 시에도 아이콘 회전 유지 */
+}
+
+
+/* 직접 입력하기 카드 */
+.topic-custom-input-btn {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%) !important;
+    border: 2px dashed #D7CCC8 !important;
+    color: #8D6E63 !important;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.topic-custom-input-btn:hover:not(.input-active) {
+    background: linear-gradient(135deg, #EFEBE9 0%, #E8E0DB 100%) !important;
+    border-color: #8D6E63 !important;
+    border-style: solid !important;
+}
+
+.topic-custom-input-btn.input-active {
+    border: 2px solid #8D6E63 !important;
+    border-style: solid !important;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FBF9F7 100%) !important;
+    cursor: text;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    height: auto;
+    position: relative;
+}
+
+.topic-custom-input-btn .custom-input-icon {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1;
+    color: #8D6E63;
+}
+
+.topic-custom-input-btn .custom-input-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.custom-topic-input-inline {
+    width: 100%;
+    min-height: 100px;
+    padding: 38px 8px;
+    border: none;
+    background: transparent;
+    color: #3E2723;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    text-align: center;
+    outline: none;
+    box-sizing: border-box;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+    resize: none;
+    line-height: 1.5;
+    overflow: hidden;
+    display: block;
+    margin: 0;
+}
+
+/* 스크롤바 완전히 숨김 */
+.custom-topic-input-inline::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-topic-input-inline {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.custom-topic-input-inline::placeholder {
+    color: #A1887F;
+    opacity: 0.7;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.debate-topic-suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 30px 30px 30px 30px; /* 상하좌우 패딩 추가 (호버 시 그림자 잘림 방지) */
+    margin: -30px -30px -30px -30px; /* 마이너스 마진으로 패딩만큼 바깥으로 확장 (버튼 너비 유지) */
+    width: calc(100% + 60px); /* 마이너스 마진 보정 (좌우 각 30px) */
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+/* 카드 애니메이션 제거 - 랜덤 버튼 클릭 시 카드는 가만히 있음 */
+
+.topic-suggestion-btn {
+    min-height: 110px; /* 긴 문장을 위한 높이 증가 (90px -> 110px) */
+    padding: 12px 10px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.4;
+    word-break: keep-all;
+    position: relative;
+    overflow-wrap: break-word;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-size: 200% 200%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    z-index: 1;
+}
+
+.topic-suggestion-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.02) 2px,
+            rgba(0, 0, 0, 0.02) 4px
+        );
+    border-radius: 16px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.topic-suggestion-btn .topic-text {
+    position: relative;
+    z-index: 1;
+}
+
+.topic-suggestion-btn .important-word {
+    font-weight: 700;
+    font-size: 1.05em;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    position: relative;
+}
+
+.topic-suggestion-btn:active {
+    transform: translateY(-2px) scale(1.01);
+}
+
+/* 가벼운 주제 - 더 하얀색 */
+.topic-suggestion-btn.topic-tone-light {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FEFCF9 50%, #FBF8F4 100%);
+    border-color: #E8E0DB;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn.topic-tone-light:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 50%, #E8E0DB 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn.topic-tone-light.selected {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 50%, #E8E0DB 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(141, 110, 99, 0.25);
+}
+
+.topic-suggestion-btn.topic-tone-light.selected:hover {
+    background: linear-gradient(135deg, #EFEBE9 0%, #E8E0DB 50%, #DDD5CF 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+    box-shadow: 0 8px 24px rgba(141, 110, 99, 0.3);
+}
+
+/* 보통 주제 - 중간 톤 (구별되게) */
+.topic-suggestion-btn.topic-tone-medium {
+    background: linear-gradient(135deg, #F8F5F2 0%, #F5F1EB 100%);
+    border-color: #D7CCC8;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn.topic-tone-medium:hover {
+    background: linear-gradient(135deg, #EFEBE9 0%, #E8E0DB 50%, #DDD5CF 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn.topic-tone-medium.selected {
+    background: linear-gradient(135deg, #EFEBE9 0%, #E8E0DB 50%, #DDD5CF 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(141, 110, 99, 0.25);
+}
+
+.topic-suggestion-btn.topic-tone-medium.selected:hover {
+    background: linear-gradient(135deg, #E8E0DB 0%, #DDD5CF 50%, #D4C9C0 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+    box-shadow: 0 8px 24px rgba(141, 110, 99, 0.3);
+}
+
+/* 철학적/묵직한 주제 - 조금 진한 톤 (약간 더 진하게) */
+.topic-suggestion-btn.topic-tone-deep {
+    background: linear-gradient(135deg, #EFEBE9 0%, #E8E0DB 100%);
+    border-color: #BCAAA4;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn.topic-tone-deep:hover {
+    background: linear-gradient(135deg, #DDD5CF 0%, #D4C9C0 50%, #C9BDB3 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+}
+
+.topic-suggestion-btn.topic-tone-deep.selected {
+    background: linear-gradient(135deg, #DDD5CF 0%, #D4C9C0 50%, #C9BDB3 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(141, 110, 99, 0.25);
+}
+
+.topic-suggestion-btn.topic-tone-deep.selected:hover {
+    background: linear-gradient(135deg, #D4C9C0 0%, #C9BDB3 50%, #BEB0A5 100%);
+    border-color: #8D6E63;
+    color: #5D4037;
+    box-shadow: 0 8px 24px rgba(93, 64, 55, 0.45);
+}
+
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.debate-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 24px;
+    padding-bottom: 24px;
+    flex-shrink: 0;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.debate-start-button {
+    flex: 1;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(141, 110, 99, 0.3);
+}
+
+.debate-start-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(141, 110, 99, 0.4);
+}
+
+.debate-start-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.debate-cancel-button {
+    padding: 14px 20px;
+    background: transparent;
+    color: #8D6E63;
+    border: none;
+    border-radius: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    position: relative;
+}
+
+.debate-cancel-button::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: #8D6E63;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.debate-cancel-button:hover {
+    color: #6B4E3D;
+    background: transparent;
+    transform: none;
+}
+
+.debate-cancel-button:hover::after {
+    opacity: 0.6;
+}
+
+.debate-continue-button {
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #A07070 0%, #8B5E5E 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(160, 112, 112, 0.3);
+}
+
+.debate-continue-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(160, 112, 112, 0.4);
+}
+
+.debate-end-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #C85A5A 0%, #B04545 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(200, 90, 90, 0.4);
+    margin-right: 8px;
+    white-space: nowrap;
+    gap: 5px;
+}
+
+.debate-end-button svg {
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.debate-end-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(200, 90, 90, 0.5);
+    background: linear-gradient(135deg, #D86A6A 0%, #C85555 100%);
+}
+
+.refresh-topics-btn {
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: #8D6E63;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+}
+
+.refresh-topics-btn:hover {
+    background: transparent;
+    color: #6B4E3D;
+    transform: rotate(180deg);
+}
+
+.refresh-topics-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.random-topic-btn {
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 6px rgba(141, 110, 99, 0.3);
+}
+
+.random-topic-btn:hover {
+    background: linear-gradient(135deg, #9D7E73 0%, #7B5E4D 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(141, 110, 99, 0.4);
+}
+
+.debate-style-section {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.debate-style-section label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #5D4037;
+    margin-bottom: 12px;
+}
+
+.debate-style-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.debate-style-btn {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F5F2 100%);
+    border: 2px solid #E8E0DB;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #5D4037;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-weight: 500;
+}
+
+.debate-style-btn:hover {
+    background: linear-gradient(135deg, #F5F1EB 0%, #EFEBE9 100%);
+    border-color: #8D6E63;
+    transform: translateY(-1px);
+}
+
+.debate-style-btn.active {
+    background: linear-gradient(135deg, #8D6E63 0%, #6B4E3D 100%);
+    color: white;
+    border-color: #6B4E3D;
+    box-shadow: 0 2px 8px rgba(141, 110, 99, 0.3);
+}
+
+/* 반응형 - 모바일 */
+@media (max-width: 480px) {
+    /* 메인 페이지(캐릭터 선택 화면): 플로팅 카드 유지 - 여백 과감하게 */
+    html {
+        background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%) !important;
+    }
+    
+    body {
+        align-items: center; /* 위아래 가운데 정렬 */
+        padding: 20px; /* 위아래 여백 조정 */
+        padding-top: calc(20px + env(safe-area-inset-top));
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        padding-left: calc(20px + env(safe-area-inset-left));
+        padding-right: calc(20px + env(safe-area-inset-right));
+        background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%) !important; /* PC와 동일한 배경색 적용 */
+    }
+    
+    #root {
+        background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%) !important;
+    }
+    
+    /* 메인 페이지: 플로팅 카드 - 살짝 작게, 높이 제한 */
+    .app-container:not(:has(.chat-container)) {
+        width: 400px; /* 420px에서 400px로 살짝 작게 */
+        max-width: calc(100% - 40px); /* 좌우 20px씩 여백 확보 */
+        height: auto; /* 자동 높이 */
+        max-height: 650px; /* 최대 높이를 650px로 제한 (800px에서 감소) */
+        min-height: 500px; /* 최소 높이도 조정 */
+        border-radius: 40px; /* PC와 동일한 둥근 모서리 */
+        margin: 0 auto; /* 중앙 정렬 */
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); /* PC와 동일한 그림자 */
+    }
+    
+    /* 채팅 화면: 전체 화면 */
+    .app-container:has(.chat-container) {
+        width: 100%;
+        max-width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        min-height: 100dvh;
+        border-radius: 0; /* 전체 화면이므로 둥근 모서리 제거 */
+        margin: 0;
+        box-shadow: none; /* 전체 화면이므로 그림자 제거 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    
+    /* 채팅 화면일 때 body도 전체 화면 */
+    body:has(.app-container:has(.chat-container)) {
+        padding: 0;
+        align-items: stretch;
+    }
+    
+    .character-select-screen {
+        border-radius: 40px; /* app-container와 동일한 둥근 모서리 */
+        overflow-y: hidden; /* PC처럼 스크롤 안 되게 고정 */
+    }
+    
+    /* 채팅 컨테이너: 전체 화면 */
+    .chat-container {
+        border-radius: 0; /* 전체 화면이므로 둥근 모서리 제거 */
+        background: linear-gradient(135deg, #8B6F47 0%, #6B4E3D 50%, #5C4033 100%); /* 모바일 채팅 화면 배경 */
+    }
+    
+    .character-card {
+        flex: 0 0 160px; /* 가로 스크롤을 위해 고정 너비 */
+        height: 220px;
+    }
+    
+    .character-slider {
+        flex-wrap: nowrap; /* 가로 스크롤을 위해 한 줄로 */
+    }
+    
+    /* 모바일: 대화 시작 버튼 위치를 위로 올림 */
+    .start-chat-section {
+        padding: 0 20px 20px 20px;
+        margin-top: -10px; /* 섹션을 위로 올림 (조금 아래로 조정) */
+    }
+    
+    .start-chat-button {
+        margin-top: 12px; /* 버튼 상단 마진 조정 */
+        margin-bottom: 16px;
+    }
+    
+    .select-title {
+        font-size: 2.4rem; /* 모바일에서 제목 크기 증가 (1.8rem -> 2.4rem) */
+        margin-bottom: 8px; /* 제목과 부제 사이 간격 추가 */
+    }
+    
+    /* 모바일: 부제 색상을 더 옅은 회색/연한 브라운으로 변경 */
+    .select-description {
+        color: #BCAAA4 !important; /* 더 옅은 연한 브라운 (#8D6E63 -> #BCAAA4) */
+        opacity: 0.85 !important; /* 약간 더 투명하게 */
+        margin-bottom: 32px !important; /* 부제와 필터 영역 사이 충분한 간격 (20px -> 32px) */
+    }
+    
+    .user-info {
+        top: 8px;
+        left: 8px;
+        padding: 6px 12px;
+    }
+    
+    .username {
+        font-size: 0.85rem;
+    }
+    
+    .logout-button {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+    
+    /* 모바일: 드롭다운은 고정, 캐릭터 칩은 오른쪽에 표시되되 칩 영역만 슬라이드 */
+    .filter-section {
+        flex-wrap: nowrap; /* 한 줄로 유지 - 드롭다운 왼쪽, 칩 오른쪽 */
+        align-items: center; /* 세로 중앙 정렬 */
+    }
+    
+    /* 모바일: 드롭다운과 검색 입력은 고정 (줄어들지 않게) */
+    .drama-filter,
+    .search-input {
+        flex-shrink: 0; /* 드롭다운과 검색 입력은 줄어들지 않게 */
+    }
+    
+    /* 모바일: 전체 드라마 드롭다운 스크롤바 숨기기 */
+    .drama-filter .custom-dropdown-menu {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    .drama-filter .custom-dropdown-menu::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+        width: 0;
+        height: 0;
+    }
+    
+    /* 모바일: 캐릭터 칩 영역만 스크롤 - 드롭다운 오른쪽에 배치 */
+    .selected-characters-display {
+        overflow-x: auto; /* 스크롤 명령어 필수 - 넘친 내용을 스크롤로 보여줌 */
+        overflow-y: visible; /* 그림자가 잘리지 않도록 */
+        -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 - 아이폰에서도 부드럽게 넘어가게 */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scroll-behavior: smooth; /* 부드러운 스크롤 */
+        /* 스크롤 영역의 padding을 안쪽으로 줘서 그림자가 보일 공간 확보 + 터치 영역 넓히기 */
+        padding: 30px 20px; /* 위아래 30px로 넉넉하게 (터치할 공간 확보), 좌우 20px 패딩으로 그림자 공간 확보 및 터치 영역 넓힘 */
+        margin: -30px -20px; /* 패딩만큼 마진으로 위치 조정 (위아래도 포함) */
+        flex-wrap: nowrap; /* 줄바꿈 금지 - 가로 스크롤을 위해 필수 */
+        /* 가로 폭 제한 (가장 중요) - 스크롤 박스가 화면 밖까지 무한대로 늘어나지 않도록 */
+        flex: 1 1 auto; /* 남은 공간 차지 - 드롭다운 오른쪽에 배치 */
+        min-width: 0; /* 플렉스 자식일 경우 버그 방지 (이거 없으면 안 될 때 많음) */
+        max-width: 100%; /* 부모 컨테이너 너비를 넘지 마라 */
+        touch-action: pan-x; /* 가로 스크롤만 허용 */
+    }
+    
+    .selected-characters-display::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+        width: 0;
+        height: 0;
+    }
+    
+    /* 모바일: 버튼이 터치를 가로채지 않도록 설정 + 절대 줄어들지 않게 */
+    .selected-char-badge {
+        flex-shrink: 0 !important; /* 절대 줄어들지 마! - 가로 스크롤을 위해 필수 */
+        flex-grow: 0; /* 늘어나지도 않게 */
+        min-width: fit-content; /* 최소 너비는 내용에 맞게 */
+        touch-action: pan-x; /* 가로 스크롤 허용, 클릭은 지연 */
+    }
+    
+    .selected-char-badge .remove-char-btn {
+        touch-action: manipulation; /* 버튼은 클릭만 허용, 스크롤 방해 안 함 */
+        flex-shrink: 0; /* 버튼도 줄어들지 않게 */
+    }
+    
+    /* 모바일: 세로 스크롤바가 있는 페이지들의 스크롤바 숨기기 및 중앙 정렬 */
+    .settings-content,
+    .history-list,
+    .stats-content,
+    .template-list,
+    .report-content,
+    .diary-modal,
+    .diary-modal-body,
+    .my-page-modal,
+    .history-modal,
+    .stats-modal,
+    .settings-modal,
+    .template-modal,
+    .report-modal,
+    .debate-modal,
+    .debate-content {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    .settings-content::-webkit-scrollbar,
+    .history-list::-webkit-scrollbar,
+    .stats-content::-webkit-scrollbar,
+    .template-list::-webkit-scrollbar,
+    .report-content::-webkit-scrollbar,
+    .diary-modal::-webkit-scrollbar,
+    .diary-modal-body::-webkit-scrollbar,
+    .my-page-modal::-webkit-scrollbar,
+    .history-modal::-webkit-scrollbar,
+    .stats-modal::-webkit-scrollbar,
+    .settings-modal::-webkit-scrollbar,
+    .template-modal::-webkit-scrollbar,
+    .report-modal::-webkit-scrollbar,
+    .debate-modal::-webkit-scrollbar,
+    .debate-content::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+        width: 0;
+        height: 0;
+    }
+    
+    /* 모바일: 모달 중앙 정렬 (스크롤바로 인한 치우침 방지) */
+    .modal-overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .my-page-modal,
+    .history-modal,
+    .stats-modal,
+    .settings-modal,
+    .template-modal,
+    .report-modal,
+    .diary-modal,
+    .debate-modal {
+        margin: 20px auto !important; /* 중앙 정렬 + 여백 */
+        width: 90% !important; /* 일반 팝업 크기 */
+        max-width: 380px !important; /* 최대 너비 제한 */
+        border-radius: 20px !important; /* 둥근 모서리 유지 */
+        max-height: 85vh !important; /* 높이 제한 */
+    }
+    
+    /* 모바일: 스크롤바 보정용 padding-right 제거 (왼쪽 치우침 방지) */
+    .history-list {
+        padding-right: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+        margin-right: 0 !important;
+    }
+    
+    .stats-content {
+        padding-right: 8px !important; /* 좌우 대칭 패딩 더 줄임 (12px -> 8px) */
+        padding-left: 8px !important; /* 좌우 대칭 패딩 더 줄임 (12px -> 8px) */
+        padding-top: 4px !important; /* 상단 여백 */
+        padding-bottom: 4px !important; /* 하단 여백 */
+    }
+    
+    .diary-modal-body {
+        padding: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+    }
+    
+    .diary-modal {
+        padding: 28px 20px 32px 20px !important; /* 상단 padding을 28px로 통일 (다른 모달과 동일, 닫기 버튼 위치 맞춤) */
+    }
+    
+    .debate-content {
+        padding-right: 0 !important; /* PC 스크롤바 보정 여백 제거 */
+        margin-right: 0 !important;
+    }
+    
+    /* 모바일: 모달 내부 콘텐츠 중앙 정렬 */
+    .history-modal,
+    .stats-modal,
+    .diary-modal,
+    .debate-modal {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 내부 콘텐츠 중앙 정렬 */
+    }
+    
+    .history-list,
+    .stats-content,
+    .diary-modal-body,
+    .debate-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+    }
+    
+    /* 모바일: 대화 보관함 카드 가로 길이 통일 */
+    .history-item {
+        width: 100% !important; /* 모든 카드의 가로 길이를 100%로 통일 */
+        box-sizing: border-box; /* padding 포함한 전체 너비 계산 */
+        touch-action: pan-y; /* 수직 스크롤만 허용 */
+    }
+    
+    /* 모바일: 대화 보관함 카드 hover 효과 비활성화 (드래그 방지) */
+    .history-item:hover {
+        transform: none !important; /* 좌우 이동 효과 제거 */
+    }
+    
+    /* 모바일: 대화 보관함 리스트 스크롤 고정 */
+    .history-list {
+        overflow-x: hidden !important; /* 가로 스크롤 원천 차단 */
+        touch-action: pan-y; /* 수직 스크롤만 허용 */
+    }
+    
+    /* 모바일: 일기 쓰기 페이지 중앙 정렬 */
+    .diary-write-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+        width: 100%;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+    
+    /* 모바일: 캘린더 잘림 방지 및 중앙 정렬 */
+    .diary-calendar {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: visible; /* 잘림 방지 */
+        padding: 20px; /* 좌우 대칭 패딩 */
+    }
+    
+    .diary-calendar-weekdays,
+    .diary-calendar-days {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .diary-calendar-day {
+        min-width: 0; /* 잘림 방지 */
+        box-sizing: border-box;
+    }
+    
+    .stats-content {
+        padding-right: 8px !important; /* 좌우 대칭 패딩 더 줄임 (12px -> 8px) */
+        padding-left: 8px !important; /* 좌우 대칭 패딩 더 줄임 (12px -> 8px) */
+        padding-top: 4px !important; /* 상단 여백 */
+        padding-bottom: 4px !important; /* 하단 여백 */
+    }
+    
+    .diary-modal-body {
+        padding: 0 !important; /* 스크롤바 보정 여백 제거 */
+    }
+    
+    .diary-modal {
+        padding: 24px 20px 32px 20px !important; /* 좌우 대칭 패딩 */
+    }
+    
+    .debate-content {
+        padding-right: 0 !important; /* 스크롤바 보정 여백 제거 */
+        margin-right: 0 !important;
+        padding-left: 0 !important; /* 좌우 대칭 패딩 */
+        align-items: center !important; /* 중앙 정렬 */
+    }
+    
+    /* 모바일: 모달 내부 콘텐츠 중앙 정렬 */
+    .history-modal,
+    .stats-modal,
+    .diary-modal,
+    .debate-modal {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 내부 콘텐츠 중앙 정렬 */
+    }
+    
+    .history-list,
+    .stats-content,
+    .diary-modal-body,
+    .debate-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+    }
+    
+    /* 모바일: 토론 모달 콘텐츠 중앙 정렬 */
+    .debate-modal .debate-content {
+        align-items: center !important;
+        padding: 0 20px !important; /* 좌우 대칭 패딩 */
+        margin: 0 !important; /* 마진 제거 */
+        justify-content: flex-start !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* 모바일: 토론 모달 자체 중앙 정렬 */
+    .debate-modal {
+        padding: 28px 20px !important; /* 좌우 대칭 패딩 */
+        margin: 20px auto !important; /* 중앙 정렬 */
+        align-items: center !important; /* 내부 콘텐츠 중앙 정렬 */
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    .debate-modal h2 {
+        text-align: center !important;
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    .debate-topic-section,
+    .debate-style-section,
+    .debate-description {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important; /* 중앙 정렬 */
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    
+    .debate-description {
+        text-align: center !important;
+        white-space: normal !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    .debate-topic-label,
+    .debate-style-section label {
+        text-align: center !important;
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    /* 모바일: 토론 주제 카드 그리드 중앙 정렬 */
+    .debate-topic-suggestions {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px 0 !important; /* 좌우 패딩 제거, 상하만 유지 */
+        margin: 0 !important; /* 마이너스 마진 완전히 제거 */
+        justify-content: center !important;
+        justify-items: center !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 토론 주제 카드 버튼 크기 */
+    .topic-suggestion-btn {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 토론 스타일 버튼 크기 증가 */
+    .debate-style-btn {
+        padding: 18px 24px !important; /* 웹: 12px 16px -> 모바일: 18px 24px */
+        font-size: 1.1rem !important; /* 웹: 0.85rem -> 모바일: 1.1rem */
+        min-height: 64px !important; /* 모바일에서 최소 높이 추가 */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .debate-style-buttons {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 12px !important; /* 웹: 10px -> 모바일: 12px */
+        justify-items: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    
+    /* 모바일: 랜덤 버튼 컨테이너 중앙 정렬 */
+    .debate-random-floating {
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    
+    /* 모바일: 토론 주제 전광판 중앙 정렬 */
+    .debate-topic-billboard {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 토론 모달 액션 버튼 중앙 정렬 */
+    .debate-modal-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    /* 모바일: 일기 쓰기 페이지 중앙 정렬 */
+    .diary-write-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 콘텐츠 중앙 정렬 */
+        width: 100%;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+    
+    /* 모바일: 캘린더 잘림 방지 및 중앙 정렬 */
+    .diary-calendar {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: visible; /* 잘림 방지 */
+        padding: 20px; /* 좌우 대칭 패딩 */
+    }
+    
+    .diary-calendar-weekdays,
+    .diary-calendar-days {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .diary-calendar-day {
+        min-width: 0; /* 잘림 방지 */
+        box-sizing: border-box;
+    }
+    
+    /* 모바일: 모달 크기 조정 */
+    /* 모바일: settings, template 모달은 기본 스타일 유지 (다른 모달들은 아래에서 개별 설정) */
+    .settings-modal, .template-modal {
+        max-height: 85vh; /* 모바일에서 높이 증가 */
+        margin: 20px auto; /* 중앙 정렬 + 여백 */
+        z-index: 10001; /* 모달 오버레이 위에 표시 */
+    }
+    
+    /* 모바일: 마음 기록 노트 닫기 버튼 위치 통일 */
+    .diary-modal {
+        position: relative; /* 닫기 버튼 absolute 위치 기준 */
+    }
+    
+    /* 모바일: 캐릭터 우편함 페이지 가로 꽉 차게 */
+    .reply-box-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+    }
+    
+    /* 모바일: 답장 읽기 페이지 가로 꽉 차게 */
+    .reply-reader-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+    }
+    
+    /* 모바일: 대화 보관함 페이지 가로 꽉 차게 */
+    .history-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+        overflow: hidden !important; /* 모달 자체는 스크롤 안 함 */
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* 모바일: 대화 보관함 헤더 고정 */
+    .history-modal h2,
+    .history-modal .close-button {
+        flex-shrink: 0 !important;
+    }
+    
+    /* 모바일: 대화 보관함 스크롤 영역 */
+    .history-modal .history-list {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: 0 !important; /* flex 자식이 스크롤 가능하도록 */
+        max-height: none !important; /* 높이 제한 제거 */
+        -webkit-overflow-scrolling: touch !important; /* iOS 부드러운 스크롤 */
+    }
+    
+    /* 모바일: 대화 통계 페이지 가로 꽉 차게 */
+    .stats-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+        overflow: hidden !important; /* 모달 자체는 스크롤 안 함 */
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* 모바일: 대화 통계 헤더 고정 */
+    .stats-modal h2,
+    .stats-modal .close-button {
+        flex-shrink: 0 !important;
+    }
+    
+    /* 모바일: 대화 통계 스크롤 영역 */
+    .stats-modal .stats-content {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: 0 !important; /* flex 자식이 스크롤 가능하도록 */
+        max-height: none !important; /* 높이 제한 제거 */
+        -webkit-overflow-scrolling: touch !important; /* iOS 부드러운 스크롤 */
+    }
+    
+    /* 모바일: 마이페이지는 일반 팝업으로 유지 (캐릭터 성향 지도와 동일) */
+    /* .my-page-modal:not(.archetype-map-modal) 스타일 제거 - 팝업 형태로 유지 */
+    
+    /* 모바일: 프로필 설정 모달은 팝업 형식으로 유지 (웹과 동일) */
+    .my-page-modal {
+        width: 90% !important;
+        max-width: 380px !important;
+        border-radius: 20px !important;
+        max-height: 85vh !important;
+        margin: 20px auto !important;
+        height: auto !important; /* 전체 화면 방지 */
+    }
+    
+    /* 모바일: 캐릭터 성향 지도는 일반 팝업으로 유지 */
+    .archetype-map-modal {
+        width: 90% !important;
+        max-width: 380px !important;
+        border-radius: 20px !important;
+        max-height: 85vh !important;
+        margin: 20px auto !important;
+    }
+    
+    /* 모바일: 마음 기록 노트 가로 꽉 차게 */
+    .diary-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+        padding: 28px 20px 32px 20px !important; /* 상단 padding 유지 */
+    }
+    
+    /* 모바일: 이전 일기 목록 버튼 잘림 방지 */
+    .diary-list {
+        padding: 0 4px; /* 좌우 여백 추가 */
+        overflow: visible; /* hover 효과가 잘리지 않도록 */
+    }
+    
+    .diary-list-item {
+        width: calc(100% - 8px) !important; /* 좌우 여백 고려하여 너비 조정 */
+        max-width: calc(100% - 8px) !important;
+        margin: 0 auto; /* 중앙 정렬 */
+        box-sizing: border-box;
+        overflow: visible; /* hover 효과가 잘리지 않도록 */
+    }
+    
+    .diary-list-item:hover {
+        transform: translateY(-2px) !important; /* translateX 대신 translateY 사용 (모바일에서 잘림 방지) */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        border-color: #8D6E63 !important;
+    }
+    
+    /* 모바일: 리포트 페이지 가로 꽉 차게 */
+    .report-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+    }
+    
+    /* 모바일: Weekly Recap 페이지 가로 꽉 차게 */
+    .weekly-recap-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+    }
+    
+    /* 모바일: Weekly Detail 페이지 가로 꽉 차게 */
+    .weekly-detail-modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        margin: 0 !important;
+    }
+    
+    /* 모바일: Weekly Detail 헤더 제목 가로 배치 */
+    .weekly-detail-modal h2 {
+        writing-mode: horizontal-tb !important;
+        text-orientation: mixed !important;
+        transform: none !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+        position: absolute !important;
+        left: 48px !important;
+        right: 48px !important;
+        text-align: center !important;
+        z-index: 1 !important;
+        overflow: visible !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        margin: 0 !important;
+        color: #3E2723 !important;
+        font-weight: 700 !important;
+    }
+    
+    /* 모바일: weekly recap 버튼 가로 길이 확대 및 레이아웃 조정 */
+    .weekly-recap-box {
+        padding: 12px !important; /* 패딩 줄여서 더 넓게 (20px -> 12px) */
+        margin-left: 0 !important; /* 음수 마진 제거 */
+        margin-right: 0 !important; /* 음수 마진 제거 */
+        overflow: visible !important; /* 그림자와 호버 효과가 잘리지 않도록 */
+        display: flex !important; /* flex 레이아웃 */
+        justify-content: center !important; /* 가로 방향 중앙 정렬 */
+        align-items: center !important; /* 세로 방향 중앙 정렬 */
+        width: 100% !important; /* 컨테이너는 전체 너비 */
+        box-sizing: border-box !important; /* 패딩이 전체 너비에 포함 */
+    }
+    
+    .weekly-recap-box > div {
+        width: 100% !important; /* 부모 컨테이너의 100% (여백은 부모에서 처리) */
+        min-width: 100% !important;
+        max-width: 100% !important;
+        padding-right: 50px !important; /* 아이콘 공간 확보 */
+        position: relative !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: Weekly Recap 버튼 내부 div 너비 확대 */
+    .weekly-recap-box > div > div:first-of-type {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: Weekly Recap 버튼 너비 확대 */
+    .weekly-recap-box > div {
+        width: 100% !important;
+    }
+    
+    .weekly-recap-box > div > div:first-of-type {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .weekly-recap-box > div > div:first-child {
+        text-align: center !important; /* "Weekly Recap" 중앙 정렬 */
+    }
+    
+    .weekly-recap-box > div > div:nth-child(2) {
+        text-align: center !important; /* "주별 통계 보기" 중앙 정렬 */
+    }
+    
+    .weekly-recap-box > div svg {
+        right: 20px !important; /* 아이콘을 오른쪽으로 이동 */
+        top: 50% !important;
+        transform: translateY(-50%) !important; /* 수직 중앙 정렬 */
+        position: absolute !important;
+    }
+    
+    /* 모바일: button-group 내 닫기 버튼은 텍스트 버튼 스타일 유지 (웹과 동일) */
+    .button-group .close-button {
+        background: #EFEBE9 !important;
+        color: #5D4037 !important;
+        border: 1.5px solid #D7CCC8 !important;
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        border-radius: 10px !important;
+        padding: 10px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .button-group .close-button:hover:not(:active) {
+        background: #D7CCC8 !important;
+        transform: none !important;
+    }
+    
+    .button-group .close-button:active {
+        background: #D7CCC8 !important;
+        border-radius: 10px !important;
+        width: auto !important;
+        height: auto !important;
+        transform: none !important;
+    }
+    
+    /* 모바일: button-group 내 닫기 버튼의 border-radius 명시적으로 설정 (우선순위 확보) */
+    .my-page-modal .button-group .close-button,
+    .settings-modal .button-group .close-button,
+    .template-modal .button-group .close-button,
+    .report-modal .button-group .close-button,
+    .history-modal .button-group .close-button,
+    .stats-modal .button-group .close-button {
+        border-radius: 10px !important;
+    }
+    
+    .my-page-modal .button-group .close-button:active,
+    .settings-modal .button-group .close-button:active,
+    .template-modal .button-group .close-button:active,
+    .report-modal .button-group .close-button:active,
+    .history-modal .button-group .close-button:active,
+    .stats-modal .button-group .close-button:active {
+        border-radius: 10px !important;
+    }
+    
+    /* 모바일: 닫기 버튼 hover 효과 제거 (터치 시 회전 방지) - button-group 내 버튼은 제외 */
+    .history-modal > .close-button,
+    .stats-modal > .close-button,
+    .my-page-modal > .close-button,
+    .settings-modal > .close-button,
+    .template-modal > .close-button,
+    .report-modal > .close-button {
+        width: 36px !important; /* 고정 크기 */
+        height: 36px !important;
+        border-radius: 50% !important; /* 원형 배경을 위한 둥근 모서리 */
+    }
+    
+    .history-modal > .close-button:hover:not(:active),
+    .stats-modal > .close-button:hover:not(:active),
+    .my-page-modal > .close-button:hover:not(:active),
+    .settings-modal > .close-button:hover:not(:active),
+    .template-modal > .close-button:hover:not(:active),
+    .report-modal > .close-button:hover:not(:active) {
+        background: rgba(0, 0, 0, 0.05) !important; /* hover 시 연한 회색 원형 배경 */
+        transform: none !important; /* 회전 효과 제거 */
+        color: #5D4037 !important;
+    }
+    
+    /* 모바일: 닫기 버튼 클릭 시 원형 배경 - button-group 내 버튼은 제외 */
+    .history-modal > .close-button:active,
+    .stats-modal > .close-button:active,
+    .my-page-modal > .close-button:active,
+    .settings-modal > .close-button:active,
+    .template-modal > .close-button:active,
+    .report-modal > .close-button:active {
+        background: rgba(0, 0, 0, 0.08) !important; /* 클릭 시 약간 더 진한 배경 */
+        border-radius: 50% !important;
+        width: 36px !important;
+        height: 36px !important;
+        transform: none !important; /* 위치 이동 효과 제거 */
+    }
+    
+    /* 모바일: button-group 내 닫기 버튼은 텍스트 버튼 스타일 유지 (웹과 동일) - 나중에 작성하여 우선순위 확보 */
+    .my-page-modal .button-group .close-button,
+    .settings-modal .button-group .close-button,
+    .template-modal .button-group .close-button,
+    .report-modal .button-group .close-button,
+    .history-modal .button-group .close-button,
+    .stats-modal .button-group .close-button {
+        background: #EFEBE9 !important;
+        color: #5D4037 !important;
+        border: 1.5px solid #D7CCC8 !important;
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        border-radius: 10px !important;
+        padding: 10px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .my-page-modal .button-group .close-button:hover:not(:active),
+    .settings-modal .button-group .close-button:hover:not(:active),
+    .template-modal .button-group .close-button:hover:not(:active),
+    .report-modal .button-group .close-button:hover:not(:active),
+    .history-modal .button-group .close-button:hover:not(:active),
+    .stats-modal .button-group .close-button:hover:not(:active) {
+        background: #D7CCC8 !important;
+        transform: none !important;
+    }
+    
+    .my-page-modal .button-group .close-button:active,
+    .settings-modal .button-group .close-button:active,
+    .template-modal .button-group .close-button:active,
+    .report-modal .button-group .close-button:active,
+    .history-modal .button-group .close-button:active,
+    .stats-modal .button-group .close-button:active {
+        background: #D7CCC8 !important;
+        border-radius: 10px !important;
+        width: auto !important;
+        height: auto !important;
+        transform: none !important;
+    }
+    
+    /* 모바일: 대화 흐름 추적하기 버튼 세로 길이 약간 증가 */
+    .continue-conversation-button {
+        padding-top: 18px !important; /* 16px -> 18px */
+        padding-bottom: 18px !important; /* 16px -> 18px */
+    }
+    
+    /* 모바일: 일기 삭제/목록으로 버튼 크기 동일하게 (웹과 동일) */
+    .diary-actions-bottom {
+        display: flex !important;
+        gap: 10px !important;
+    }
+    
+    .diary-action-button {
+        flex: 1 !important; /* 동일한 크기로 만들기 */
+        min-width: 0 !important; /* flex 자식이 줄어들 수 있도록 */
+        box-sizing: border-box !important;
+        padding: 14px 20px !important; /* 웹과 동일한 세로 길이 */
+    }
+    
+    /* 모바일: 저장한 대사 목록 카드 텍스트 영역 확대 */
+    .template-item {
+        gap: 8px !important; /* 아이콘과 텍스트 사이 간격 줄이기 (12px -> 8px) */
+        width: 100% !important; /* 카드 너비 100% */
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .template-icon {
+        width: 40px; /* 아이콘 크기 줄이기 (48px -> 40px) */
+        height: 40px;
+    }
+    
+    .template-icon svg {
+        width: 20px; /* 아이콘 내부 SVG 크기 줄이기 (24px -> 20px) */
+        height: 20px;
+    }
+    
+    .template-content {
+        flex: 1;
+        min-width: 0;
+        max-width: 100% !important; /* 텍스트 영역 최대 너비 확대 (85% -> 100%) */
+        padding-right: 4px; /* 오른쪽 여백 최소화 */
+    }
+    
+    .template-arrow {
+        font-size: 1rem; /* 화살표 크기 줄이기 (1.2rem -> 1rem) */
+        flex-shrink: 0;
+        margin-left: 4px; /* 화살표 왼쪽 여백 최소화 */
+    }
+    
+    /* 모바일: 순위 카드 너비 확대 - 구조는 유지하고 너비만 조절 */
+    .stats-content .top-character-card {
+        box-sizing: border-box !important;
+        width: 100% !important;
+    }
+    
+    /* 모바일: 1위 카드 너비 확대 - 첫 번째 div 안의 카드 */
+    .stats-content > div > div:first-child > div:first-child .top-character-card {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* 모바일: 2위, 3위 카드 너비 확대 - 가로로 나란히 배치된 카드들 (마지막 div 안의 카드들) */
+    .stats-content > div > div:first-child > div:last-child .top-character-card {
+        flex: 1 1 0 !important; /* 동일한 크기로 만들기 */
+        min-width: 0 !important; /* flex 자식이 줄어들 수 있도록 */
+        max-width: 50% !important; /* 최대 너비 50% */
+        width: 50% !important; /* 고정 너비 50% */
+        box-sizing: border-box !important;
+    }
+    
+    /* 2위, 3위 카드 컨테이너 간격 조정 */
+    .stats-content > div > div:first-child > div:last-child {
+        gap: 8px !important; /* 카드 간 간격 */
+        display: flex !important;
+    }
+    
+    /* 모바일: 저장한 대사 목록 카드 너비 확대 */
+    .stats-quote-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 저장한 대사 목록 리스트 컨테이너 너비 확대 */
+    .stats-quotes-list {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .stats-quotes-items {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 모바일: 입력창 관련 스타일 - 화면 확대 방지 및 레이아웃 조정 */
+    .input-area {
+        padding: 10px 12px 44px 12px !important; /* 패딩 조정 - 하단에 34px 추가 (10px + 34px = 44px) */
+        gap: 6px !important; /* 버튼 간격 조정 */
+        box-sizing: border-box !important;
+        /* 하단 여백 영역에 배경색 확장 */
+        background: linear-gradient(180deg, #FFFFFF 0%, #FBF9F7 60%, #F5F1EB 100%) !important;
+        align-items: center !important; /* 세로 중앙 정렬 */
+        /* 입력창이 늘어나도 설정 버튼과의 간격 유지 */
+        position: relative !important;
+        transition: height 0.2s ease !important; /* 높이 변화 시 부드러운 전환 */
+    }
+    
+    /* 배경 이미지가 있을 때도 하단 여백 배경색 유지 */
+    .chat-container.has-custom-background .input-area {
+        background: linear-gradient(180deg, #FFFFFF 0%, #FBF9F7 60%, #F5F1EB 100%) !important;
+    }
+    
+    /* 모바일: 입력창 위 설정 버튼 - 입력창이 늘어날 때 함께 위로 올라가도록 */
+    /* 입력창과 설정 버튼이 자연스럽게 함께 움직이도록 처리 */
+    .input-mode-toggle {
+        padding: 6px 16px !important;
+        margin-bottom: 0 !important;
+        flex-shrink: 0 !important;
+        /* 입력창과 함께 자연스럽게 위로 이동하도록 */
+        position: relative !important;
+        /* 입력창이 늘어날 때 설정 버튼도 함께 위로 올라가도록 - 같은 flex 컨테이너에 있으면 자동 처리 */
+    }
+    
+    /* 모바일: 설정 버튼 위치 조정 - 입력창 위에 배치 */
+    .settings-button {
+        position: fixed !important; /* absolute에서 fixed로 변경하여 입력창과 독립적으로 위치 조정 */
+        bottom: 200px !important; /* 입력창 최대 높이(100px) + 상하 패딩(24px) + 하단 패딩(44px) + 상단 패딩(10px) + 여유 공간(22px) = 200px */
+        right: 14px !important;
+        width: 48px !important;
+        height: 48px !important;
+        z-index: 100 !important; /* 입력창 위에 표시되도록 z-index 증가 */
+        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        /* 입력창과 겹치지 않도록 보장 */
+        pointer-events: auto !important;
+    }
+    
+    /* 모바일: 템플릿 버튼도 설정 버튼 위에 배치 */
+    .template-button {
+        position: fixed !important;
+        bottom: 258px !important; /* 설정 버튼(48px) + 간격(10px) + 설정 버튼 위치(200px) = 258px */
+        right: 14px !important;
+        width: 48px !important;
+        height: 48px !important;
+        z-index: 100 !important;
+        transition: bottom 0.2s ease !important;
+    }
+    
+    /* 모바일: 토론 개입 패널 위치 조정 - 입력창 위에 배치, 완전 중앙 정렬 */
+    .debate-intervention-panel {
+        position: fixed !important;
+        bottom: auto !important; /* JavaScript로 동적으로 설정 */
+        left: 50% !important;
+        transform: translateX(-50%) !important; /* 중앙 정렬 */
+        z-index: 1000 !important;
+        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        max-width: calc(100% - 24px) !important; /* 좌우 여백 확보 */
+        width: auto !important;
+        margin: 0 auto !important; /* 추가 중앙 정렬 보장 */
+        right: auto !important; /* 오른쪽 정렬 제거 */
+    }
+    
+    /* 모바일: 토론 개입 패널 내부 콘텐츠 중앙 정렬 */
+    .debate-intervention-header {
+        justify-content: center !important; /* 중앙 정렬 */
+        text-align: center !important;
+    }
+    
+    .debate-intervention-header-text {
+        align-items: center !important; /* 텍스트 중앙 정렬 */
+        text-align: center !important;
+    }
+    
+    .debate-intervention-title,
+    .debate-intervention-subtitle {
+        text-align: center !important; /* 제목과 부제목 중앙 정렬 */
+    }
+    
+    .debate-intervention-buttons {
+        align-items: center !important; /* 버튼들 중앙 정렬 */
+        width: 100% !important;
+    }
+    
+    .debate-intervention-btn {
+        width: 100% !important; /* 버튼 전체 너비 */
+        text-align: center !important; /* 버튼 텍스트 중앙 정렬 */
+        justify-content: center !important; /* 버튼 내부 콘텐츠 중앙 정렬 */
+    }
+    
+    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 조정 - 입력창 위에 배치 */
+    .debate-intervention-show-btn-container {
+        position: fixed !important;
+        bottom: auto !important; /* JavaScript로 동적으로 설정 */
+        left: 50% !important;
+        transform: translateX(-50%) !important; /* 중앙 정렬 */
+        z-index: 1000 !important;
+        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        width: auto !important;
+        margin: 0 auto !important; /* 추가 중앙 정렬 보장 */
+        right: auto !important; /* 오른쪽 정렬 제거 */
+        justify-content: center !important; /* 버튼 중앙 정렬 */
+    }
+    
+    .debate-intervention-show-btn {
+        margin: 0 auto !important; /* 버튼 중앙 정렬 */
+    }
+    
+    .input-area textarea,
+    .input-area [contenteditable] {
+        font-size: 16px !important; /* iOS 자동 확대 방지 - 최소 16px 필수 */
+        padding: 12px 14px !important; /* 상하 패딩 조정하여 텍스트 중앙 정렬 (10px -> 12px) */
+        min-height: 44px !important;
+        max-height: 100px !important; /* 모바일에서 최대 높이 제한 */
+        line-height: 1.5 !important;
+        /* 텍스트 수직 중앙 정렬을 위한 추가 설정 */
+        box-sizing: border-box !important;
+    }
+    
+    /* contenteditable 내부 텍스트 중앙 정렬 (flex 사용하지 않고 padding으로 조정) */
+    .input-area [contenteditable] {
+        padding: 12px 14px !important; /* 상하 패딩 동일하게 조정 */
+        display: block !important; /* flex 제거 */
+        line-height: 1.5 !important;
+    }
+    
+    /* textarea의 텍스트가 중앙에 오도록 조정 */
+    .input-area textarea {
+        padding: 12px 14px !important; /* 상하 패딩 동일하게 조정 */
+        line-height: 1.5 !important;
+    }
+    
+    .voice-button,
+    .action-toggle-btn {
+        width: 36px !important; /* 버튼 크기 조정 */
+        height: 36px !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .send-button {
+        width: 36px !important;
+        height: 36px !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* 모바일: 헤더 아바타 잘림 방지 */
+    .header-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        flex-shrink: 0 !important;
+        min-width: 32px !important; /* 최소 너비 보장 */
+        min-height: 32px !important; /* 최소 높이 보장 */
+    }
+    
+    .chat-header .char-group:not(.single) .header-avatar {
+        width: 28px !important;
+        height: 28px !important;
+        flex-shrink: 0 !important;
+        min-width: 28px !important; /* 최소 너비 보장 */
+        min-height: 28px !important; /* 최소 높이 보장 */
+    }
+    
+    .header-avatar img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important; /* 이미지 하단 여백 제거 */
+    }
+    
+    /* 모바일: 말풍선 세트 간 간격만 줄이기 (웹과 동일한 구조 유지) */
+    .message-list {
+        padding: 20px 8px 40px 8px !important; /* 좌우 패딩만 줄임 (16px -> 8px) */
+    }
+    
+    .debate-mode .message-list {
+        padding: 20px 8px 40px 8px !important; /* 좌우 패딩만 줄임 */
+    }
+    
+    /* 모바일: 오른쪽 메시지 여백 유지 */
+    .message-bubble.user {
+        margin-right: 10px !important; /* 모바일에서 프로필 이미지 잘림 방지 */
+        max-width: calc(100% - 10px) !important; /* 오른쪽 여백 확보 */
+    }
+    
+    /* 모바일: 토론 주제 패널 배경색을 채팅방 배경색과 동일하게 */
+    .debate-topic-panel-content {
+        background: #F5F1EB !important; /* 채팅방 배경색과 동일 */
+        background-image: none !important; /* 그라데이션 제거 */
+        background-color: #F5F1EB !important; /* 배경색 명시적 설정 */
+    }
+    
+    /* 모바일: 토론 주제 패널 말풍선 화살표 색상 조정 */
+    .debate-topic-panel-content::before {
+        border-top-color: rgba(245, 241, 235, 0.95) !important;
+    }
+    
+    .debate-topic-panel-content::after {
+        border-top-color: #F5F1EB !important;
+    }
+    
+    /* 모바일: 채팅 헤더 레이아웃 조정 */
+    .chat-header {
+        padding: 8px 12px !important; /* 패딩 조정 */
+        min-height: 56px !important; /* 최소 높이 보장 */
+        box-sizing: border-box !important;
+    }
+    
+    .chat-header .header-info {
+        min-width: 0 !important; /* flex 자식이 줄어들 수 있도록 */
+        overflow: visible !important; /* 내용이 잘리지 않도록 */
+    }
+    
+    .char-group {
+        gap: 6px !important; /* 요소 간 간격 조정 */
+        min-width: 0 !important; /* flex 자식이 줄어들 수 있도록 */
+        overflow: visible !important; /* 아바타가 잘리지 않도록 */
+    }
+    
+    .char-name {
+        font-size: 0.9rem !important; /* 폰트 크기 조정 */
+        overflow: visible !important; /* 텍스트가 잘리지 않도록 */
+        text-overflow: ellipsis !important; /* 긴 텍스트는 말줄임표 */
+    }
+    
+    /* 모바일: 헤더 아이콘 버튼 크기 조정 */
+    .header-icon-button {
+        width: 32px !important;
+        height: 32px !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .back-button {
+        width: 32px !important;
+        height: 32px !important;
+        flex-shrink: 0 !important;
+    }
+    
+}
+
+/* 메시지 하트 뱃지 - 말풍선 우측 하단에 겹쳐서 */
+.message-heart-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    background: #FDF7ED;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(141, 110, 99, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    z-index: 10;
+    animation: heartPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+    transform: translate(0, 0);
+    filter: none;
+    color: #E63950;
+    line-height: 1;
+    background-clip: padding-box;
+}
+
+.message-heart-badge.removing {
+    animation: heartRemove 0.4s ease forwards;
+}
+
+@keyframes heartPop {
+    0% {
+        transform: rotate(-12deg) scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: rotate(-12deg) scale(1.2);
+    }
+    70% {
+        transform: rotate(-12deg) scale(0.9);
+    }
+    100% {
+        transform: rotate(-12deg) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes heartRemove {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.message-heart-badge:hover {
+    transform: rotate(-12deg) scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.message-bubble.ai {
+    cursor: pointer;
+    user-select: none;
+}
+
+.message-bubble.ai .message-text {
+    transition: all 0.2s ease;
+}
+
+.message-bubble.ai:hover .message-text {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 하트 클릭 효과 */
+.message-bubble.ai.heart-clicked {
+    animation: heartPulse 0.6s ease;
+}
+
+@keyframes heartPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.message-bubble.ai.heart-clicked .message-heart-badge {
+    animation: heartPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.message-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Weekly Recap 스타일 */
+.weekly-recap-modal {
+    max-width: 380px; /* 다른 모달들과 동일한 크기 (500px -> 380px) */
+    overflow: hidden; /* 모달 자체는 스크롤 없음 */
+    display: flex;
+    flex-direction: column;
+}
+
+.weekly-recap-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0; /* flex 자식이 스크롤 가능하도록 */
+    box-sizing: border-box; /* 패딩이 전체 너비에 포함되도록 */
+}
+
+/* Weekly Recap 리스트 컨테이너 - 양쪽 패딩으로 스크롤바 공간 확보 */
+.weekly-recap-list {
+    padding-left: 20px !important; /* 왼쪽 여백 */
+    padding-right: 20px !important; /* 오른쪽 여백 (스크롤바가 이 공간에 위치) */
+    box-sizing: border-box !important; /* 패딩이 전체 너비에 포함되도록 */
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.weekly-recap-content::-webkit-scrollbar {
+    width: 4px;
+    margin-right: 8px; /* 스크롤바를 콘텐츠 위에 오버레이 (공간 차지 안 함) */
+}
+
+.weekly-recap-content::-webkit-scrollbar-track {
+    background: #F5F1EB;
+    border-radius: 3px;
+    margin-right: 8px; /* 스크롤바를 콘텐츠 위에 오버레이 (공간 차지 안 함) */
+}
+
+.weekly-recap-content::-webkit-scrollbar-thumb {
+    background: rgba(215, 204, 200, 0.8);
+    border-radius: 3px;
+    margin-right: 8px; /* 스크롤바를 콘텐츠 위에 오버레이 (공간 차지 안 함) */
+    min-height: 5px;
+}
+
+.weekly-recap-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(188, 170, 164, 0.9);
+}
+
+.month-selector {
+    scrollbar-width: none; /* Firefox: hide scrollbar */
+    scrollbar-color: transparent transparent;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.month-selector::-webkit-scrollbar {
+    display: none; /* Chrome/Safari: hide scrollbar */
+    width: 0;
+    height: 0;
+}
+
+.month-selector::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.month-selector::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.month-button:hover {
+    transform: translateY(-1px);
+}
+
+.weekly-recap-card {
+    position: relative;
+}
+
+.weekly-recap-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    border-radius: 16px;
+}
+
+/* Weekly Detail Screen 스타일 */
+.weekly-detail-modal {
+    max-width: 420px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.weekly-detail-content {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.weekly-detail-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.weekly-detail-modal .back-button {
+    font-size: 0;
+    background: transparent;
+    border: none;
+    color: #4A3B32;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    width: 40px;
+    height: 40px;
+}
+
+.weekly-detail-modal .back-button svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+}
+
+.weekly-detail-modal .back-button:hover {
+    background: #EFEBE9;
+    color: #4A3B32;
+}
+
+/* Recharts 클릭 효과 제거 (도넛 차트 & 감정 그래프) */
+.recharts-pie-sector,
+.recharts-sector,
+.recharts-area,
+.recharts-dot,
+.recharts-line {
+    outline: none !important;
+    pointer-events: auto !important;
+}
+
+.recharts-pie-sector:focus,
+.recharts-sector:focus,
+.recharts-pie-sector:active,
+.recharts-sector:active,
+.recharts-area:focus,
+.recharts-area:active,
+.recharts-dot:focus,
+.recharts-dot:active {
+    outline: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* Recharts hover 시 그래프가 사라지지 않도록 - 매우 강력하게 적용 */
+.recharts-pie-sector:hover,
+.recharts-sector:hover,
+.recharts-pie-sector path:hover,
+.recharts-sector path:hover {
+    opacity: 1 !important;
+    filter: none !important;
+    visibility: visible !important;
+    display: block !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* 감정 그래프는 클릭 불가 */
+.recharts-area,
+.recharts-dot,
+.recharts-line {
+    cursor: default !important;
+}
+
+/* Recharts 클릭 시 나타나는 검정 박스 제거 */
+.recharts-active-shape,
+.recharts-layer.recharts-active-shape,
+.recharts-active-dot {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+.recharts-wrapper {
+    outline: none !important;
+}
+
+.recharts-surface {
+    outline: none !important;
+}
+
+/* 감정 그래프 Area 클릭 효과 제거 */
+.recharts-area-area,
+.recharts-area-curve {
+    pointer-events: none !important;
+}
+
+/* Recharts 전체 클릭 방지 */
+.recharts-wrapper * {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Weekly Detail 모달 내의 Recharts Pie 차트 - hover 효과 완전 제거 */
+.weekly-detail-modal .recharts-pie-sector,
+.weekly-detail-modal .recharts-pie-sector path,
+.weekly-detail-modal .recharts-sector,
+.weekly-detail-modal .recharts-sector path,
+.weekly-detail-content .recharts-pie-sector,
+.weekly-detail-content .recharts-pie-sector path,
+.weekly-detail-content .recharts-sector,
+.weekly-detail-content .recharts-sector path {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    pointer-events: auto !important;
+}
+
+/* hover, focus, active 상태에서도 동일하게 유지 */
+.weekly-detail-modal .recharts-pie-sector:hover,
+.weekly-detail-modal .recharts-pie-sector:focus,
+.weekly-detail-modal .recharts-pie-sector:active,
+.weekly-detail-modal .recharts-pie-sector:hover path,
+.weekly-detail-modal .recharts-pie-sector:focus path,
+.weekly-detail-modal .recharts-pie-sector:active path,
+.weekly-detail-content .recharts-pie-sector:hover,
+.weekly-detail-content .recharts-pie-sector:focus,
+.weekly-detail-content .recharts-pie-sector:active,
+.weekly-detail-content .recharts-pie-sector:hover path,
+.weekly-detail-content .recharts-pie-sector:focus path,
+.weekly-detail-content .recharts-pie-sector:active path {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+}
+
+/* Recharts Pie 차트 hover 시 섹터가 사라지지 않도록 강제 */
+.recharts-pie .recharts-pie-sector,
+.recharts-pie .recharts-pie-sector *,
+.recharts-pie-sector,
+.recharts-pie-sector * {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+.recharts-pie .recharts-pie-sector path,
+.recharts-pie-sector path {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Recharts의 기본 hover 스타일 완전 제거 */
+.recharts-layer.recharts-pie path,
+.recharts-layer.recharts-pie g,
+.recharts-layer.recharts-pie * {
+    transition: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.recharts-layer.recharts-pie path:hover,
+.recharts-layer.recharts-pie g:hover,
+.recharts-pie-sector:hover,
+.recharts-pie-sector:hover *,
+.recharts-pie-sector:hover path {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Recharts Pie의 모든 상태에서 섹터 보이기 */
+.recharts-pie g.recharts-layer,
+.recharts-pie g.recharts-layer *,
+.recharts-pie .recharts-sector,
+.recharts-pie .recharts-sector * {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* 이번주 Best 3 한 줄 스크롤 */
+.top-characters-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(141, 110, 99, 0.3) transparent;
+    padding-bottom: 8px;
+}
+
+.top-characters-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.top-characters-container::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.top-characters-container::-webkit-scrollbar-thumb {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 3px;
+}
+
+.top-characters-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(141, 110, 99, 0.5);
+}

@@ -13,7 +13,7 @@ pinned: false
 
 ## 🎥 데모 영상
 
-[![IntoDrama 데모 영상](https://img.youtube.com/vi/Ym6sf6DfoD8/0.jpg)](https://www.youtube.com/watch?v=Ym6sf6DfoD8&si=NIAKo1OUNUAnBXw7)
+[![IntoDrama 데모 영상](https://img.youtube.com/vi/vxY2TymhWEs/0.jpg)](https://youtube.com/watch?v=vxY2TymhWEs&si=p_UB6I9IJI-PC_kA)
 
 ---
 
@@ -247,6 +247,9 @@ pinned: false
 - **캐릭터 코멘트**: 캐릭터의 말투로 음악 추천 코멘트를 생성하여 더욱 개인화된 경험을 제공합니다
 
 #### 감정 기반 UI 변화
+
+[![감정 기반 UI 변화 영상](https://img.youtube.com/vi/MmrIpxyqzcE/0.jpg)](https://youtube.com/watch?v=MmrIpxyqzcE&si=s1lgLjL8Sd-bMt4L)
+
 - **실시간 감정 감지**: 사용자와 캐릭터의 메시지를 실시간으로 분석하여 감정을 감지합니다
 - **감정 타입**: 로맨스(romance), 위로(comfort), 갈등(conflict), 중립(neutral) 4가지 감정 타입을 감지합니다
 - **배경색 변화**: 감지된 감정에 따라 채팅 화면의 배경색과 말풍선의 ui가 자동으로 변경됩니다

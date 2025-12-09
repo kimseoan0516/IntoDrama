@@ -557,7 +557,7 @@
 .message-bubble.user { 
     align-self: flex-end;
     margin-right: 0; /* 웹: message-list의 padding-right(16px)만 사용하여 왼쪽과 대칭 */
-    max-width: calc(100% - 0px); /* 오른쪽 여백은 message-list padding으로 처리 */
+    max-width: 80%; /* AI 메시지와 동일하게 80%로 제한하여 적절히 늘어나도록 */
 }
 
 .message-bubble.user .message-text {

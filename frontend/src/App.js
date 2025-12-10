@@ -2241,39 +2241,18 @@ const ChatScreen = ({
                             );
                         }
 
-                        // 시간 포맷팅 (카카오톡 스타일)
+                        // 시간 포맷팅 (카카오톡 스타일) - 날짜 제거, 시간만 표시
                         const formatTime = (timestamp) => {
                             if (!timestamp) return '';
                             const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-                            const now = new Date();
-                            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                            const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                             
                             const hours = date.getHours();
                             const minutes = date.getMinutes();
                             
-                            // 오늘 메시지: 시간만 표시
-                            if (msgDate.getTime() === today.getTime()) {
-                                const period = hours < 12 ? '오전' : '오후';
-                                const displayHours = hours === 0 ? 12 : (hours > 12 ? hours - 12 : hours);
-                                return `${period} ${displayHours}:${minutes.toString().padStart(2, '0')}`;
-                            }
-                            
-                            // 어제 메시지: "어제" + 시간 표시
-                            const yesterday = new Date(today);
-                            yesterday.setDate(yesterday.getDate() - 1);
-                            if (msgDate.getTime() === yesterday.getTime()) {
-                                const period = hours < 12 ? '오전' : '오후';
-                                const displayHours = hours === 0 ? 12 : (hours > 12 ? hours - 12 : hours);
-                                return `어제 ${period} ${displayHours}:${minutes.toString().padStart(2, '0')}`;
-                            }
-                            
-                            // 그 외: 날짜와 시간 표시
-                            const month = date.getMonth() + 1;
-                            const day = date.getDate();
+                            // 모든 메시지: 시간만 표시 (날짜 제거)
                             const period = hours < 12 ? '오전' : '오후';
                             const displayHours = hours === 0 ? 12 : (hours > 12 ? hours - 12 : hours);
-                            return `${month}/${day} ${period} ${displayHours}:${minutes.toString().padStart(2, '0')}`;
+                            return `${period} ${displayHours}:${minutes.toString().padStart(2, '0')}`;
                         };
 
                         // 메시지 시간 표시 (카카오톡 스타일)

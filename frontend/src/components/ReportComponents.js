@@ -301,31 +301,22 @@ export const ActivityBottomSheet = ({ selectedActivity, isMobile, onClose, topCh
             setLoadingComment(true);
             
             try {
-                const response = await fetch('http://localhost:8000/chat/activity-comment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        character_id: topCharacterId,
-                        activity_name: selectedActivity.activity,
-                        user_nickname: userNickname || '사용자'
-                    })
+                const { api } = await import('../utils/api');
+                const response = await api.getActivityComment({
+                    character_id: topCharacterId,
+                    activity_name: selectedActivity.activity,
+                    user_nickname: userNickname || '사용자'
                 });
                 
-                let newComment;
-                if (response.ok) {
-                    const data = await response.json();
-                    newComment = data.comment;
-                } else {
-                    newComment = `${userNickname || '사용자'}, 이 활동을 실천해 보면 좋을 것 같아. 네 마음이 편안해지길 바라.`;
-                }
+                const newComment = response.comment || `${userNickname || '사용자'}, 이 활동을 실천해 보면 좋을 것 같아. 네 마음이 편안해지길 바라.`;
                 
                 // 캐시에 저장
                 commentCache.current[currentActivityKey] = newComment;
                 setCharacterComment(newComment);
             } catch (error) {
                 console.error('캐릭터 코멘트 로드 실패:', error);
+                // 에러 발생 시에도 API를 다시 시도하지 않고, 빈 상태로 두거나 재시도 로직 추가
+                // 웹과 동일하게 동작하도록 수정
                 const fallbackComment = `${userNickname || '사용자'}, 이 활동을 실천해 보면 좋을 것 같아. 네 마음이 편안해지길 바라.`;
                 commentCache.current[currentActivityKey] = fallbackComment;
                 setCharacterComment(fallbackComment);
@@ -715,6 +706,9 @@ export const ReportDetailModal = ({
         }
     };
 
+    // 모바일 여부 확인
+    const isMobile = window.innerWidth <= 768;
+
     return (
         <div className="modal-overlay" 
             style={{ 
@@ -728,23 +722,26 @@ export const ReportDetailModal = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '20px'
+                padding: isMobile ? '0' : '20px'
             }}
             onClick={onClose}
         >
             <div 
+                className="report-modal"
                 style={{
                     backgroundColor: '#FAF8F5',
-                    borderRadius: '20px',
+                    borderRadius: isMobile ? '0' : '20px',
                     padding: '0',
-                    maxWidth: '420px',
-                    width: '90%',
-                    maxHeight: '90vh',
+                    maxWidth: isMobile ? '100%' : '420px',
+                    width: isMobile ? '100%' : '90%',
+                    maxHeight: isMobile ? '100vh' : '90vh',
+                    height: isMobile ? '100vh' : 'auto',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-                    position: 'relative'
+                    position: 'relative',
+                    margin: isMobile ? '0' : 'auto'
                 }}
                 onClick={(e) => e.stopPropagation()}
             >

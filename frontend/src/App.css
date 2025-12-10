@@ -2432,12 +2432,12 @@
     
     /* 모바일: 토론 스타일 섹션 여백 조정 */
     .debate-style-section {
-        margin-top: 16px !important; /* 제목을 위로 올리기: 기본 24px -> 16px */
+        margin-top: 20px !important; /* 제목을 위로 올리기: 기본 24px -> 16px */
         margin-bottom: 24px !important;
     }
     
     .debate-style-section label {
-        margin-bottom: 8px !important; /* 제목과 버튼 사이 간격 줄이기: 기본 12px -> 8px */
+        margin-bottom: 18px !important; /* 제목과 버튼 사이 간격 줄이기: 기본 12px -> 8px */
     }
     
     /* 모바일: 토론 주제 카드 그리드 중앙 정렬 */
@@ -2471,12 +2471,18 @@
     .debate-style-buttons {
         width: 100% !important;
         max-width: 100% !important;
-        gap: 6px !important; /* 간격 줄임: 12px -> 6px */
+        gap: 3px !important; /* 간격 더 줄임: 6px -> 3px */
         justify-items: center !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
+    }
+    
+    /* 모바일: 토론 스타일 버튼 가로 너비 증가 */
+    .debate-style-btn {
+        width: 100% !important;
+        min-width: 0 !important; /* 그리드에서 버튼이 최대한 넓게 */
     }
     
     /* 모바일: 랜덤 버튼 컨테이너 중앙 정렬 */

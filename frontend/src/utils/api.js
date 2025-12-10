@@ -159,6 +159,7 @@ export const api = {
   startDebate: (data) => apiCall('/chat/debate', { method: 'POST', body: data, requiresAuth: true }),
   getDebateSummary: (data) => apiCall('/chat/debate/summary', { method: 'POST', body: data, requiresAuth: true }),
   getBgmComment: (data) => apiCall('/chat/bgm-comment', { method: 'POST', body: data }),
+  getActivityComment: (data) => apiCall('/chat/activity-comment', { method: 'POST', body: data }),
 
   // 인증
   register: (userData) => apiCall('/auth/register', { method: 'POST', body: userData }),

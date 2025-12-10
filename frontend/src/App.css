@@ -3187,9 +3187,26 @@
     
     /* 모바일: 오른쪽 메시지 여백 유지 - 왼쪽 캐릭터 말풍선과 동일한 간격 */
     .message-bubble.user {
-        margin-right: 44px !important; /* 왼쪽 캐릭터 말풍선과 동일한 간격 (AI 메시지의 margin-left 44px와 동일) */
+        margin-right: 36px !important; /* 약간 오른쪽으로 이동 (44px -> 36px) */
         margin-left: 0 !important; /* 왼쪽 마진 제거 */
         max-width: 80% !important; /* AI 메시지와 동일하게 80%로 제한하여 적절히 늘어나도록 */
+    }
+    
+    /* 모바일: 왼쪽 AI 메시지도 약간 오른쪽으로 이동 */
+    .message-bubble.ai .message-content {
+        margin-left: 36px !important; /* 약간 오른쪽으로 이동 (44px -> 36px) */
+    }
+    
+    /* 모바일: 시스템 메시지 중앙 정렬 보정 */
+    .system-message {
+        text-align: center !important;
+        margin: 0 auto !important;
+        display: block !important;
+        width: fit-content !important;
+        max-width: 85% !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        position: relative !important;
     }
     
     /* 모바일: 토론 주제 패널 배경색을 채팅방 배경색과 동일하게 */

@@ -3035,7 +3035,7 @@
     /* 모바일: 설정 버튼 위치 조정 - 입력창 위에 배치 */
     .settings-button {
         position: fixed !important; /* absolute에서 fixed로 변경하여 입력창과 독립적으로 위치 조정 */
-        bottom: 160px !important; /* 입력창 위에 더 가깝게 배치 (200px -> 160px) */
+        bottom: 120px !important; /* 입력창 위에 더 가깝게 배치 (200px -> 160px) */
         right: 14px !important;
         width: 48px !important;
         height: 48px !important;
@@ -3187,8 +3187,8 @@
     
     /* 모바일: 오른쪽 메시지 여백 유지 - 왼쪽 캐릭터 말풍선과 동일한 간격 */
     .message-bubble.user {
-        margin-right: 8px !important; /* 왼쪽 캐릭터 말풍선과 동일한 간격 (message-list padding과 동일) */
-        margin-left: 44px !important; /* 왼쪽 캐릭터 말풍선과 동일한 간격 (AI 메시지의 margin-left와 동일) */
+        margin-right: 44px !important; /* 왼쪽 캐릭터 말풍선과 동일한 간격 (AI 메시지의 margin-left 44px와 동일) */
+        margin-left: 0 !important; /* 왼쪽 마진 제거 */
         max-width: 80% !important; /* AI 메시지와 동일하게 80%로 제한하여 적절히 늘어나도록 */
     }
     

@@ -87,6 +87,8 @@ const ChatScreen = ({
     const exportMenuRef = useRef(null);
     const [showHeaderMenu, setShowHeaderMenu] = useState(false);
     const headerMenuRef = useRef(null);
+    // 더블터치 감지를 위한 터치 시간 추적 (메시지 ID별)
+    const lastTouchTimesRef = useRef(new Map());
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -2065,6 +2067,9 @@ const ChatScreen = ({
                             }
                         };
 
+                        // 더블터치 감지를 위한 상수
+                        const DOUBLE_TAP_DELAY = 300; // 300ms 내 두 번 터치하면 더블터치로 인식
+                        
                         // 메시지 더블클릭 핸들러 (AI 메시지만 저장/취소)
                         const handleMessageDoubleClick = async (e) => {
                             if (msg.sender !== 'ai' || !msg.characterId) return;
@@ -2201,6 +2206,27 @@ const ChatScreen = ({
                             }
                         };
                         
+                        // 모바일 더블터치 핸들러
+                        const handleMessageTouchStart = (e) => {
+                            if (msg.sender !== 'ai' || !msg.characterId) return;
+                            
+                            const currentTime = Date.now();
+                            const lastTouchTime = lastTouchTimesRef.current.get(msg.id) || 0;
+                            const timeSinceLastTouch = currentTime - lastTouchTime;
+                            
+                            if (timeSinceLastTouch < DOUBLE_TAP_DELAY && timeSinceLastTouch > 0) {
+                                // 더블터치 감지
+                                e.preventDefault();
+                                e.stopPropagation();
+                                
+                                // 더블클릭 핸들러와 동일한 로직 실행
+                                handleMessageDoubleClick(e);
+                                lastTouchTimesRef.current.delete(msg.id); // 리셋
+                            } else {
+                                lastTouchTimesRef.current.set(msg.id, currentTime);
+                            }
+                        };
+                        
                         const handleHeartClick = async (e) => {
                             if (msg.sender !== 'ai' || !msg.characterId) return;
                             e.stopPropagation();
@@ -2282,6 +2308,7 @@ const ChatScreen = ({
                                 className={`message-bubble ${msg.sender} ${aiTurnClass} ${debatePosition} ${captureMode ? 'selectable' : ''} ${isInRange ? 'in-range-for-capture' : ''} ${captureMode && selectedMessages.length >= 1 && !isInRange ? 'out-of-range' : ''} ${isLiked ? 'liked' : ''}`}
                                 onClick={handleMessageClick}
                                 onDoubleClick={handleMessageDoubleClick}
+                                onTouchStart={handleMessageTouchStart}
                             >
                                 {msg.sender === 'ai' && (
                                     <>

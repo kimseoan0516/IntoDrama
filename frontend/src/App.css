@@ -3178,35 +3178,40 @@
     
     /* 모바일: 말풍선 세트 간 간격만 줄이기 (웹과 동일한 구조 유지) */
     .message-list {
-        padding: 20px 8px 40px 8px !important; /* 좌우 패딩만 줄임 (16px -> 8px) */
+        padding: 20px 0 40px 0 !important; /* 좌우 패딩 제거하여 메시지 세트가 직접 간격 조정 */
     }
     
     .debate-mode .message-list {
-        padding: 20px 8px 40px 8px !important; /* 좌우 패딩만 줄임 */
+        padding: 20px 0 40px 0 !important; /* 좌우 패딩 제거 */
     }
     
-    /* 모바일: 오른쪽 메시지 여백 유지 - 왼쪽 캐릭터 말풍선과 동일한 간격 */
+    /* 모바일: 오른쪽 메시지 여백 유지 - 테두리에서 36px 간격 */
     .message-bubble.user {
-        margin-right: 36px !important; /* 약간 오른쪽으로 이동 (44px -> 36px) */
+        margin-right: 36px !important; /* 테두리에서 36px 간격 */
         margin-left: 0 !important; /* 왼쪽 마진 제거 */
         max-width: 80% !important; /* AI 메시지와 동일하게 80%로 제한하여 적절히 늘어나도록 */
     }
     
-    /* 모바일: 왼쪽 AI 메시지도 약간 오른쪽으로 이동 */
-    .message-bubble.ai .message-content {
-        margin-left: 36px !important; /* 약간 오른쪽으로 이동 (44px -> 36px) */
+    /* 모바일: 왼쪽 AI 메시지 세트 - 오른쪽과 동일한 간격 (테두리에서 36px) */
+    .message-bubble.ai {
+        margin-left: 36px !important; /* 테두리에서 36px 간격 (오른쪽과 동일) */
     }
     
-    /* 모바일: 시스템 메시지 중앙 정렬 보정 */
-    .system-message {
+    .message-bubble.ai .message-content {
+        margin-left: 0 !important; /* message-content의 margin-left 제거 (부모에서 간격 조정) */
+    }
+    
+    /* 모바일: 시스템 메시지 정중앙 정렬 */
+    .message-list .system-message {
+        align-self: center !important; /* flex 컨테이너에서 중앙 정렬 */
         text-align: center !important;
         margin: 0 auto !important;
         display: block !important;
         width: fit-content !important;
         max-width: 85% !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
         position: relative !important;
+        left: auto !important;
+        transform: none !important;
     }
     
     /* 모바일: 토론 주제 패널 배경색을 채팅방 배경색과 동일하게 */

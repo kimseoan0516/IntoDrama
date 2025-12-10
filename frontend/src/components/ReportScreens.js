@@ -2751,18 +2751,24 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                 )}
             </div>
             
-            <div className="modal-overlay" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1000 }}>
-                <div style={{
+            <div className="modal-overlay" style={{ 
+                backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+                zIndex: 1000,
+                padding: isMobile ? '0' : '20px'
+            }}>
+                <div className="report-modal" style={{
                     backgroundColor: '#FAF8F5',
-                    borderRadius: '20px',
+                    borderRadius: isMobile ? '0' : '20px',
                     padding: '0',
-                    maxWidth: '420px',
-                    width: '90%',
-                    maxHeight: '90vh',
+                    maxWidth: isMobile ? '100%' : '420px',
+                    width: isMobile ? '100%' : '90%',
+                    maxHeight: isMobile ? '100vh' : '90vh',
+                    height: isMobile ? '100vh' : 'auto',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                    margin: isMobile ? '0' : 'auto'
                 }} ref={reportRef}>
                 {/* 헤더 */}
                             <div style={{

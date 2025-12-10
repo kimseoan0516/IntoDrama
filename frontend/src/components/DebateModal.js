@@ -112,7 +112,8 @@ const DebateModal = ({ selectedCharIds, characterData, debateTopic, setDebateTop
                 <h2>토론 모드</h2>
                 <div className="debate-content">
                     <div className="debate-description">
-                        같은 주제, 다른 시선. 그들의 이야기가 시작됩니다.
+                        같은 주제, 다른 시선.<br />
+                        그들의 이야기가 시작됩니다.
                     </div>
                     
                     {/* 토론 주제 섹션 */}

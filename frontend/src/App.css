@@ -329,8 +329,8 @@
 .diary-calendar-day.is-today::after {
     content: '';
     position: absolute;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: transparent;
     border: 2px solid #B8A389;
@@ -351,8 +351,8 @@
 .diary-calendar-day.has-diary.is-today::after {
     z-index: 1;
     border-color: #A8957A;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     box-sizing: border-box;
 }
 
@@ -1266,7 +1266,7 @@
     margin-bottom: 20px;
     margin-top: 4px;
     line-height: 1.6;
-    white-space: nowrap;
+    text-align: center;
 }
 
 .debate-topic-section {
@@ -2448,11 +2448,11 @@
         box-sizing: border-box !important;
     }
     
-    /* 모바일: 토론 스타일 버튼 크기 증가 */
+    /* 모바일: 토론 스타일 버튼 크기 조정 */
     .debate-style-btn {
-        padding: 18px 24px !important; /* 웹: 12px 16px -> 모바일: 18px 24px */
-        font-size: 1.1rem !important; /* 웹: 0.85rem -> 모바일: 1.1rem */
-        min-height: 64px !important; /* 모바일에서 최소 높이 추가 */
+        padding: 10px 16px !important; /* 세로 길이 줄임: 18px -> 10px */
+        font-size: 0.9rem !important; /* 글씨 크기 줄임: 1.1rem -> 0.9rem */
+        min-height: auto !important; /* 최소 높이 제거 */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;

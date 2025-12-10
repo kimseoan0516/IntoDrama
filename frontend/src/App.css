@@ -3035,7 +3035,7 @@
     /* 모바일: 설정 버튼 위치 조정 - 입력창 위에 배치 */
     .settings-button {
         position: fixed !important; /* absolute에서 fixed로 변경하여 입력창과 독립적으로 위치 조정 */
-        bottom: 200px !important; /* 입력창 최대 높이(100px) + 상하 패딩(24px) + 하단 패딩(44px) + 상단 패딩(10px) + 여유 공간(22px) = 200px */
+        bottom: 160px !important; /* 입력창 위에 더 가깝게 배치 (200px -> 160px) */
         right: 14px !important;
         width: 48px !important;
         height: 48px !important;
@@ -3048,7 +3048,7 @@
     /* 모바일: 템플릿 버튼도 설정 버튼 위에 배치 */
     .template-button {
         position: fixed !important;
-        bottom: 258px !important; /* 설정 버튼(48px) + 간격(10px) + 설정 버튼 위치(200px) = 258px */
+        bottom: 218px !important; /* 설정 버튼(48px) + 간격(10px) + 설정 버튼 위치(160px) = 218px */
         right: 14px !important;
         width: 48px !important;
         height: 48px !important;
@@ -3118,25 +3118,25 @@
     .input-area textarea,
     .input-area [contenteditable] {
         font-size: 16px !important; /* iOS 자동 확대 방지 - 최소 16px 필수 */
-        padding: 12px 14px !important; /* 상하 패딩 조정하여 텍스트 중앙 정렬 (10px -> 12px) */
+        padding: 13px 14px !important; /* 상하 패딩 조정하여 placeholder 텍스트 중앙 정렬 (12px -> 13px) */
         min-height: 44px !important;
         max-height: 100px !important; /* 모바일에서 최대 높이 제한 */
-        line-height: 1.5 !important;
+        line-height: 1.4 !important; /* line-height 조정하여 텍스트 중앙 정렬 */
         /* 텍스트 수직 중앙 정렬을 위한 추가 설정 */
         box-sizing: border-box !important;
     }
     
-    /* contenteditable 내부 텍스트 중앙 정렬 (flex 사용하지 않고 padding으로 조정) */
+    /* contenteditable 내부 텍스트 중앙 정렬 */
     .input-area [contenteditable] {
-        padding: 12px 14px !important; /* 상하 패딩 동일하게 조정 */
+        padding: 13px 14px !important; /* 상하 패딩 동일하게 조정 */
         display: block !important; /* flex 제거 */
-        line-height: 1.5 !important;
+        line-height: 1.4 !important; /* line-height 조정 */
     }
     
     /* textarea의 텍스트가 중앙에 오도록 조정 */
     .input-area textarea {
-        padding: 12px 14px !important; /* 상하 패딩 동일하게 조정 */
-        line-height: 1.5 !important;
+        padding: 13px 14px !important; /* 상하 패딩 동일하게 조정 */
+        line-height: 1.4 !important; /* line-height 조정 */
     }
     
     .voice-button,
@@ -3185,9 +3185,10 @@
         padding: 20px 8px 40px 8px !important; /* 좌우 패딩만 줄임 */
     }
     
-    /* 모바일: 오른쪽 메시지 여백 유지 */
+    /* 모바일: 오른쪽 메시지 여백 유지 - 왼쪽 캐릭터 말풍선과 동일한 간격 */
     .message-bubble.user {
-        margin-right: 10px !important; /* 모바일에서 프로필 이미지 잘림 방지 */
+        margin-right: 8px !important; /* 왼쪽 캐릭터 말풍선과 동일한 간격 (message-list padding과 동일) */
+        margin-left: 44px !important; /* 왼쪽 캐릭터 말풍선과 동일한 간격 (AI 메시지의 margin-left와 동일) */
         max-width: 80% !important; /* AI 메시지와 동일하게 80%로 제한하여 적절히 늘어나도록 */
     }
     

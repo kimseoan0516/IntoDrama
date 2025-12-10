@@ -2430,6 +2430,16 @@
         margin-right: auto !important;
     }
     
+    /* 모바일: 토론 스타일 섹션 여백 조정 */
+    .debate-style-section {
+        margin-top: 16px !important; /* 제목을 위로 올리기: 기본 24px -> 16px */
+        margin-bottom: 24px !important;
+    }
+    
+    .debate-style-section label {
+        margin-bottom: 8px !important; /* 제목과 버튼 사이 간격 줄이기: 기본 12px -> 8px */
+    }
+    
     /* 모바일: 토론 주제 카드 그리드 중앙 정렬 */
     .debate-topic-suggestions {
         width: 100% !important;
@@ -2461,7 +2471,7 @@
     .debate-style-buttons {
         width: 100% !important;
         max-width: 100% !important;
-        gap: 12px !important; /* 웹: 10px -> 모바일: 12px */
+        gap: 6px !important; /* 간격 줄임: 12px -> 6px */
         justify-items: center !important;
         margin-left: auto !important;
         margin-right: auto !important;
@@ -3200,6 +3210,11 @@
     /* 모바일: 왼쪽 AI 메시지 콘텐츠 오른쪽으로 더 이동 - 사용자 메시지의 프로필-말풍선 간격(8px)과 동일하게 */
     .message-bubble.ai .message-content {
         margin-left: 48px !important; /* 프로필 사진(36px) + 간격(8px) + 약간 여유(4px) = 48px */
+    }
+    
+    /* 모바일: 타이핑 인디케이터도 일반 메시지와 동일한 간격으로 */
+    .message-bubble.loading .message-text {
+        margin-left: 48px !important; /* 일반 AI 메시지와 동일한 간격 */
     }
     
   /* 모바일: 시스템 메시지 정중앙 정렬 */

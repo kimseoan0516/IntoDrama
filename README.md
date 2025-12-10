@@ -702,6 +702,20 @@ npm start
 - API 사용량 제한을 초과하지 않았는지 확인
 - 네트워크 연결 상태 확인
 
+### "User location is not supported" 오류가 발생하는 경우
+**오류 메시지**: `400 User location is not supported for the API use` 또는 유사한 지역 제한 오류
+
+**원인**: Google Gemini API가 현재 지역에서 사용할 수 없거나, API 키가 특정 지역으로 제한되어 있는 경우
+
+**해결 방법**:
+1. **VPN 사용**: Google Gemini API를 지원하는 지역(예: 미국, 유럽 등)의 VPN을 사용
+2. **API 키 확인**: [Google AI Studio](https://makersuite.google.com/app/apikey)에서 API 키의 지역 제한 설정 확인
+3. **새 API 키 생성**: 다른 지역에서 생성한 Google 계정으로 API 키를 새로 발급
+4. **프록시 사용**: API 요청을 프록시를 통해 라우팅하여 지원되는 지역에서 접근
+5. **대체 API 고려**: 다른 지역에서 사용 가능한 AI API로 대체 (필요 시)
+
+**참고**: Google Gemini API는 특정 국가/지역에서만 사용 가능할 수 있습니다. 정확한 지원 지역은 [Google AI Studio 문서](https://ai.google.dev/docs)를 참고하세요.
+
 ### 웹앱 관련 문제
 - **브라우저 호환성**: Chrome, Edge, Safari 최신 버전 사용 권장
 - **캐시 문제**: 브라우저 캐시를 삭제하고 새로고침 (Ctrl+Shift+R 또는 Cmd+Shift+R)

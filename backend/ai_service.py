@@ -10,7 +10,10 @@ from sqlalchemy.orm import Session
 import json
 import google.generativeai as genai
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
-from google.api_core.exceptions import ResourceExhausted, ServiceUnavailable, InternalServerError
+from google.api_core.exceptions import (
+    ResourceExhausted, ServiceUnavailable, InternalServerError,
+    InvalidArgument, FailedPrecondition, PermissionDenied, NotFound
+)
 
 from database import CharacterMemory
 from config import model, SAFETY_SETTINGS, CHARACTER_YEARS, WEEKDAYS, MAX_HISTORY_MESSAGES, MAX_LINES_PER_BUBBLE
@@ -722,9 +725,36 @@ def get_ai_response(
         
         return ai_message
 
+    except InvalidArgument as e:
+        error_str = str(e)
+        if "location" in error_str.lower() or "region" in error_str.lower() or "not supported" in error_str.lower():
+            print(f"[!! AI({persona['name']}) 지역 제한 오류 !!] {e}")
+            return "AI가 응답하는 데 문제가 생겼습니다. (오류: 현재 지역에서는 Google Gemini API를 사용할 수 없습니다. VPN을 사용하거나 API 키의 지역 설정을 확인해주세요.)"
+        else:
+            print(f"[!! AI({persona['name']}) 인자 오류 !!] {e}")
+            return f"AI가 응답하는 데 문제가 생겼습니다. (오류: 잘못된 요청 - {error_str})"
+    except PermissionDenied as e:
+        print(f"[!! AI({persona['name']}) 권한 오류 !!] {e}")
+        return "AI가 응답하는 데 문제가 생겼습니다. (오류: API 키 권한이 없습니다. Google AI Studio에서 API 키를 확인해주세요.)"
+    except FailedPrecondition as e:
+        error_str = str(e)
+        if "location" in error_str.lower() or "region" in error_str.lower():
+            print(f"[!! AI({persona['name']}) 지역 제한 오류 !!] {e}")
+            return "AI가 응답하는 데 문제가 생겼습니다. (오류: 현재 지역에서는 Google Gemini API를 사용할 수 없습니다. VPN을 사용하거나 API 키의 지역 설정을 확인해주세요.)"
+        else:
+            print(f"[!! AI({persona['name']}) 조건 오류 !!] {e}")
+            return f"AI가 응답하는 데 문제가 생겼습니다. (오류: {error_str})"
+    except NotFound as e:
+        print(f"[!! AI({persona['name']}) 리소스 없음 오류 !!] {e}")
+        return "AI가 응답하는 데 문제가 생겼습니다. (오류: API 리소스를 찾을 수 없습니다. API 키와 모델 설정을 확인해주세요.)"
     except Exception as e:
+        error_str = str(e)
+        # 지역 제한 관련 키워드 확인
+        if any(keyword in error_str.lower() for keyword in ["location", "region", "not supported", "country", "geographic"]):
+            print(f"[!! AI({persona['name']}) 지역 제한 오류 (일반 예외) !!] {e}")
+            return "AI가 응답하는 데 문제가 생겼습니다. (오류: 현재 지역에서는 Google Gemini API를 사용할 수 없습니다. 해결 방법: 1) VPN 사용, 2) Google AI Studio에서 API 키의 지역 설정 확인, 3) 다른 지역에서 생성한 API 키 사용)"
         print(f"[!! AI({persona['name']}) 응답 최종 오류 (재시도 3회 실패) !!] {e}")
-        return f"AI가 응답하는 데 문제가 생겼습니다. (오류: {e})"
+        return f"AI가 응답하는 데 문제가 생겼습니다. (오류: {error_str})"
 
 
 def get_multi_ai_response_json(
@@ -1099,10 +1129,46 @@ def get_multi_ai_response_json(
 
         return ai_message_text
 
-    except Exception as e:
-        print(f"[!! AI (Multi-JSON) 응답 최종 오류 (재시도 3회 실패) !!] {e}")
+    except InvalidArgument as e:
+        error_str = str(e)
+        if "location" in error_str.lower() or "region" in error_str.lower() or "not supported" in error_str.lower():
+            print(f"[!! AI (Multi-JSON) 지역 제한 오류 !!] {e}")
+            error_msg = "현재 지역에서는 Google Gemini API를 사용할 수 없습니다. VPN을 사용하거나 API 키의 지역 설정을 확인해주세요."
+        else:
+            print(f"[!! AI (Multi-JSON) 인자 오류 !!] {e}")
+            error_msg = f"잘못된 요청: {error_str}"
         return json.dumps({
-            "response_A": f"AI가 JSON 응답 생성 중 오류가 발생했습니다: {e}",
+            "response_A": f"AI가 응답하는 데 문제가 생겼습니다. (오류: {error_msg})",
             "response_B": "오류. (위의 A 응답 참고)"
-        })
+        }, ensure_ascii=False)
+    except PermissionDenied as e:
+        print(f"[!! AI (Multi-JSON) 권한 오류 !!] {e}")
+        return json.dumps({
+            "response_A": "AI가 응답하는 데 문제가 생겼습니다. (오류: API 키 권한이 없습니다. Google AI Studio에서 API 키를 확인해주세요.)",
+            "response_B": "오류. (위의 A 응답 참고)"
+        }, ensure_ascii=False)
+    except FailedPrecondition as e:
+        error_str = str(e)
+        if "location" in error_str.lower() or "region" in error_str.lower():
+            print(f"[!! AI (Multi-JSON) 지역 제한 오류 !!] {e}")
+            error_msg = "현재 지역에서는 Google Gemini API를 사용할 수 없습니다. VPN을 사용하거나 API 키의 지역 설정을 확인해주세요."
+        else:
+            print(f"[!! AI (Multi-JSON) 조건 오류 !!] {e}")
+            error_msg = error_str
+        return json.dumps({
+            "response_A": f"AI가 응답하는 데 문제가 생겼습니다. (오류: {error_msg})",
+            "response_B": "오류. (위의 A 응답 참고)"
+        }, ensure_ascii=False)
+    except Exception as e:
+        error_str = str(e)
+        if any(keyword in error_str.lower() for keyword in ["location", "region", "not supported", "country", "geographic"]):
+            print(f"[!! AI (Multi-JSON) 지역 제한 오류 (일반 예외) !!] {e}")
+            error_msg = "현재 지역에서는 Google Gemini API를 사용할 수 없습니다. 해결 방법: 1) VPN 사용, 2) Google AI Studio에서 API 키의 지역 설정 확인, 3) 다른 지역에서 생성한 API 키 사용"
+        else:
+            print(f"[!! AI (Multi-JSON) 응답 최종 오류 (재시도 3회 실패) !!] {e}")
+            error_msg = error_str
+        return json.dumps({
+            "response_A": f"AI가 응답하는 데 문제가 생겼습니다. (오류: {error_msg})",
+            "response_B": "오류. (위의 A 응답 참고)"
+        }, ensure_ascii=False)
 

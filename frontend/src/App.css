@@ -3188,7 +3188,7 @@
     /* 모바일: 오른쪽 메시지 여백 유지 */
     .message-bubble.user {
         margin-right: 10px !important; /* 모바일에서 프로필 이미지 잘림 방지 */
-        max-width: calc(100% - 10px) !important; /* 오른쪽 여백 확보 */
+        max-width: 80% !important; /* AI 메시지와 동일하게 80%로 제한하여 적절히 늘어나도록 */
     }
     
     /* 모바일: 토론 주제 패널 배경색을 채팅방 배경색과 동일하게 */

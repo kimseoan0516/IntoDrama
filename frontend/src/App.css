@@ -2471,7 +2471,7 @@
     .debate-style-buttons {
         width: 100% !important;
         max-width: 100% !important;
-        gap: 8px !important; /* 간격 늘림: 3px -> 8px */
+        gap: 3px !important; /* 간격 더 줄임: 6px -> 3px */
         justify-items: center !important;
         margin-left: auto !important;
         margin-right: auto !important;
@@ -2479,10 +2479,10 @@
         padding-right: 0 !important;
     }
     
-    /* 모바일: 토론 스타일 버튼 가로 너비 조정 */
+    /* 모바일: 토론 스타일 버튼 가로 너비 증가 */
     .debate-style-btn {
-        width: calc(50% - 4px) !important; /* 간격을 고려한 너비 조정 */
-        min-width: 0 !important;
+        width: 100% !important;
+        min-width: 0 !important; /* 그리드에서 버튼이 최대한 넓게 */
     }
     
     /* 모바일: 랜덤 버튼 컨테이너 중앙 정렬 */

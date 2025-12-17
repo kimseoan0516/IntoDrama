@@ -33,27 +33,52 @@ pinned: false
 
 ## 🎥 데모 영상
 
-[![IntoDrama 데모 영상](https://img.youtube.com/vi/vxY2TymhWEs/0.jpg)](https://youtube.com/watch?v=vxY2TymhWEs&si=p_UB6I9IJI-PC_kA)
+- **전체 데모 영상**
+  - [![IntoDrama 전체 데모](https://img.youtube.com/vi/vxY2TymhWEs/0.jpg)](https://youtube.com/watch?v=vxY2TymhWEs)
+
+- **감정 기반 UI 데모 영상**
+  - [![IntoDrama 감정 기반 UI 데모](https://img.youtube.com/vi/MmrIpxyqzcE/0.jpg)](https://youtube.com/watch?v=MmrIpxyqzcE)
 
 ---
 
-## 📖 프로그램 상세 설명
+## 🌟 핵심 기능 (Core Features)
 
-### 🎬 **명대사 직접 수집 & 프롬프트 기반 설계**
+### 1) 지능형 페르소나 엔진 (High-Fidelity Persona Engine)
 
-모든 드라마 캐릭터의 명대사를 인터넷에서 직접 수집하여 정확한 페르소나를 구현했습니다. 파인튜닝이나 임베딩 패턴 학습 없이, 오직 **프롬프트 기반 방식**으로 캐릭터의 스타일만 참고하는 구조로 설계되었습니다.
+- **수작업 명대사 데이터셋**: 드라마 대본/명대사에서 직접 수집한 데이터를 기반으로 말투, 어미, 가치관을 설계해 캐릭터 일치도를 극대화했습니다.
+- **프롬프트 기반 아키텍처**: 별도의 파인튜닝 없이 고도화된 프롬프트 엔지니어링을 적용하여, 저작권 리스크를 줄이면서 유연하게 캐릭터를 구현합니다.
+- **장기 기억 시스템 (Memory Management)**: 사용자와의 대화를 감정/선호도/관계성 등으로 분류해 기억하고, 시간이 흐를수록 개인화된 대화 경험을 제공합니다.
 
-### 🧠 **지능형 대화 시스템**
+### 2) 다차원 대화 인터랙션
 
-Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대화 기억 시스템을 통해 장기적인 관계 형성이 가능합니다. 캐릭터는 이전 대화를 기억하고, 감정을 분석하며, 사용자와의 관계를 발전시켜 나갑니다.
+- **멀티채팅 및 토론 모드**: 캐릭터 간 관계성을 반영한 3자 대화(사용자+2캐릭터), 특정 주제에 대한 AI 캐릭터 간 토론을 지원합니다.
+- **교환일기(손편지)**: 사용자의 일기에 대해 캐릭터가 페르소나를 유지하며 답장을 보내는 비동기 정서 교감 기능을 제공합니다.
+- **감정 기반 동적 UI**: 실시간 문맥 분석을 통해 배경색/애니메이션/말풍선 스타일이 자동으로 변화하여 몰입감을 높입니다.
+
+### 3) 데이터 분석 및 심리 리포트
+
+- **AI 심리 분석**: 대화 데이터를 분석하여 로맨스/위로/갈등 지수 등을 산출하고 주간 리캡 및 심리 리포트를 생성합니다.
+- **캐릭터 성향 지도**: 캐릭터들을 ‘따뜻함/차가움’, ‘현실적/이상적’ 축으로 시각화하여 성향을 한눈에 비교할 수 있습니다.
 
 ---
 
-## 🎯 주요 기능
+## 📌 상세 기능 설명
+
+### 🧭 기능 목차
+
+- **대화(채팅)**: 1:1 / 1:2 멀티채팅 / 토론 모드 / 대화 저장·관리 / 대사 저장
+- **일기**: 감정 일기(자동/키워드/직접 작성) / 교환일기(손편지, 예약 답장)
+- **분석/리포트**: 주간 통계 / 주간 리캡 / 심리 리포트 / 감정 타임라인
+- **UX/도구**: 감정 기반 UI / 타이핑 효과 / 메시지 캡처·공유 / 소설 형식 변환 / 한국어 조사 처리 / 프로필 / 음성 입력
+- **기타**: 캐릭터 성향 지도 / 음악 추천
 
 ### 💬 대화 기능
 
 #### 1:1 대화
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **단일 캐릭터와의 개인 대화**: 한 명의 드라마 캐릭터와 깊이 있는 1:1 대화를 나눌 수 있습니다
 - **페르소나 기반 대화**: 각 캐릭터의 고유한 성격, 말투, 배경 스토리를 반영한 자연스러운 대화
 - **🎬 직접 수집한 드라마 명대사 기반**: 
@@ -66,7 +91,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **캐릭터 기억 시스템**: 이전 대화 내용을 기억하고 다음 대화에 반영하여 장기적인 관계 형성
 - **대화 맥락 유지**: 대화 흐름을 자연스럽게 이어가며 캐릭터의 일관성 있는 반응 제공
 
+</details>
+
 #### 1:2 멀티채팅
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **2명의 캐릭터와 동시 대화**: 사용자는 최대 2명의 캐릭터와 동시에 대화할 수 있습니다 (1:1 또는 1:2 대화만 지원)
 - **캐릭터 간 상호작용**: 두 캐릭터가 서로 대화하며 사용자와도 자연스럽게 소통하는 3자 대화 형식
 - **관계 기반 대화**: 캐릭터들 간의 드라마 내 관계를 반영한 자연스러운 상호작용
@@ -74,7 +105,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **대화 흐름 관리**: 여러 캐릭터가 참여하는 복잡한 대화 상황도 자연스럽게 처리
 - **시각적 구분**: 1:2 대화 시 내 대화 보관함에서 두 캐릭터의 프로필 사진이 대각선으로 겹쳐 표시
 
+</details>
+
 #### 토론 모드
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **2명의 캐릭터 토론**: 정확히 2명의 캐릭터가 선택된 상태에서 특정 주제에 대해 토론을 진행합니다
 - **토론 주제 선택**: 미리 준비된 토론 주제 중 선택하거나 직접 주제를 입력할 수 있습니다
   - **주제 색상 구분**: 무거운 주제와 가벼운 주제가 색상으로 구분되어 표시됩니다
@@ -91,7 +128,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **일반 채팅 전환**: 토론 모드 종료 후 일반 채팅으로 자연스럽게 전환 가능
 - **토론 히스토리 제외**: 토론 내용은 일반 대화 히스토리에서 제외되어 페르소나에 영향을 주지 않습니다
 
+</details>
+
 #### 대화 저장 및 관리
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **대화 보관함 (내 대화 보관함)**
   - 사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 전체 대화만 표시됩니다
   - 필터링 조건: `is_manual=1 AND is_manual_quote=0` (사용자가 직접 저장한 대화만)
@@ -132,16 +175,28 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
   - 대사 저장으로 인한 자동 저장은 대화 보관함에 표시되지 않으며, 서버에만 저장되어 대화 흐름 추적에만 사용됩니다
   - 대화의 전체 맥락을 파악하며 저장된 대사가 어떤 상황에서 나온 것인지 확인 가능합니다
 
+</details>
+
 ### 📊 통계 및 분석
 
 #### 주간 통계
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **이번주 대화 요약**: 현재 주(월요일부터 오늘까지)의 대화 활동을 한눈에 확인
 - **캐릭터별 활동량**: 이번주에 가장 많이 대화한 캐릭터 TOP 3를 순위와 함께 표시
 - **상세 통계 정보**: 각 캐릭터별 대화 횟수, 메시지 수, 대화 시간 등 구체적인 수치 제공
 - **시각적 표현**: 그래프와 차트를 통해 데이터를 직관적으로 이해할 수 있도록 시각화
 - **랭킹 시스템**: 1위, 2위, 3위 캐릭터를 뱃지와 함께 표시하여 한눈에 파악 가능
 
+</details>
+
 #### 주간 리캡
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **월별 주간 대화 요약**: 6개월간의 대화 기록을 월별로 나누어 확인할 수 있습니다
 - **주별 활동 시각화**: 각 주의 대화 활동량을 시각적으로 표현하여 패턴 파악 가능
 - **캐릭터 랭킹**: 해당 주에 가장 많이 대화한 캐릭터 TOP 3를 순위와 함께 표시
@@ -149,7 +204,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **"이번주" 뱃지**: 현재 주를 명확히 구분할 수 있는 뱃지 제공
 - **과거 데이터 탐색**: 최근 6개월간의 대화 패턴을 시간순으로 탐색 가능
 
+</details>
+
 #### 심리 리포트
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **AI 기반 심리 분석**: 대화 내용을 AI가 분석하여 사용자의 심리 상태를 파악합니다
 - **감정 상태 분석**: 대화에서 드러나는 감정 상태를 분석하고 시각화합니다
   - **로맨스 점수**: 대화에서 드러나는 로맨틱한 감정의 강도를 분석합니다
@@ -165,9 +226,15 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **감정 타임라인**: 대화 시간순으로 감정 변화를 시각화하여 타임라인으로 확인할 수 있습니다
 - **인사이트 제공**: 대화 패턴을 통해 사용자의 심리적 특성과 관계 형성 방식을 인사이트로 제공
 
+</details>
+
 ### 📝 일기 기능 (마음 기록 노트)
 
 #### 감정 일기 자동 생성
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **AI 기반 일기 생성**: 대화 내용을 AI가 분석하여 감정 일기를 자동으로 생성합니다
 - **생성 방식 구분**:
   - **메인 화면에서 일기 생성**: 메인 화면의 "마음 기록 노트"에서 일기를 생성할 경우, **키워드 기반 생성만 가능**합니다. 사용자가 직접 키워드를 입력하여 AI가 일기를 생성합니다.
@@ -187,7 +254,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
   - **텍스트 파일 저장**: 작성한 일기를 텍스트 파일(.txt)로 저장할 수 있습니다. 일기 제목, 날짜, 날씨, 감정 태그, 내용이 포함된 깔끔한 형식으로 저장됩니다.
   - **이미지 파일 저장**: 작성한 일기를 아름다운 이미지로 저장할 수 있습니다. HTML2Canvas를 활용하여 고해상도의 이미지를 생성하며, 일기 제목, 날짜, 날씨 아이콘, 감정 태그, 일기 내용이 디자인된 형태로 저장됩니다. 저장된 이미지는 SNS에 공유하거나 갤러리에 보관하여 오랫동안 소장할 수 있습니다.
 
+</details>
+
 #### 날씨 연동
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **실제 날씨 정보**: OpenWeatherMap API를 통해 실제 날씨 정보를 가져옵니다
 - **자동 날씨 기록**: 일기 작성 시 해당 날짜의 날씨 정보가 자동으로 기록됩니다
 - **날씨 반영**: 일기 내용에 날씨 정보가 자연스럽게 반영되어 더 생생한 기록이 됩니다
@@ -195,9 +268,15 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **날짜 선택**: 달력을 통해 원하는 날짜를 선택하여 해당 날짜의 일기를 작성할 수 있습니다
 - **미래 날짜 제한**: 오늘 이후의 날짜는 선택할 수 없도록 제한되어 있습니다
 
+</details>
+
 ### 🎁 캐릭터 상호작용
 
 #### 성향 지도 (캐릭터 성향 지도)
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **2D 좌표계 시각화**: 캐릭터들의 성향을 2차원 좌표계로 시각화하여 한눈에 비교할 수 있습니다
 - **성향 축**: 따뜻함/차가움(가로축), 현실적/이상적(세로축) 두 가지 차원으로 캐릭터를 배치합니다
   - **따뜻함/차가움 (warmth)**: 0.0(매우 차가움) ~ 1.0(매우 따뜻함)
@@ -210,7 +289,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **성향 캐싱**: 서버 시작 시 모든 캐릭터의 성향을 미리 계산하여 캐시에 저장합니다
 - **데이터베이스 저장**: 계산된 성향 데이터를 데이터베이스에 저장하여 재사용합니다
 
+</details>
+
 #### 캐릭터 기억 시스템
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **대화 기억**: 캐릭터가 사용자와의 이전 대화 내용을 기억하고 다음 대화에 반영합니다
 - **기억 타입**: 감정(emotion), 이벤트(event), 선호도(preference), 관계(relationship) 등 다양한 타입의 기억을 저장합니다
 - **중요도 기반 기억**: 중요한 대화나 감정적 이벤트를 우선적으로 기억하여 더 의미 있는 대화 생성 (중요도 1-10)
@@ -222,39 +307,75 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **기억 업데이트**: 기억이 참조될 때마다 last_referenced 시간이 업데이트되어 최근성 반영
 - **토큰 최적화**: 대화 히스토리가 길어질 때 토큰 제한을 고려하여 중요한 기억만 참조합니다
 
+</details>
+
 ### 🎨 사용자 경험
 
 #### 실시간 타이핑 효과
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **타이핑 애니메이션**: AI 응답이 한 글자씩 타이핑되는 것처럼 표시되어 생동감 있는 대화 경험 제공
 - **설정 가능**: 설정 메뉴에서 타이핑 효과를 ON/OFF로 전환할 수 있어 선호에 맞게 조정 가능
 - **자연스러운 흐름**: 타이핑 효과로 인해 대화가 더 자연스럽고 실시간으로 진행되는 느낌을 줍니다
 - **읽기 속도 조절**: 타이핑 효과를 통해 메시지를 천천히 읽을 수 있어 이해도 향상
 
+</details>
+
 #### 메시지 캡처 및 공유
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **선택적 캡처**: 원하는 메시지만 선택하여 이미지로 캡처할 수 있습니다
 - **고해상도 이미지**: HTML2Canvas를 사용하여 고해상도의 이미지를 생성합니다
 - **SNS 공유**: 캡처한 대화 이미지를 SNS에 공유하거나 저장하여 친구들과 공유 가능
 - **대화 기록 보존**: 특별한 대화를 이미지로 저장하여 오랫동안 보관할 수 있습니다
 
+</details>
+
 #### 소설 형식 변환
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **서사적 문체 변환**: 대화 내용을 소설 형식의 서사적 문체로 자동 변환합니다
 - **자연스러운 재구성**: 대화를 읽기 편한 소설 형식으로 재구성하여 이야기처럼 읽을 수 있습니다
 - **텍스트 파일 저장**: 변환된 소설 형식의 텍스트를 파일로 저장하여 보관 가능
 - **스토리텔링**: 단순한 대화가 하나의 이야기로 변환되어 더욱 흥미롭게 읽을 수 있습니다
 
+</details>
+
 #### 한국어 조사 자동 처리
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **지능형 조사 선택**: 받침 유무에 따라 '와/과', '이/가', '을/를', '은/는' 등을 자동으로 올바르게 선택
 - **자연스러운 문장**: 한국어 문법에 맞는 자연스러운 문장을 자동으로 생성합니다
 - **캐릭터 이름 처리**: 여러 캐릭터 이름을 연결할 때도 각 이름에 맞는 조사를 자동으로 적용
 - **오류 방지**: 수동으로 조사를 입력할 때 발생할 수 있는 오류를 자동으로 방지합니다
 
+</details>
+
 #### 프로필 설정
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **닉네임 변경**: 사용자 닉네임을 자유롭게 변경할 수 있으며, 대화에서 캐릭터가 이 닉네임을 사용합니다
 - **프로필 사진**: 프로필 사진을 업로드하여 개인화된 프로필을 만들 수 있습니다
 - **프로필 미리보기**: 사진을 업로드하기 전에 미리보기를 통해 확인 가능합니다
 - **간편한 변경**: "변경" 버튼을 통해 쉽게 프로필 사진을 교체할 수 있습니다
 
+</details>
+
 #### 음성 입력 기능
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **음성 인식**: 브라우저의 Web Speech API를 활용하여 음성으로 메시지를 입력할 수 있습니다
 - **실시간 음성 감정 분석**: 음성 입력 중 실시간으로 음성의 톤과 감정을 분석합니다
 - **감정 감지**: 음성의 피치, 볼륨, 주파수를 분석하여 기쁨, 슬픔, 화남, 중립 등의 감정을 감지합니다
@@ -263,7 +384,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **음성 입력 중지**: 음성 입력 버튼을 다시 클릭하거나 말하기를 멈추면 자동으로 인식이 종료됩니다
 - **브라우저 호환성**: Chrome, Edge 등 Web Speech API를 지원하는 브라우저에서 사용 가능합니다
 
+</details>
+
 #### 교환일기 기능
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **캐릭터와의 편지 교환**: 일기를 작성하고 캐릭터에게 보내면, 캐릭터가 답장편지를 작성하여 돌려보냅니다
 - **일기 작성**: 마음 기록 노트에서 일기를 작성한 후 "답장 받기" 옵션을 활성화하면 교환일기가 생성됩니다
 - **자동 답장 생성**: AI가 캐릭터의 페르소나에 맞게 일기에 대한 답장을 자동으로 생성합니다
@@ -276,7 +403,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **예약 발송**: 원하는 시간에 답장 편지를 자동으로 발송하도록 예약할 수 있습니다
 - **답장 날짜 표시**: 답장이 도착한 날짜를 "오늘 도착", "어제 도착", "n일 전 도착" 형식으로 표시합니다
 
+</details>
+
 #### 음악 추천 기능
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **감정 기반 음악 추천**: 대화 내용을 분석하여 사용자의 감정 상태에 맞는 음악을 추천합니다
 - **캐릭터 음악 추천**: 가장 많이 대화한 캐릭터가 사용자의 기분에 맞춰 음악을 추천하고 코멘트를 남깁니다
 - **감정 분석**: 최근 7일간의 대화 기록을 분석하여 우울, 위로, 불면증, 한숨, 걱정, 응원, 희망, 그리움, 청춘, 막막함, 설렘, 행복, 용기, 현실, 고독, 사랑 등의 감정을 감지합니다
@@ -284,9 +417,12 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **YouTube 링크**: 추천된 음악의 YouTube 링크를 제공하여 바로 들을 수 있습니다
 - **캐릭터 코멘트**: 캐릭터의 말투로 음악 추천 코멘트를 생성하여 더욱 개인화된 경험을 제공합니다
 
+</details>
+
 #### 감정 기반 UI 변화
 
-[![감정 기반 UI 변화 영상](https://img.youtube.com/vi/MmrIpxyqzcE/0.jpg)](https://youtube.com/watch?v=MmrIpxyqzcE&si=s1lgLjL8Sd-bMt4L)
+<details>
+<summary><strong>자세히 보기</strong></summary>
 
 - **실시간 감정 감지**: 사용자와 캐릭터의 메시지를 실시간으로 분석하여 감정을 감지합니다
 - **감정 타입**: 로맨스(romance), 위로(comfort), 갈등(conflict), 중립(neutral) 4가지 감정 타입을 감지합니다
@@ -311,7 +447,13 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **지능형 감정 판단**: 취향을 묻는 질문(예: ~를 좋아해?) 은 로맨스로 오인식하지 않도록 특별 처리됩니다
 - **감정 전환**: 대화 흐름에 따라 감정이 자연스럽게 전환되며, 이전 감정 상태를 고려하여 부드럽게 변화합니다
 
+</details>
+
 #### 기타 UX 기능
+
+<details>
+<summary><strong>자세히 보기</strong></summary>
+
 - **메시지 소리 알림**: 새 메시지가 도착할 때 소리 알림을 재생합니다 (설정에서 ON/OFF 가능)
 - **랜덤 플레이스홀더**: 입력창에 표시되는 플레이스홀더 텍스트가 랜덤으로 변경되어 재미를 더합니다
 - **반응형 디자인**: 다양한 화면 크기(데스크톱, 태블릿, 모바일)에 최적화된 반응형 디자인
@@ -322,6 +464,8 @@ Google Gemini AI를 활용하여 캐릭터의 페르소나를 구현하고, 대�
 - **즐겨찾기 캐릭터**: 자주 대화하는 캐릭터를 즐겨찾기로 등록하여 빠르게 접근 가능합니다
 - **대화 자동 저장**: 로그인한 사용자의 경우 대화가 자동으로 서버에 저장되어 통계 및 분석에 활용됩니다
 - **대화 통계 추적**: 각 대화의 메시지 수, 대화 시간, 참여 캐릭터 등의 통계를 자동으로 추적합니다
+
+</details>
 
 ---
 
@@ -611,77 +755,94 @@ npm start
 - `POST /music/character-recommend`: 캐릭터 음악 추천
 - `POST /psychology/report`: 심리 리포트 생성
 
-### 데이터베이스 모델
+## 🗂️ 데이터베이스 스키마 (Mermaid)
 
-#### Users (사용자)
-- `id`: 사용자 ID (Primary Key)
-- `email`: 이메일 (Unique)
-- `hashed_password`: 해시된 비밀번호
-- `nickname`: 닉네임
-- `profile_pic`: 프로필 사진 URL
-- `created_at`: 생성 시간
-- `updated_at`: 수정 시간
+```mermaid
+erDiagram
+  users {
+    INT id PK
+    VARCHAR username "UNIQUE, NOT NULL"
+    VARCHAR email "UNIQUE, NOT NULL"
+    VARCHAR hashed_password "NOT NULL"
+    VARCHAR nickname
+    TEXT profile_pic
+    DATETIME created_at
+  }
 
-#### ChatHistory (대화 기록)
-- `id`: 대화 ID (Primary Key)
-- `user_id`: 사용자 ID (Foreign Key)
-- `character_ids`: 캐릭터 ID 목록 (JSON)
-- `messages`: 메시지 목록 (JSON)
-- `title`: 대화 제목
-- `is_manual`: 수동 저장 여부
-  - `0`: 자동 저장 (대화 보관함에 표시 안 됨)
-  - `1`: 사용자가 직접 "서버에 저장" 버튼을 눌러 저장 (대화 보관함에 표시됨)
-- `is_manual_quote`: 대사 저장으로 인한 저장 여부
-  - `0`: 일반 저장 (대사 저장이 아닌 경우)
-  - `1`: 대사 저장(하트 클릭)으로 인한 자동 저장 (대화 보관함에 표시 안 됨)
-- **대화 보관함 필터링**: `is_manual=1 AND is_manual_quote=0`인 대화만 대화 보관함에 표시됩니다
-- `created_at`: 생성 시간
-- `updated_at`: 수정 시간
+  chat_histories {
+    INT id PK
+    INT user_id FK
+    VARCHAR title
+    TEXT character_ids "JSON string"
+    TEXT messages "JSON string"
+    INT is_manual
+    INT is_manual_quote
+    VARCHAR quote_message_id
+    DATETIME created_at
+    DATETIME updated_at
+  }
 
-#### EmotionDiary (감정 일기)
-- `id`: 일기 ID (Primary Key)
-- `user_id`: 사용자 ID (Foreign Key)
-- `title`: 일기 제목
-- `content`: 일기 내용
-- `date`: 일기 날짜
-- `weather`: 날씨 정보
-- `emotions`: 감정 태그 (JSON)
-- `created_at`: 생성 시간
-- `updated_at`: 수정 시간
+  character_memories {
+    INT id PK
+    INT user_id FK
+    VARCHAR character_id
+    VARCHAR memory_type
+    TEXT content
+    TEXT context "JSON string"
+    INT importance
+    DATETIME created_at
+    DATETIME last_referenced
+  }
 
-#### ExchangeDiary (교환일기)
-- `id`: 교환일기 ID (Primary Key)
-- `user_id`: 사용자 ID (Foreign Key)
-- `character_id`: 캐릭터 ID
-- `diary_id`: 원본 일기 ID (Foreign Key, 선택사항)
-- `content`: 편지 내용
-- `reply_content`: 답장 내용
-- `reply_received`: 답장 수신 여부
-- `request_reply`: 답장 요청 여부
-- `scheduled_time`: 예약 발송 시간
-- `reaction`: 사용자 반응 (JSON)
-- `created_at`: 생성 시간
-- `reply_created_at`: 답장 생성 시간
+  emotion_diaries {
+    INT id PK
+    INT user_id FK
+    DATETIME diary_date
+    VARCHAR title
+    TEXT content
+    TEXT summary
+    TEXT emotions "JSON string"
+    VARCHAR weather
+    DATETIME created_at
+  }
 
-#### CharacterMemory (캐릭터 기억)
-- `id`: 기억 ID (Primary Key)
-- `user_id`: 사용자 ID (Foreign Key)
-- `character_id`: 캐릭터 ID
-- `memory_type`: 기억 타입 (emotion, event, preference, relationship)
-- `content`: 기억 내용
-- `context`: 기억의 맥락 (JSON)
-- `importance`: 중요도 (1-10)
-- `created_at`: 생성 시간
-- `last_referenced`: 마지막 참조 시간
+  exchange_diaries {
+    INT id PK
+    INT user_id FK
+    VARCHAR character_id
+    INT diary_id FK "nullable"
+    TEXT content
+    TEXT reply_content
+    TEXT preview_message
+    BOOLEAN reply_received
+    BOOLEAN reply_read
+    BOOLEAN reacted
+    DATETIME scheduled_time
+    DATETIME reply_created_at
+    TEXT next_topic
+    TEXT whisper_message
+    INT topic_used
+    DATETIME created_at
+    DATETIME updated_at
+  }
 
-#### CharacterArchetype (캐릭터 성향)
-- `id`: 성향 ID (Primary Key)
-- `character_id`: 캐릭터 ID
-- `name`: 캐릭터 이름
-- `warmth`: 따뜻함 점수 (0.0-1.0)
-- `realism`: 현실성 점수 (0.0-1.0)
-- `created_at`: 생성 시간
-- `updated_at`: 수정 시간
+  character_archetypes {
+    INT id PK
+    VARCHAR character_id "UNIQUE, NOT NULL"
+    VARCHAR name
+    VARCHAR warmth
+    VARCHAR realism
+    VARCHAR order_chaos
+    VARCHAR good_evil
+    DATETIME updated_at
+  }
+
+  users ||--o{ chat_histories : "has"
+  users ||--o{ character_memories : "has"
+  users ||--o{ emotion_diaries : "has"
+  users ||--o{ exchange_diaries : "has"
+  emotion_diaries ||--o{ exchange_diaries : "links (optional)"
+```
 
 ---
 

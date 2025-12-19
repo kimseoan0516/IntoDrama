@@ -3298,7 +3298,7 @@
         max-width: 85% !important;
         position: relative !important;
         left: auto !important;
-        transform: translateX(-8px) !important; /* 중앙 기준 약간 왼쪽으로 이동 */
+        transform: translateX(-12px) !important; /* 중앙 기준 약간 왼쪽으로 이동 */
         box-sizing: border-box !important;
     }
     

@@ -2989,7 +2989,7 @@ function App() {
                 }
                 
                 // 토론 개입 패널 및 버튼 위치 조정 (입력창 위 고정 간격)
-                const interventionGap = 12; // 입력창과 토론 개입 패널/버튼 사이 고정 간격
+                const interventionGap = -150; // 입력창과 토론 개입 패널/버튼 사이 고정 간격 (음수 값으로 아래로 이동)
                 const interventionBottomPosition = windowHeight - inputAreaTop + interventionGap;
                 
                 // 토론 개입 패널 위치 조정 (왼쪽 하단에 배치 - bottom만 동적 설정, left는 CSS에서 12px로 설정)

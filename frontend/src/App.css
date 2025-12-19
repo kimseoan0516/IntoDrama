@@ -3287,12 +3287,12 @@
         margin-left: auto !important;
     }
     
-  /* 모바일: 시스템 메시지 정중앙 정렬 - 왼쪽으로 보정 */
+  /* 모바일: 시스템 메시지 정확한 중앙 정렬 - 메시지 길이와 관계없이 중앙 고정 */
     .message-list .system-message {
         align-self: center !important; /* flex 컨테이너에서 중앙 정렬 */
         text-align: center !important;
-        margin: 0 auto !important;
-        margin-left: 60px !important; /* 오른쪽으로 이동 */
+        margin-left: auto !important; /* 좌우 자동 마진으로 정확한 중앙 정렬 */
+        margin-right: auto !important;
         display: block !important;
         width: fit-content !important;
         max-width: 85% !important;

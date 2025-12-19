@@ -3072,16 +3072,16 @@
         transition: bottom 0.2s ease !important;
     }
     
-    /* 모바일: 토론 개입 패널 위치 - 왼쪽 하단(입력창 위)에 배치 */
+    /* 모바일: 토론 개입 패널 위치 - 완전 왼쪽 하단(입력창 위)에 배치 */
     .debate-intervention-panel {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 12px !important; /* 왼쪽 하단에 배치 */
+        left: 0 !important; /* 완전 왼쪽 하단에 배치 */
         right: auto !important;
         transform: none !important;
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
-        max-width: calc(100% - 24px) !important; /* 좌우 여백 확보 */
+        max-width: calc(100% - 12px) !important; /* 오른쪽 여백만 확보 */
         width: auto !important;
         margin: 0 !important;
         box-sizing: border-box !important;
@@ -3114,11 +3114,11 @@
         justify-content: flex-start !important; /* 웹과 동일 */
     }
     
-    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 왼쪽 하단(입력창 위)에 배치 */
+    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 완전 왼쪽 하단(입력창 위)에 배치 */
     .debate-intervention-show-btn-container {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 12px !important; /* 왼쪽 하단에 배치 */
+        left: 0 !important; /* 완전 왼쪽 하단에 배치 */
         right: auto !important;
         transform: none !important;
         z-index: 1000 !important;
@@ -3261,7 +3261,7 @@
         align-self: flex-end !important; /* 오른쪽 정렬 유지 */
         margin-right: 36px !important; /* 오른쪽 여백 유지 */
         margin-left: 0 !important;
-        max-width: 70% !important; /* 가로 길이 최대 70%로 제한 (웹처럼 구별되게) */
+        max-width: 80% !important; /* 가로 길이 최대 80%로 제한 */
         flex-direction: row-reverse !important; /* 좌우 반전 - 아바타 오른쪽, 말풍선 왼쪽 */
         gap: 8px !important;
         display: flex !important;
@@ -3283,7 +3283,7 @@
         margin-left: 0 !important;
         margin-right: 0 !important;
         margin-top: 0 !important;
-        padding-top: 20px !important; /* 첫 번째 캐릭터와 동일한 간격 (이름이 보이도록) */
+        padding-top: 24px !important; /* 첫 번째 캐릭터와 동일한 간격 (이름이 보이도록) */
         align-items: flex-start !important;
         width: auto !important;
         max-width: none !important;
@@ -3302,7 +3302,7 @@
     
     /* 모바일: 첫 번째 캐릭터(debate-left 또는 일반 ai)도 가로 길이 줄이기 */
     .debate-mode .message-bubble.ai:not(.debate-right) {
-        max-width: 70% !important; /* 가로 길이 최대 70%로 제한 (웹처럼 구별되게) */
+        max-width: 80% !important; /* 가로 길이 최대 80%로 제한 */
     }
     
     .debate-mode .message-bubble.ai.debate-right .message-text {

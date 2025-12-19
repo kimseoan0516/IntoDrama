@@ -3072,18 +3072,20 @@
         transition: bottom 0.2s ease !important;
     }
     
-    /* 모바일: 토론 개입 패널 위치 - 입력창 위 왼쪽 하단에 배치 (웹과 동일한 구조) */
+    /* 모바일: 토론 개입 패널 위치 - 입력창 위 왼쪽 하단에 배치 */
     .debate-intervention-panel {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
         left: 12px !important; /* 왼쪽 하단에 배치 */
+        right: auto !important; /* 오른쪽 정렬 제거 */
         transform: none !important; /* transform 제거 */
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
         max-width: calc(100% - 24px) !important; /* 좌우 여백 확보 */
         width: auto !important;
         margin: 0 !important; /* 마진 제거 */
-        right: auto !important;
+        margin-left: 0 !important; /* 왼쪽 마진 제거 */
+        margin-right: auto !important; /* 오른쪽 마진 자동 */
     }
     
     /* 모바일: 토론 개입 패널 내부 콘텐츠 - 웹과 동일하게 왼쪽 정렬 */
@@ -3113,18 +3115,20 @@
         justify-content: flex-start !important; /* 웹과 동일 */
     }
     
-    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 입력창 위 왼쪽 하단에 배치 (웹과 동일한 구조) */
+    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 입력창 위 왼쪽 하단에 배치 */
     .debate-intervention-show-btn-container {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
         left: 12px !important; /* 왼쪽 하단에 배치 */
+        right: auto !important; /* 오른쪽 정렬 제거 */
         transform: none !important; /* transform 제거 */
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
         width: auto !important;
         margin: 0 !important; /* 마진 제거 */
-        right: auto !important;
-        justify-content: flex-start !important; /* 웹과 동일 */
+        margin-left: 0 !important; /* 왼쪽 마진 제거 */
+        margin-right: auto !important; /* 오른쪽 마진 자동 */
+        justify-content: flex-start !important; /* 왼쪽 정렬 */
     }
     
     .debate-intervention-show-btn {
@@ -3149,10 +3153,27 @@
         line-height: 1.4 !important; /* line-height 조정 */
     }
     
+    /* 모바일: placeholder를 한 줄로 제한 - 사용자가 스크롤해서 볼 수 있게 */
+    .input-area [contenteditable]:empty:before {
+        white-space: nowrap !important; /* 한 줄로 제한 */
+        overflow: hidden !important; /* 넘치는 부분 숨김 */
+        text-overflow: ellipsis !important; /* 말줄임표 표시 */
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
     /* textarea의 텍스트가 중앙에 오도록 조정 */
     .input-area textarea {
         padding: 13px 14px !important; /* 상하 패딩 동일하게 조정 */
         line-height: 1.4 !important; /* line-height 조정 */
+    }
+    
+    /* 모바일: textarea placeholder도 한 줄로 제한 */
+    .input-area textarea::placeholder {
+        white-space: nowrap !important; /* 한 줄로 제한 */
+        overflow: hidden !important; /* 넘치는 부분 숨김 */
+        text-overflow: ellipsis !important; /* 말줄임표 표시 */
     }
     
     .voice-button,
@@ -3257,10 +3278,11 @@
     }
     
     .debate-mode .message-bubble.ai.debate-right .message-name {
-        position: static !important; /* absolute 제거 */
-        right: auto !important;
+        position: absolute !important; /* absolute로 변경 - 말풍선 우측 상단에 배치 */
+        right: 44px !important; /* 첫 번째 캐릭터의 left: 44px와 좌우 대칭 */
         left: auto !important;
-        top: auto !important;
+        top: -15px !important; /* 첫 번째 캐릭터와 동일한 상단 위치 */
+        white-space: nowrap !important;
     }
     
     .debate-mode .message-bubble.ai.debate-right .message-text {
@@ -3308,18 +3330,18 @@
         padding: 16px 20px 8px 20px !important;
     }
     
-    /* 모바일: 토론 주제 패널 배경색 - 웹과 동일한 그라데이션 사용 */
+    /* 모바일: 토론 주제 패널 배경색 - 채팅방 배경과 동일한 아이보리 색상 */
     .debate-topic-panel-content {
-        background: linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 50%, #F0EDE8 100%) !important;
+        background: #F5F1EB !important;
     }
     
-    /* 모바일: 토론 주제 패널 말풍선 화살표 색상 - 웹과 동일 */
+    /* 모바일: 토론 주제 패널 말풍선 화살표 색상 - 채팅방 배경과 동일한 아이보리 */
     .debate-topic-panel-content::before {
-        border-top-color: rgba(240, 237, 232, 0.95) !important;
+        border-top-color: #F5F1EB !important;
     }
     
     .debate-topic-panel-content::after {
-        border-top-color: #F8F6F3 !important;
+        border-top-color: #F5F1EB !important;
     }
     
     /* 모바일: 채팅 헤더 레이아웃 조정 */

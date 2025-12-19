@@ -3330,18 +3330,9 @@
         padding: 16px 20px 8px 20px !important;
     }
     
-    /* 모바일: 토론 주제 패널 배경색 - 채팅방 배경과 동일한 아이보리 색상 */
-    .debate-topic-panel-content {
+    /* 모바일: 토론 모드 헤더 배경 - 채팅방 배경과 동일한 아이보리 색상 */
+    .debate-mode .chat-header {
         background: #F5F1EB !important;
-    }
-    
-    /* 모바일: 토론 주제 패널 말풍선 화살표 색상 - 채팅방 배경과 동일한 아이보리 */
-    .debate-topic-panel-content::before {
-        border-top-color: #F5F1EB !important;
-    }
-    
-    .debate-topic-panel-content::after {
-        border-top-color: #F5F1EB !important;
     }
     
     /* 모바일: 채팅 헤더 레이아웃 조정 */

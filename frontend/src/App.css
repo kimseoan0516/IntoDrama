@@ -3072,27 +3072,19 @@
         transition: bottom 0.2s ease !important;
     }
     
-    /* 모바일: 토론 개입 패널 위치 - 입력창 위 왼쪽 하단에 배치 */
+    /* 모바일: 토론 개입 패널 위치 - 웹과 동일한 구조 (중앙에서 왼쪽으로 이동) */
     .debate-intervention-panel {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 12px !important; /* 왼쪽 하단에 배치 - 강제 적용 */
-        right: auto !important; /* 오른쪽 정렬 제거 */
-        transform: none !important; /* transform 제거 */
-        z-index: 1000 !important;
-        transition: bottom 0.2s ease, left 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
-        max-width: calc(100% - 24px) !important; /* 좌우 여백 확보 */
-        width: auto !important;
-        margin: 0 !important; /* 마진 제거 */
-        margin-left: 0 !important; /* 왼쪽 마진 제거 */
-        margin-right: auto !important; /* 오른쪽 마진 자동 */
-    }
-    
-    /* 모바일: base.css의 중앙 정렬 스타일 강제 오버라이드 */
-    .chat-container .debate-intervention-panel {
-        left: 12px !important;
+        left: calc(50% - 140px) !important; /* 웹과 동일한 구조: 중앙에서 왼쪽으로 이동 (모바일 화면에 맞게 조정) */
         right: auto !important;
         transform: none !important;
+        z-index: 1000 !important;
+        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        max-width: 280px !important; /* 웹과 동일한 최대 너비 */
+        width: auto !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
     }
     
     /* 모바일: 토론 개입 패널 내부 콘텐츠 - 웹과 동일하게 왼쪽 정렬 */
@@ -3122,27 +3114,19 @@
         justify-content: flex-start !important; /* 웹과 동일 */
     }
     
-    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 입력창 위 왼쪽 하단에 배치 */
+    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 웹과 동일한 구조 (중앙에서 왼쪽으로 이동) */
     .debate-intervention-show-btn-container {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 12px !important; /* 왼쪽 하단에 배치 - 강제 적용 */
-        right: auto !important; /* 오른쪽 정렬 제거 */
-        transform: none !important; /* transform 제거 */
-        z-index: 1000 !important;
-        transition: bottom 0.2s ease, left 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
-        width: auto !important;
-        margin: 0 !important; /* 마진 제거 */
-        margin-left: 0 !important; /* 왼쪽 마진 제거 */
-        margin-right: auto !important; /* 오른쪽 마진 자동 */
-        justify-content: flex-start !important; /* 왼쪽 정렬 */
-    }
-    
-    /* 모바일: base.css의 중앙 정렬 스타일 강제 오버라이드 */
-    .chat-container .debate-intervention-show-btn-container {
-        left: 12px !important;
+        left: calc(50% - 140px) !important; /* 웹과 동일한 구조: 중앙에서 왼쪽으로 이동 (모바일 화면에 맞게 조정) */
         right: auto !important;
         transform: none !important;
+        z-index: 1000 !important;
+        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        width: auto !important;
+        margin: 0 !important;
+        display: flex !important;
+        justify-content: flex-start !important; /* 웹과 동일 */
     }
     
     .debate-intervention-show-btn {
@@ -3258,21 +3242,22 @@
         margin-left: 48px !important; /* 일반 AI 메시지와 동일한 간격 */
     }
     
-    /* 모바일: debate-right 스타일 - 사용자 메시지와 완전히 동일한 배치 및 간격 */
+    /* 모바일: debate-right 스타일 - 첫 번째 캐릭터와 동일한 구조, 좌우 반전만 */
     .debate-mode .message-bubble.ai.debate-right {
-        align-self: flex-end !important;
-        margin-right: 36px !important; /* 사용자 메시지와 동일한 오른쪽 테두리 간격 */
+        align-self: flex-end !important; /* 오른쪽 정렬 유지 */
+        margin-right: 36px !important; /* 오른쪽 여백 유지 */
         margin-left: 0 !important;
-        max-width: 80% !important; /* 사용자 메시지와 동일한 최대 너비 */
-        flex-direction: row !important; /* row-reverse 제거, 사용자 메시지와 동일하게 */
-        gap: 8px !important; /* 사용자 메시지와 동일한 gap */
+        max-width: 80% !important; /* 가로 길이 최대 80%로 제한 */
+        flex-direction: row-reverse !important; /* 좌우 반전 - 아바타 오른쪽, 말풍선 왼쪽 */
+        gap: 8px !important;
         display: flex !important;
         align-items: flex-start !important;
+        position: relative !important; /* message-name absolute 위치 기준 */
     }
     
     .debate-mode .message-bubble.ai.debate-right .avatar {
-        order: 1 !important; /* 사용자 메시지와 동일하게 오른쪽에 배치 */
-        position: static !important; /* absolute 제거 */
+        order: 0 !important;
+        position: static !important;
         right: auto !important;
         left: auto !important;
         width: 36px !important;
@@ -3282,21 +3267,27 @@
     
     .debate-mode .message-bubble.ai.debate-right .message-content {
         margin-left: 0 !important;
-        margin-right: 0 !important; /* margin 제거, 사용자 메시지와 동일하게 */
-        margin-top: 0 !important; /* margin-top 제거 */
+        margin-right: 0 !important;
+        margin-top: 0 !important;
         align-items: flex-start !important;
         width: auto !important;
         max-width: none !important;
         flex: 1 !important;
         min-width: 0 !important;
+        position: relative !important; /* message-name absolute 위치 기준 */
     }
     
     .debate-mode .message-bubble.ai.debate-right .message-name {
-        position: absolute !important; /* absolute로 변경 - 말풍선 우측 상단에 배치 */
+        position: absolute !important;
         right: 44px !important; /* 첫 번째 캐릭터의 left: 44px와 좌우 대칭 */
         left: auto !important;
         top: -15px !important; /* 첫 번째 캐릭터와 동일한 상단 위치 */
         white-space: nowrap !important;
+    }
+    
+    /* 모바일: 첫 번째 캐릭터(debate-left 또는 일반 ai)도 가로 길이 줄이기 */
+    .debate-mode .message-bubble.ai:not(.debate-right) {
+        max-width: 80% !important; /* 가로 길이 최대 80%로 제한 */
     }
     
     .debate-mode .message-bubble.ai.debate-right .message-text {

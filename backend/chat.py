@@ -132,7 +132,6 @@ def handle_chat(request: ChatRequest, db: Session = Depends(get_db), current_use
             in_debate_mode = False
             continue
         
-        # 토론 중이 아닐 때만 히스토리에 추가
         if not in_debate_mode:
             if msg.sender == 'user':
                 chat_history_for_ai.append({"role": "user", "parts": [{"text": msg.text}]})
@@ -190,7 +189,6 @@ def handle_chat(request: ChatRequest, db: Session = Depends(get_db), current_use
             )
             
             try:
-                # 코드 블록 제거
                 clean_json_string = json_response_string
                 if clean_json_string.startswith("```json"):
                     clean_json_string = clean_json_string[7:]
@@ -205,12 +203,10 @@ def handle_chat(request: ChatRequest, db: Session = Depends(get_db), current_use
                 json_end = clean_json_string.rfind('}')
                 if json_start != -1 and json_end != -1 and json_end > json_start:
                     clean_json_string = clean_json_string[json_start:json_end+1]
-                    # 중괄호 밖의 텍스트 제거 시도
                     try:
                         parsed_data = json.loads(clean_json_string)
                     except json.JSONDecodeError:
-                        # 재시도: 불필요한 문자 제거
-                        # JSON 내부의 주석이나 특수 문자 제거 시도
+                        # JSON 내부의 주석이나 특수 문자 제거
                         clean_json_string = re.sub(r'//.*?\n', '', clean_json_string)
                         clean_json_string = re.sub(r'/\*.*?\*/', '', clean_json_string, flags=re.DOTALL)
                         parsed_data = json.loads(clean_json_string)
@@ -291,7 +287,6 @@ def update_quote(quote_id: int, quote_data: dict, current_user: User = Depends(g
     if not quote:
         raise HTTPException(status_code=404, detail="Quote not found")
     
-    # 텍스트 수정
     new_text = quote_data.get("text", "").strip()
     if not new_text:
         raise HTTPException(status_code=400, detail="Text cannot be empty")
@@ -354,7 +349,7 @@ def get_chat_histories(current_user: User = Depends(get_current_user), db: Sessi
     
     result = []
     for h in histories:
-        # 저장된 제목을 그대로 사용 (사용자가 수정한 제목은 덮어쓰지 않음)
+        # 저장된 제목 사용
         title = h.title
         
         created_at_str = h.created_at.isoformat() + 'Z' if h.created_at else None
@@ -522,7 +517,6 @@ def summarize_chat(chat_data: dict, current_user: Optional[User] = Depends(get_c
             )
             
             summary = response.text.strip()
-            # 괄호 안의 숫자+자 패턴 제거
             summary = re.sub(r'\s*\([0-9]+자\)\s*', '', summary)
             # 20자로 제한
             if len(summary) > 20:
@@ -681,7 +675,7 @@ def get_weekly_history_stats(current_user: User = Depends(get_current_user), db:
                 "chat_count": data["chat_count"],
                 "message_count": data["message_count"],
                 "character_count": len(data["characters"]),
-                "top_characters": top_characters  # 상위 3명 캐릭터 추가
+                "top_characters": top_characters
             })
         
         return {"weeks": result}
@@ -909,47 +903,38 @@ def _clean_response_text(text: str) -> str:
     
     original = text
     
-    # "---" 구분선과 그 이후의 모든 내용 제거 (이전 대화, 현재 시점 등)
+    # "---" 구분선과 그 이후의 모든 내용 제거
     if '---' in text:
         text = text.split('---')[0].strip()
     
-    # "이전 대화:" 또는 "Previous conversation:" 같은 패턴 제거
     text = re.sub(r'(이전\s*대화|Previous\s*conversation|이전\s*대화:).*', '', text, flags=re.IGNORECASE | re.DOTALL).strip()
     
-    # "현재 시점:" 또는 "Current time:" 같은 패턴 제거
     text = re.sub(r'(현재\s*시점|Current\s*time|현재\s*시점:).*', '', text, flags=re.IGNORECASE | re.DOTALL).strip()
     
-    # "캐릭터 설명:" 또는 "Character description:" 같은 패턴 제거
     text = re.sub(r'(캐릭터\s*설명|Character\s*description|캐릭터\s*설명:).*', '', text, flags=re.IGNORECASE | re.DOTALL).strip()
     
-    # "캐릭터명:" 또는 "Character:" 같은 패턴 제거 (캐릭터 이름 뒤의 콜론과 그 이후 내용)
-    text = re.sub(r'^[^\s:]+:\s*', '', text).strip()  # 시작 부분의 "캐릭터명:" 제거
+    # "캐릭터명:" 패턴 제거
+    text = re.sub(r'^[^\s:]+:\s*', '', text).strip()
     text = re.sub(r'(캐릭터|Character):\s*', '', text, flags=re.IGNORECASE).strip()
     
-    # "[캐릭터명의 의견/반박]" 형식 제거
     text = re.sub(r'\[[^\]]*의\s*의견/반박\]\s*', '', text).strip()
     
-    # "캐릭터명 (배우명)의 의견을 제시합니다" 형식 제거
     text = re.sub(r'[^\s]+\s*\([^)]+\)\s*의\s*의견을\s*제시합니다\.?', '', text).strip()
     
-    # "캐릭터명의 의견을 제시합니다" 형식 제거
     text = re.sub(r'[^\s]+\s*의\s*의견을\s*제시합니다\.?', '', text).strip()
     
-    # "의견을 제시합니다" 단독 패턴 제거
     text = re.sub(r'의견을\s*제시합니다\.?', '', text).strip()
     
-    # 대사 시작 부분의 "[캐릭터명]" 형식만 제거
     text = re.sub(r'^\[[^\]]*\]\s*', '', text).strip()
     
-    # 날짜/시간 패턴 제거 (예: "2025년 12월 6일 오후 9시 19분")
+    # 날짜/시간 패턴 제거
     text = re.sub(r'\d{4}년\s*\d{1,2}월\s*\d{1,2}일.*?분', '', text).strip()
     text = re.sub(r'\d{4}-\d{2}-\d{2}.*?분', '', text).strip()
     
-    # "(시간 언급 금지" 같은 주석 제거
     text = re.sub(r'\([^)]*시간[^)]*\)', '', text).strip()
     text = re.sub(r'\([^)]*time[^)]*\)', '', text, flags=re.IGNORECASE).strip()
     
-    # 여러 줄에 걸친 메타데이터 블록 제거 (캐릭터 설명 등)
+    # 여러 줄에 걸친 메타데이터 블록 제거
     lines = text.split('\n')
     cleaned_lines = []
     skip_mode = False
@@ -964,7 +949,6 @@ def _clean_response_text(text: str) -> str:
             if skip_mode:
                 skip_mode = False
             continue
-        # skip_mode가 아니면 라인 추가
         if not skip_mode:
             cleaned_lines.append(line)
     
@@ -1045,7 +1029,6 @@ def _parse_debate_response(json_response_string: str, char_a_id: str, char_b_id:
         parsed_data = json.loads(json_obj)
     except json.JSONDecodeError as e:
         print(f"⚠️ JSON 파싱 실패: {e}, 주석 제거 후 재시도")
-        # 주석 제거 후 재시도
         try:
             clean_json = re.sub(r'//.*?\n', '', clean_json)
             clean_json = re.sub(r'/\*.*?\*/', '', clean_json, flags=re.DOTALL)
@@ -1111,7 +1094,6 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
                 debate_started = True
                 continue
             
-            # 토론 시작 이후의 메시지만 추가
             if debate_started:
                 debate_messages_only.append(msg)
                 if sender == 'user':
@@ -1138,7 +1120,6 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
         user_last_input = None  # 사용자가 입력창으로 입력한 최근 메시지
         
         # 라운드 2 이상일 때 상대방의 가장 최근 메시지와 사용자 입력 추출
-        # 사용자 입력은 모든 라운드에서 추출 가능하도록 수정
         # ⚠️ 중요: 토론 시작 이후의 메시지만 사용 (debate_messages_only)
         for msg in reversed(debate_messages_only):
             sender = msg.sender if hasattr(msg, 'sender') else msg.get('sender')
@@ -1795,11 +1776,11 @@ def convert_to_novel(novel_data: dict, current_user: Optional[User] = Depends(ge
             novel_text = response.text.strip()
             
             # 마크다운 형식 제거
-            novel_text = re.sub(r'\*\*(.*?)\*\*', r'\1', novel_text)  # **볼드** 제거
-            novel_text = re.sub(r'\*(.*?)\*', r'\1', novel_text)  # *이탤릭* 제거
-            novel_text = re.sub(r'^#+\s+', '', novel_text, flags=re.MULTILINE)  # # 제목 제거
-            novel_text = re.sub(r'__(.*?)__', r'\1', novel_text)  # __밑줄__ 제거
-            novel_text = re.sub(r'_(.*?)_', r'\1', novel_text)  # _밑줄_ 제거
+            novel_text = re.sub(r'\*\*(.*?)\*\*', r'\1', novel_text)
+            novel_text = re.sub(r'\*(.*?)\*', r'\1', novel_text)
+            novel_text = re.sub(r'^#+\s+', '', novel_text, flags=re.MULTILINE)
+            novel_text = re.sub(r'__(.*?)__', r'\1', novel_text)
+            novel_text = re.sub(r'_(.*?)_', r'\1', novel_text)
             
             if not novel_text:
                 raise HTTPException(status_code=500, detail="소설 변환 결과가 비어있습니다.")
@@ -2044,10 +2025,10 @@ def get_debate_summary(
             
             summary = response.text.strip()
             
-            # 마크다운 형식 제거 (있는 경우)
-            summary = re.sub(r'\*\*(.*?)\*\*', r'\1', summary)  # **볼드** 제거
-            summary = re.sub(r'\*(.*?)\*', r'\1', summary)  # *이탤릭* 제거
-            summary = re.sub(r'^#+\s+', '', summary, flags=re.MULTILINE)  # # 제목 제거
+            # 마크다운 형식 제거
+            summary = re.sub(r'\*\*(.*?)\*\*', r'\1', summary)
+            summary = re.sub(r'\*(.*?)\*', r'\1', summary)
+            summary = re.sub(r'^#+\s+', '', summary, flags=re.MULTILINE)
             
             if not summary:
                 return {"summary": "토론 요약을 생성할 수 없습니다."}

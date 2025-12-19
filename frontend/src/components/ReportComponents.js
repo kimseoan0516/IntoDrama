@@ -315,8 +315,6 @@ export const ActivityBottomSheet = ({ selectedActivity, isMobile, onClose, topCh
                 setCharacterComment(newComment);
             } catch (error) {
                 console.error('캐릭터 코멘트 로드 실패:', error);
-                // 에러 발생 시에도 API를 다시 시도하지 않고, 빈 상태로 두거나 재시도 로직 추가
-                // 웹과 동일하게 동작하도록 수정
                 const fallbackComment = `${userNickname || '사용자'}, 이 활동을 실천해 보면 좋을 것 같아. 네 마음이 편안해지길 바라.`;
                 commentCache.current[currentActivityKey] = fallbackComment;
                 setCharacterComment(fallbackComment);

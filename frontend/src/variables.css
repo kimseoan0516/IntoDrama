@@ -708,7 +708,7 @@ body {
 .select-instruction {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #8D6E63;  /* 더 밝은 갈색으로 변경 */
+    color: #8D6E63;
     margin-bottom: 8px;
     padding: 0 20px;
     flex-shrink: 0;

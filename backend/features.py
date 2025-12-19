@@ -401,7 +401,6 @@ def get_archetype_map(
                 "realism": round(realism_score, 2)
             }
             archetype_data.append(char_data)
-            # 캐시에도 추가
             if _character_archetype_cache is not None:
                 _character_archetype_cache.append(char_data)
         

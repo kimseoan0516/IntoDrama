@@ -1154,7 +1154,7 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                     borderTop: '1px solid rgba(0, 0, 0, 0.05)',
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    justifyContent: 'flex-start', // 왼쪽 정렬로 변경
+                                                    justifyContent: 'flex-start',
                                                     gap: '8px',
                                                     padding: '6px 4px 6px 4px'
                                                 }}>

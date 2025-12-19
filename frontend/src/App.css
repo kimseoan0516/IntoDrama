@@ -2986,10 +2986,10 @@
     
     /* 모바일: 2위, 3위 카드 너비 확대 - 가로로 나란히 배치된 카드들 (마지막 div 안의 카드들) */
     .stats-content > div > div:first-child > div:last-child .top-character-card {
-        flex: 1 1 0 !important; /* 동일한 크기로 만들기 */
-        min-width: 0 !important; /* flex 자식이 줄어들 수 있도록 */
-        max-width: 50% !important; /* 최대 너비 50% */
-        width: 50% !important; /* 고정 너비 50% */
+        flex: 0 0 calc(50% - 4px) !important; /* 고정 크기로 설정 (gap 8px 고려하여 각각 50% - 4px) */
+        min-width: calc(50% - 4px) !important; /* 최소 너비도 동일하게 고정 */
+        max-width: calc(50% - 4px) !important; /* 최대 너비도 동일하게 고정 */
+        width: calc(50% - 4px) !important; /* 고정 너비 */
         box-sizing: border-box !important;
     }
     
@@ -3379,7 +3379,7 @@
     }
     
     .char-name {
-        font-size: 0.9rem !important; /* 폰트 크기 조정 */
+        font-size: 1.1rem !important; /* 폰트 크기 조정 */
         overflow: visible !important; /* 텍스트가 잘리지 않도록 */
         text-overflow: ellipsis !important; /* 긴 텍스트는 말줄임표 */
     }

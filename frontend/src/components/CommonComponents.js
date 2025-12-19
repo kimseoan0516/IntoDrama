@@ -30,7 +30,6 @@ export const CustomDropdown = ({ value, onChange, options, className, onOpen }) 
                 }
             });
             
-            // 설정 화면의 경우 settings-content의 overflow를 visible로 변경
             const settingsContent = dropdownRef.current?.closest('.settings-content');
             if (settingsContent) {
                 settingsContent.style.overflow = 'visible';

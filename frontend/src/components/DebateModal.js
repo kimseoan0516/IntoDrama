@@ -60,7 +60,7 @@ const DebateModal = ({ selectedCharIds, characterData, debateTopic, setDebateTop
                     setSlotMachineText('');
                 }, 600);
             }
-        }, 80); // 80ms마다 변경 (총 약 640ms)
+        }, 80);
     };
     
     const handleCustomInputSubmit = () => {
@@ -72,7 +72,6 @@ const DebateModal = ({ selectedCharIds, characterData, debateTopic, setDebateTop
             setEditingCustomTopic(false);
             setCustomInputValue('');
         } else {
-            // 빈 값이면 커스텀 주제 삭제
             setCustomTopic('');
             setShowCustomInput(false);
             setEditingCustomTopic(false);
@@ -98,7 +97,7 @@ const DebateModal = ({ selectedCharIds, characterData, debateTopic, setDebateTop
                 textareaRef.current.style.height = Math.max(100, textareaRef.current.scrollHeight) + 'px';
             }
         }
-    }, [showCustomInput]); // customInputValue 의존성 제거
+    }, [showCustomInput]);
     
     return (
         <div className="modal-overlay" onClick={onClose}>

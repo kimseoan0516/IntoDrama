@@ -442,7 +442,7 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
     const [hoveredCharacterIndex, setHoveredCharacterIndex] = useState(null); // hover 중인 캐릭터 인덱스
     const [editingQuote, setEditingQuote] = useState(null); // 편집 중인 명대사
     const [editText, setEditText] = useState(''); // 편집 텍스트
-    const [deletingQuoteIndex, setDeletingQuoteIndex] = useState(null); // 삭제 중인 명대사 인덱스
+    const [deletingQuoteIndex, setDeletingQuoteIndex] = useState(null);
     
     // 명대사 편집 핸들러
     const handleEditQuote = (quote, index) => {
@@ -450,12 +450,10 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
         setEditText(quote.text);
     };
     
-    // 명대사 수정 저장
     const handleSaveEdit = async () => {
         if (!editingQuote || !editText.trim()) return;
         
         try {
-            // 사용자가 저장한 명대사만 수정 가능
             if (editingQuote.source === 'user' && editingQuote.id) {
                 await api.updateQuote(editingQuote.id, { text: editText.trim() });
             }
@@ -480,7 +478,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
         }
     };
     
-    // 명대사 삭제 핸들러
     const handleDeleteQuote = async (quote, index) => {
         if (!window.confirm('이 명대사를 삭제하시겠습니까? 삭제하면 AI가 다른 명대사로 자동으로 대체합니다.')) {
             return;
@@ -489,7 +486,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
         setDeletingQuoteIndex(index);
         
         try {
-            // 사용자가 저장한 명대사는 DB에서 삭제
             if (quote.source === 'user' && quote.id) {
                 await api.deleteQuote(quote.id);
             }
@@ -509,7 +505,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                 console.error('대화 로그 불러오기 실패:', error);
             }
             
-            // 현재 명대사 목록에서 삭제할 명대사 제외
             const currentQuotes = detailData.top_quotes.filter((q, i) => i !== index);
             const usedTexts = new Set(currentQuotes.map(q => q.text));
             
@@ -517,7 +512,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
             const aiQuotes = extractEmotionalQuotes(chatHistories, weekStartDate, weekEndDate);
             const newQuote = aiQuotes.find(q => !usedTexts.has(q.text));
             
-            // 새로운 명대사가 있으면 추가, 없으면 그냥 삭제
             const updatedQuotes = [...currentQuotes];
             if (newQuote && updatedQuotes.length < 3) {
                 updatedQuotes.push(newQuote);
@@ -853,7 +847,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                 const finalQuotes = [];
                 const usedTexts = new Set(); // 중복 방지
                 
-                // User Pick 먼저 추가 (최대 3개)
                 weekSavedQuotes.forEach(quote => {
                     if (finalQuotes.length < 3 && !usedTexts.has(quote.text)) {
                         finalQuotes.push(quote);
@@ -1298,7 +1291,6 @@ export const WeeklyDetailScreen = ({ weekData, weekStart, onBack, token }) => {
                                             dataKey="value"
                                             style={{ cursor: 'pointer', outline: 'none' }}
                                             onClick={(data, index) => {
-                                                // 클릭한 섹터의 인덱스로 중앙 이미지 변경
                                                 if (index !== undefined && index !== null) {
                                                     setSelectedCharacterIndex(index);
                                                     setHoveredCharacterIndex(null); // 클릭 시 hover 상태 초기화

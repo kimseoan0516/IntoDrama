@@ -3,7 +3,7 @@ import { characterData } from '../constants/characterData';
 import { CustomDropdown } from './CommonComponents';
 import { favorites as favoritesStorage } from '../utils/storage';
 
-// 캐릭터 선택 화면 컴포넌트 (필터링/검색 추가)
+// 캐릭터 선택 화면 컴포넌트
 const CharacterSelectScreen = ({ onStartChat, onMyPageClick, onHistoryClick, onStatsClick, userProfile, onShowDiary, onExchangeDiaryClick }) => {
     const [selectedChars, setSelectedChars] = useState([]); 
     const [searchQuery, setSearchQuery] = useState('');

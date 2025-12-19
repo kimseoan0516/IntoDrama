@@ -79,13 +79,11 @@ export function josaRo(word) {
 export function joinNamesWithJosa(names, suffix = '') {
     if (!names || names.length === 0) return '';
     
-    // suffix가 "의 대화"로 끝나면 "와의 대화" 또는 "과의 대화"로 변경
     if (suffix === '의 대화') {
         if (names.length === 1) {
             // 단일 이름일 때는 받침 유무에 따라 "와" 또는 "과" 선택
             return names[0] + josaWa(names[0]) + '의 대화';
         } else {
-            // 여러 이름일 때는 마지막 이름에 조사 추가
             const allButLast = names.slice(0, -1).join(', ');
             const last = names[names.length - 1];
             return `${allButLast}, ${last}${josaWa(last)}의 대화`;
@@ -98,7 +96,6 @@ export function joinNamesWithJosa(names, suffix = '') {
     const allButLast = names.slice(0, -1).join(', ');
     const last = names[names.length - 1];
 
-    // 마지막 이름에 조사(와/과) 추가
     return `${allButLast}, ${last}${josaWa(last)}${suffix}`;
 }
 

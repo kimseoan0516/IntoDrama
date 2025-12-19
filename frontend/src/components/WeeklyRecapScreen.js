@@ -78,7 +78,7 @@ export const WeeklyRecapScreen = ({ onClose, token, refreshTrigger, onWeekClick 
     const formatMonthLabel = (monthKey) => {
         const [year, month] = monthKey.split('-');
         const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-        return monthNames[parseInt(month) - 1]; // 월만 반환 (연도 제거)
+        return monthNames[parseInt(month) - 1];
     };
     
     const formatWeekDate = (weekStart) => {
@@ -431,7 +431,6 @@ export const WeeklyRecapScreen = ({ onClose, token, refreshTrigger, onWeekClick 
                                                 }}
                                             onClick={() => {
                                                 if (onWeekClick) {
-                                                    // 기록이 없어도 클릭 가능하도록 변경
                                                     onWeekClick(hasData ? week : null, weekInfo.week_start);
                                                 }
                                             }}

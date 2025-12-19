@@ -59,7 +59,6 @@ if not API_KEY:
     print("   3. 또는: export GOOGLE_API_KEY='your-api-key' (Bash)")
 else:
     try:
-        # API 키 앞뒤 공백 제거
         API_KEY = API_KEY.strip()
         genai.configure(api_key=API_KEY)
         model = genai.GenerativeModel('gemini-2.5-flash')

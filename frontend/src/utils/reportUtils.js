@@ -66,7 +66,7 @@ export const detectConflictLevel = (text) => {
                                 /(너|당신|네|니|그쪽).{0,5}(때문|탓|잘못|화나|짜증)/.test(text);
     
     if (hasActualAnnoyance) {
-        score += 0.3; // 실제 짜증 표현이 있을 때만 갈등 점수 추가
+        score += 0.3;
     }
     
     conflictKeywords.forEach(k => {
@@ -76,11 +76,10 @@ export const detectConflictLevel = (text) => {
     });
     
     // "지친다"만 있으면 갈등으로 판단하지 않음
-    // "지친다" + 화나고 섭섭한 키워드가 함께 있을 때만 갈등 점수 추가
     if (hasTired) {
         const hasConflictWithTired = conflictWithTired.some(k => text.includes(k));
         if (hasConflictWithTired) {
-            score += 0.2; // 갈등 점수 추가
+            score += 0.2;
         }
         // "지친다" + 실제 짜증 표현이 함께 있을 때도 갈등으로 판단
         if (hasActualAnnoyance) {
@@ -119,7 +118,6 @@ export const convertBackendReportToFrontendFormat = (backendReport, messages, us
         totalMessages: totalMessages || 0
     };
     
-    // 추가 필드 생성 (기존 generateReport와 호환되도록)
     const avgRomanceScore = report.stats.romanceScore;
     const avgComfortScore = report.stats.comfortScore;
     const avgConflictScore = report.stats.conflictScore;
@@ -526,13 +524,13 @@ export const generateReport = (messages, userProfile) => {
         nextSceneSuggestion = '더 깊은 이야기를 나누는 장면';
     }
 
-    // 심리 분석 (위로 톤으로 변경)
+    // 심리 분석
     const analysis = `최근 대화에서 ${dominantMood === 'romance' ? '따뜻한 감정과 교감' : dominantMood === 'comfort' ? '위로와 안정을 찾으려는 마음' : dominantMood === 'conflict' ? '갈등과 복잡한 감정' : '다양한 감정'}이 많이 느껴졌어요. 많이 힘드셨죠?`;
 
-    // 심리적 포지션 (위로 톤으로 변경)
+    // 심리적 포지션
     const position = `지금은 ${dominantMood === 'romance' ? '따뜻한 감정을 나누고 싶은 순간' : dominantMood === 'comfort' ? '위로와 공감이 필요한 때' : dominantMood === 'conflict' ? '마음의 짐을 내려놓아도 좋은 때' : '조용히 쉬어도 좋은 하루'}입니다.`;
 
-    // 전문가 해석 (위로 톤으로 변경)
+    // 전문가 해석
     const interpretation = `최근 대화를 보니 ${dominantMood === 'romance' ? '따뜻한 감정을 나누려는 마음이 많이 느껴졌어요. 지금 이 순간의 감정을 소중히 여기시고, 당신의 마음을 알아주고 싶어요.' : dominantMood === 'comfort' ? '위로와 안정을 찾으려는 마음이 많이 느껴졌어요. 외로움이나 그리움이 느껴지는 하루였나요? 당신의 마음을 알아주고 싶어요.' : dominantMood === 'conflict' ? '갈등과 복잡한 감정이 많이 느껴졌어요. 많이 힘드셨죠? 지금은 무리하지 말고 잠시 쉬어도 괜찮아요. 당신의 마음을 알아주고 싶어요.' : '평온하지만 어딘가 지친 마음이 느껴졌어요. 지금은 조용히 쉬어도 괜찮아요. 당신의 마음을 알아주고 싶어요.'}`;
 
     // 심리적 문제 진단

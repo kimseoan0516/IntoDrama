@@ -71,7 +71,7 @@ def optimize_chat_history(chat_history_for_ai: List[dict]) -> List[dict]:
 def chunk_message(text: str) -> List[str]:
     """AI의 응답을 N줄(예: 4줄) 단위로 쪼개어 리스트로 만듭니다."""
     
-    # 1. AI 응답을 줄바꿈 기준으로 쪼개고, 빈 줄은 제거
+    # AI 응답을 줄바꿈 기준으로 쪼개고, 빈 줄 제거
     lines = [line.strip() for line in text.split('\n') if line.strip()]
     
     if not lines:
@@ -881,11 +881,11 @@ def get_multi_ai_response_json(
 """)
     system_prompt_parts.append("---")
     
-    # 특정 3명 대화 시 사용자 호칭 변경 처리
+    # 특정 3명 대화 시 사용자 호칭 처리
     persona_a_description = persona_a['description']
     persona_b_description = persona_b['description']
     
-    # 특정 캐릭터 조합 시 사용자 호칭 변경 (이민용 + 서민정)
+    # 특정 캐릭터 조합 시 사용자 호칭 처리
     if char_a_id == 'min_yong' and char_b_id == 'min_jeong':
         persona_a_description = persona_a_description.replace(
             "사용자의 실제 닉네임이 '{{user_nickname}}'일지라도, 너는 사용자를 항상 '서선생'이라고 부른다.",
@@ -905,7 +905,7 @@ def get_multi_ai_response_json(
             f"너는 지금 서민정 선생과 사용자 '{user_nickname}씨'와 함께 3명이서 대화하고 있다."
         )
     
-    # 특정 캐릭터 조합 시 사용자 호칭 변경 (류선재 + 임솔)
+    # 특정 캐릭터 조합 시 사용자 호칭 처리
     if char_a_id == 'sun_jae' and char_b_id == 'im_sol':
         persona_a_description = persona_a_description.replace(
             "사용자의 실제 닉네임이 '{{user_nickname}}'일지라도, 너는 사용자를 항상 '솔' 또는 '솔아'라고 부른다.",
@@ -1114,7 +1114,6 @@ def get_multi_ai_response_json(
                 "response_B": f"{persona_b['name']}의 의견을 제시합니다."
             }, ensure_ascii=False)
         
-        # JSON 코드 블록 제거
         if ai_message_text.startswith("```json"):
             ai_message_text = ai_message_text[7:]
         elif ai_message_text.startswith("```"):

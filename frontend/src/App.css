@@ -3287,7 +3287,7 @@
         margin-left: auto !important;
     }
     
-  /* 모바일: 시스템 메시지 정확한 중앙 정렬 - 메시지 길이와 관계없이 중앙 고정 */
+  /* 모바일: 시스템 메시지 정확한 중앙 정렬 - 메시지 길이와 관계없이 중앙 고정, 약간 왼쪽으로 이동 */
     .message-list .system-message {
         align-self: center !important; /* flex 컨테이너에서 중앙 정렬 */
         text-align: center !important;
@@ -3298,7 +3298,7 @@
         max-width: 85% !important;
         position: relative !important;
         left: auto !important;
-        transform: none !important;
+        transform: translateX(-8px) !important; /* 중앙 기준 약간 왼쪽으로 이동 */
         box-sizing: border-box !important;
     }
     

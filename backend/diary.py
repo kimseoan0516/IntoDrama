@@ -52,7 +52,7 @@ class PushNotificationService:
         
         실제 구현 시 Firebase Cloud Messaging, OneSignal 등을 사용
         """
-        # TODO: 실제 푸시 알림 서비스 연동
+        # 푸시 알림 서비스 연동
         print(f"[푸시 알림] 사용자 {user_id}: {title} - {body}")
         if data:
             print(f"[푸시 알림 데이터]: {data}")
@@ -248,7 +248,7 @@ def get_preview_message(character_id: str) -> str:
     elif character_id in MENTOR_CHARACTERS:
         available_categories.extend(["curiosity", "daily"])
     else:
-        # 일반 캐릭터인 경우 로맨스, 호기심, 일상 카테고리 추가
+        # 일반 캐릭터 카테고리 설정
         available_categories.extend(["romance", "curiosity", "daily"])
     
     # 랜덤으로 카테고리 선택
@@ -1022,7 +1022,6 @@ def create_exchange_diary(
                 # 스케줄링된 시간에 답장 생성
                 scheduled_datetime_kst = convert_to_kst(scheduled_time_utc)
                 
-                # 스케줄러에 작업 추가
                 scheduler.add_job(
                     generate_reply,
                     trigger=DateTrigger(run_date=scheduled_datetime_kst),
@@ -1255,7 +1254,6 @@ def react_to_reply(
             ]
             notification_body = random.choice(topic_notification_messages)
             
-            # 스케줄러에 알림 작업 추가
             def send_topic_reminder():
                 PushNotificationService.send_notification(
                     user_id=diary.user_id,

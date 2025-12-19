@@ -505,7 +505,7 @@ const ChatScreen = ({
                                     /(너|당신|네|니|그쪽).{0,5}(때문|탓|잘못|화나|짜증)/.test(text);
         
         if (hasActualAnnoyance) {
-            score += 0.3; // 실제 짜증 표현이 있을 때만 갈등 점수 추가
+            score += 0.3;
         }
         
         conflictKeywords.forEach(k => {
@@ -713,7 +713,6 @@ const ChatScreen = ({
                                 baseText = baseText.substring(0, index) + baseText.substring(index + previousInterim.length);
                             }
                         }
-                        // 새로운 interim 텍스트 추가
                         const newText = (baseText.trim() + (baseText.trim() ? ' ' : '') + interimTranscript).trim();
                         interimTranscriptRef.current = interimTranscript;
                         
@@ -1011,7 +1010,6 @@ const ChatScreen = ({
                         audioContextRef.current.close();
                         audioContextRef.current = null;
                     }
-                    // onend 이벤트는 useEffect에서 정의한 핸들러가 처리하므로 여기서는 추가 처리 불필요
                 };
                 
                 recognitionRef.current.start();
@@ -1060,7 +1058,7 @@ const ChatScreen = ({
         const chatContainer = captureRef.current.closest('.chat-container');
         const chatWindow = captureRef.current.closest('.chat-window');
         
-        // 임시 컨테이너 생성 (실제 채팅방과 동일한 구조)
+        // 캡처용 컨테이너 생성
         const tempContainer = document.createElement('div');
         tempContainer.style.position = 'absolute';
         tempContainer.style.left = '-9999px';
@@ -1110,7 +1108,6 @@ const ChatScreen = ({
             if (msgElement) {
                 const clonedMsg = msgElement.cloneNode(true);
                 
-                // 캡쳐 관련 클래스만 제거
                 clonedMsg.classList.remove('selected-for-capture', 'selectable', 'out-of-range', 'in-range-for-capture');
                 
                 // 모든 자식 요소의 스타일 복원 및 원본 스타일 복사
@@ -1292,10 +1289,9 @@ const ChatScreen = ({
                             clonedMessageList.style.background = messageListStyle.background || '#F5F1EB';
                         }
                         
-                        // 감정 모드 배경 효과 제거 (::before, ::after 가상 요소) - 흐림 방지
+                        // 감정 모드 배경 효과 제거
                         const clonedChatContainer = clonedDoc.querySelector('.chat-container');
                         if (clonedChatContainer) {
-                            // ::before와 ::after 가상 요소를 완전히 제거하기 위해 강력한 스타일 추가
                             const style = clonedDoc.createElement('style');
                             style.textContent = `
                                 /* 모든 감정 모드의 가상 요소 제거 */
@@ -1402,7 +1398,7 @@ const ChatScreen = ({
                             clonedChatContainer.style.backdropFilter = 'none';
                             clonedChatContainer.style.webkitBackdropFilter = 'none';
                             
-                            // 모든 감정 모드 클래스 제거 (배경 효과 제거를 위해)
+                            // 감정 모드 클래스 제거
                             clonedChatContainer.classList.remove('mood-romance', 'mood-comfort', 'mood-conflict', 'confession-scene');
                         }
                         
@@ -1427,7 +1423,6 @@ const ChatScreen = ({
                             if (computedOpacity && parseFloat(computedOpacity) < 1) {
                                 el.style.opacity = '1';
                             }
-                            // filter나 backdrop-filter가 있으면 제거
                             const computedFilter = window.getComputedStyle(el).filter;
                             const computedBackdropFilter = window.getComputedStyle(el).backdropFilter;
                             if (computedFilter && computedFilter !== 'none') {
@@ -1452,11 +1447,10 @@ const ChatScreen = ({
                         // linear-gradient에서 rgba를 rgb로 변환하는 함수
                         const fixGradientOpacity = (gradientString) => {
                             if (!gradientString || !gradientString.includes('linear-gradient')) return gradientString;
-                            // rgba를 rgb로 변환 (투명도 제거)
                             return gradientString.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)/g, 'rgb($1, $2, $3)');
                         };
                         
-                        // 메시지 버블 색상 강제 적용 - 진하게 표시 (투명도 완전 제거)
+                        // 메시지 버블 색상 강제 적용
                         const messageBubbles = clonedDoc.querySelectorAll('.message-bubble');
                         messageBubbles.forEach(bubble => {
                             const originalBubble = Array.from(captureRef.current.children).find(
@@ -1470,7 +1464,6 @@ const ChatScreen = ({
                                     if (originalMessageText) {
                                         const textComputedStyle = window.getComputedStyle(originalMessageText);
                                         
-                                        // 배경색 강제 적용 - rgba 투명도 제거
                                         let backgroundValue = textComputedStyle.background || textComputedStyle.backgroundColor;
                                         
                                         if (backgroundValue && backgroundValue !== 'none' && backgroundValue !== 'rgba(0, 0, 0, 0)' && backgroundValue !== 'transparent') {
@@ -1525,7 +1518,6 @@ const ChatScreen = ({
                                         messageText.style.opacity = '1';
                                         messageText.style.filter = 'none';
                                         
-                                        // backdrop-filter 제거 (캡처 시 불필요)
                                         messageText.style.backdropFilter = 'none';
                                         messageText.style.webkitBackdropFilter = 'none';
                                     }
@@ -1671,7 +1663,7 @@ const ChatScreen = ({
                 }
             };
             
-            // DOM 변경 감지하여 자동 스크롤
+            // 자동 스크롤
             const observer = new MutationObserver(() => {
                 scrollToBottom();
             });
@@ -2075,7 +2067,7 @@ const ChatScreen = ({
                             if (msg.sender !== 'ai' || !msg.characterId) return;
                             e.stopPropagation();
                             
-                            // 스크롤 위치 저장 (하트 추가 시 튕김 방지)
+                            // 스크롤 위치 저장
                             const chatWindow = messageListRef.current;
                             const savedScrollTop = chatWindow ? chatWindow.scrollTop : 0;
                             
@@ -2267,7 +2259,7 @@ const ChatScreen = ({
                             );
                         }
 
-                        // 시간 포맷팅 (카카오톡 스타일) - 날짜 제거, 시간만 표시
+                            // 시간 포맷팅
                         const formatTime = (timestamp) => {
                             if (!timestamp) return '';
                             const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
@@ -2275,7 +2267,6 @@ const ChatScreen = ({
                             const hours = date.getHours();
                             const minutes = date.getMinutes();
                             
-                            // 모든 메시지: 시간만 표시 (날짜 제거)
                             const period = hours < 12 ? '오전' : '오후';
                             const displayHours = hours === 0 ? 12 : (hours > 12 ? hours - 12 : hours);
                             return `${period} ${displayHours}:${minutes.toString().padStart(2, '0')}`;
@@ -2338,7 +2329,6 @@ const ChatScreen = ({
                                                     if (line.type === '행동') {
                                                         // 행동 부분: 괄호 안의 텍스트만 기울임체로 표시
                                                         const actionText = line.text;
-                                                        // 괄호 제거하고 내용만 표시
                                                         const content = actionText.replace(/^\(|\)$/g, '');
                                                         return (
                                                             <span key={idx}>
@@ -2491,7 +2481,6 @@ const ChatScreen = ({
                             newMessageType = '행동';
                         }
                         
-                        // 버튼 클릭으로 인한 변경임을 표시 (onInput에서 messageType 업데이트 방지)
                         textarea._isButtonToggle = true;
                         
                         // messageType을 먼저 설정
@@ -2512,7 +2501,6 @@ const ChatScreen = ({
                                 selection.removeAllRanges();
                                 selection.addRange(newRange);
                             }
-                            // 플래그 제거
                             setTimeout(() => {
                                 textarea._isButtonToggle = false;
                             }, 100);
@@ -2540,12 +2528,11 @@ const ChatScreen = ({
                         e.target._isComposing = true;
                     }}
                     onCompositionEnd={(e) => {
-                        // 한글 입력 완료 - 조합 종료 후 약간의 지연을 두고 HTML 업데이트
+                        // 한글 입력 완료 처리
                         const element = e.target;
                         element._isComposing = false;
                         
-                        // 조합 종료 후 약간의 지연을 두고 HTML 포맷팅 적용
-                        // 이렇게 하면 모바일에서도 자연스럽게 입력 가능
+                        // HTML 포맷팅 적용
                         setTimeout(() => {
                             if (!element._isComposing) {
                                 const newText = element.innerText || element.textContent || '';
@@ -2576,7 +2563,6 @@ const ChatScreen = ({
                         element.style.height = 'auto';
                         element.style.height = Math.max(44, element.scrollHeight) + 'px';
                         
-                        // 버튼 클릭으로 인한 변경이면 messageType 업데이트만 수행
                         if (element._isButtonToggle) {
                             if (newText !== inputText) {
                                 setInputText(newText);
@@ -2584,8 +2570,7 @@ const ChatScreen = ({
                             return;
                         }
                         
-                        // 한글 입력 중(조합 중)이면 상태만 업데이트하고 HTML 업데이트는 건너뛰기
-                        // 이렇게 하면 조합 중에는 브라우저의 기본 동작을 방해하지 않음
+                        // 한글 입력 중이면 상태만 업데이트
                         if (element._isComposing) {
                             if (newText !== inputText) {
                                 setInputText(newText);
@@ -2593,7 +2578,6 @@ const ChatScreen = ({
                             return;
                         }
                         
-                        // 텍스트 변경 감지 및 상태 업데이트
                         if (newText !== inputText) {
                             setInputText(newText);
                         }
@@ -2627,7 +2611,7 @@ const ChatScreen = ({
                                     updateHTMLWithCursorRestoreImmediate(element, newText, savedCursorPos);
                                 }
                             }
-                        }, 50); // 50ms 지연으로 입력 완료 후 포맷팅
+                        }, 50);
                     }}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
@@ -2760,11 +2744,10 @@ const detectConflictLevel = (text) => {
     });
     
     // "지친다"만 있으면 갈등으로 판단하지 않음
-    // "지친다" + 화나고 섭섭한 키워드가 함께 있을 때만 갈등 점수 추가
     if (hasTired) {
         const hasConflictWithTired = conflictWithTired.some(k => text.includes(k));
         if (hasConflictWithTired) {
-            score += 0.2; // 갈등 점수 추가
+            score += 0.2;
         }
     }
     
@@ -3255,7 +3238,7 @@ function App() {
                 }
                 
                 return msg;
-            }).filter(msg => msg !== null && msg.text); // null과 text가 없는 메시지 제거
+            }).filter(msg => msg !== null && msg.text);
             
             setMessages(loadedMessages);
             
@@ -3290,7 +3273,6 @@ function App() {
         }
     };
 
-    // 대화 삭제
     const deleteChatHistory = (chatId) => {
         chatHistoryStorage.delete(chatId);
         setHistoryRefreshTrigger(prev => prev + 1);
@@ -3508,13 +3490,11 @@ function App() {
                 const totalDelay = data.responses.length > 1 ? (data.responses.length - 1) * 1500 + 2000 : 2000;
                 
                 if (isInitialStart && isFirstRound) {
-                    // 첫 번째 라운드 완료: 두 번째 라운드로 자동 진행 (startInitialDebateRounds에서 처리)
                     setDebateRound(nextRound);
                     debateRoundRef.current = nextRound;
                     setIsLoading(false);
                     // 두 번째 라운드는 startInitialDebateRounds에서 호출됨
                 } else if (isInitialStart && !isFirstRound && round === 2) {
-                    // 두 번째 라운드 완료: 사용자 입력 가능하도록 설정하되 자동 진행은 하지 않음
                     setDebateRound(3);
                     debateRoundRef.current = 3;
                     setTimeout(() => {
@@ -3762,7 +3742,6 @@ function App() {
                                 console.error('두 번째 캐릭터 최종변론 요청 실패:', finalStatement2Response.status);
                             }
                             
-                            // 최종변론 후 종료 메시지 추가
                             setTimeout(() => {
                                 const debateEndMessage = {
                                     id: Date.now() + 3000,
@@ -3784,7 +3763,6 @@ function App() {
                             }, 800);
                         } catch (finalStatementError) {
                             console.error('최종변론 생성 오류:', finalStatementError);
-                            // 오류 발생 시 바로 종료 메시지 추가
                             const debateEndMessage = {
                                 id: Date.now() + 3000,
                                 sender: 'system',
@@ -3805,7 +3783,6 @@ function App() {
                         }
                     };
                     
-                    // 요약 표시 후 최종변론 추가
                     setTimeout(() => {
                         addFinalStatements();
                     }, 500);
@@ -3873,7 +3850,6 @@ function App() {
                     return updated;
                 });
                 
-                // 종료 메시지 추가
                 const debateEndMessage = {
                     id: Date.now() + 1,
                     sender: 'system',
@@ -4238,7 +4214,7 @@ function App() {
                 sender = userProfile.nickname;
             } else {
                 const charName = characterData[msg.characterId]?.name || 'AI';
-                // 배우 이름 제거 (예: "황용식 (강하늘)" -> "황용식")
+                // 배우 이름 제거
                 sender = charName.split(' (')[0];
             }
             return `[${sender}]: ${msg.text}`;
@@ -4361,7 +4337,7 @@ function App() {
             setIsInterventionPanelHidden(true);
             setWaitingForUserInput(false);
             
-            // 사용자 메시지 추가 (선택지와 동일한 형식)
+            // 사용자 메시지 추가
             const userMessage = { 
                 id: Date.now(), 
                 sender: 'user', 
@@ -4381,10 +4357,10 @@ function App() {
                 if (textarea) textarea.style.height = 'auto';
             }
             
-            // 선택지와 동일한 방식으로 토론 계속 (1초 후, debateRound 사용)
+            // 토론 계속
             setTimeout(() => {
                 continueDebateRound(debateRound);
-            }, 1000); // 선택지와 동일하게 1초로 변경
+            }, 1000);
             return;
         }
         
@@ -4429,7 +4405,6 @@ function App() {
             }
         });
         
-        // messageLines가 비어있으면 기본 메시지로 추가
         if (messageLines.length === 0 && finalText.trim()) {
             messageLines.push({
                 text: finalText,
@@ -4534,7 +4509,7 @@ function App() {
                     
                     setMessages(prev => [...prev, aiMessageChunk]);
                     
-                    // 메시지 추가 후 자동 스크롤 (부드럽게, 튕김 없이)
+                    // 메시지 추가 후 자동 스크롤
                     const scrollToBottom = () => {
                         if (messageListRef.current) {
                             const element = messageListRef.current;
@@ -4579,7 +4554,6 @@ function App() {
             console.error("Error fetching AI response:", error);
             setIsLoading(false); 
             
-            // 에러 메시지 개선
             let errorText = '서버 연결 실패';
             if (error.message === 'Failed to fetch' || error.message.includes('fetch') || error.message.includes('NetworkError')) {
                 errorText = `백엔드 서버에 연결할 수 없습니다. 백엔드 서버가 실행 중인지 확인해주세요. (${API_BASE_URL})`;
@@ -4678,7 +4652,6 @@ function App() {
                 currentSegment.text += text[i];
                 depth--;
                 if (depth === 0) {
-                    // 행동 부분 완료 (괄호 포함)
                     currentSegment.end = i + 1;
                     segments.push({ ...currentSegment });
                     // 대사 부분 시작
@@ -5021,7 +4994,6 @@ function App() {
                     setSelectedCharIds(ids); 
                     setCurrentTurn('USER'); 
                     setCurrentChatId(null);
-                    // 시스템 메시지 추가
                     const systemMessages = [];
                     if (ids.length === 1) {
                         const char = characterData[ids[0]];
@@ -5042,7 +5014,6 @@ function App() {
                         });
                     }
                     setMessages(systemMessages);
-                    // 랜덤 placeholder 변경
                     setRandomPlaceholder(randomPlaceholders[Math.floor(Math.random() * randomPlaceholders.length)]);
                 }}
                 onMyPageClick={() => setShowMyPage(true)}

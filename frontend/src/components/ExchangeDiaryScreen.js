@@ -114,11 +114,9 @@ export const ReplyBoxMainScreen = ({ onClose, token, onReadReply, onShowDiary })
         setConfirmDeleteId(null);
         setFadingOutId(replyId);
         
-        // 애니메이션 시간만큼 대기 후 삭제 API 호출
         setTimeout(async () => {
             try {
                 await api.deleteExchangeDiary(replyId);
-                // 목록에서 삭제
                 setReplies(prev => prev.filter(reply => reply.id !== replyId));
             } catch (error) {
                 console.error('답장 삭제 실패:', error);
@@ -916,7 +914,6 @@ export const WriteDiaryScreen = ({ onBack, token, characterId, onSuccess }) => {
                 topic_used: topicUsed && todayTopic !== null  // 주제를 사용했는지 여부
             };
             
-            // 답장 요청이 활성화되어 있고 즉시가 아닌 경우 스케줄 시간 추가
             if (requestReply && selectedReplyTime !== 'now') {
                 const scheduledTime = calculateScheduledTime(selectedReplyTime, customTime);
                 if (scheduledTime) {
@@ -1450,7 +1447,6 @@ export const ReadReplyScreen = ({ diaryId, onBack, token, onShowOriginalDiary })
     const handleReaction = async () => {
         if (reacted) return;
         
-        // 버튼 상태를 즉시 변경하여 즉각적인 피드백 제공
         setReacted(true);
         
         // 랜덤 whisper_message 목록

@@ -7,7 +7,7 @@ const getApiBaseUrl = () => {
         return process.env.REACT_APP_API_URL;
     }
     
-    // 로컬 개발 환경 (localhost 또는 127.0.0.1)
+    // 로컬 개발 환경
     const isLocalhost = window.location.hostname === 'localhost' || 
                         window.location.hostname === '127.0.0.1' ||
                         window.location.hostname === '';
@@ -57,7 +57,7 @@ const getFetchOptions = (method = 'GET', body = null, requiresAuth = false) => {
   const options = {
     method,
     mode: 'cors',
-    credentials: 'include', // 모바일 호환성을 위해 변경
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
   };
 

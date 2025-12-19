@@ -7,7 +7,7 @@ import os
 # 환경 변수에서 데이터베이스 URL 읽기 (없으면 기본값 사용)
 SQLALCHEMY_DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./drama_chat.db")
 
-# SQLite인 경우 connect_args 추가, 그 외에는 빈 딕셔너리
+# SQLite 연결 설정
 connect_args = {}
 engine_kwargs = {}
 
@@ -19,7 +19,7 @@ elif SQLALCHEMY_DATABASE_URL.startswith("postgresql"):
         "pool_pre_ping": True,  # 연결이 살아있는지 확인 (만료된 연결 자동 재연결)
         "pool_recycle": 3600,   # 1시간마다 연결 재사용
         "pool_size": 5,         # 연결 풀 크기
-        "max_overflow": 10,     # 추가 연결 허용
+        "max_overflow": 10,
     }
     # SSL 설정 (필요한 경우)
     # connect_args["sslmode"] = "require"  # 필요시 주석 해제
@@ -131,7 +131,7 @@ class ExchangeDiary(Base):
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)
 
-# 기존 데이터베이스에 is_manual 컬럼 추가 (마이그레이션)
+# is_manual 컬럼 마이그레이션
 def migrate_database():
     """기존 데이터베이스에 is_manual 컬럼이 없으면 추가"""
     from sqlalchemy import inspect, text
@@ -155,7 +155,7 @@ def migrate_database():
     except Exception as e:
         print(f"마이그레이션 확인 중 오류 (무시 가능): {e}")
 
-# emotion_diaries 테이블에 weather 컬럼 추가 (마이그레이션)
+# emotion_diaries 테이블 weather 컬럼 마이그레이션
 def migrate_emotion_diaries():
     """기존 데이터베이스에 emotion_diaries.weather 컬럼이 없으면 추가"""
     from sqlalchemy import inspect, text
@@ -179,7 +179,7 @@ def migrate_emotion_diaries():
     except Exception as e:
         print(f"마이그레이션 확인 중 오류 (무시 가능): {e}")
 
-# chat_histories 테이블에 is_manual_quote, quote_message_id 컬럼 추가 (마이그레이션)
+# chat_histories 테이블 컬럼 마이그레이션
 def migrate_chat_histories_quote():
     """기존 데이터베이스에 is_manual_quote, quote_message_id 컬럼이 없으면 추가"""
     from sqlalchemy import inspect, text
@@ -284,7 +284,7 @@ def migrate_exchange_diaries():
     except Exception as e:
         print(f"마이그레이션 확인 중 오류 (무시 가능): {e}")
 
-# character_archetypes 테이블에 order_chaos, good_evil 컬럼 추가 (마이그레이션)
+# character_archetypes 테이블 컬럼 마이그레이션
 def migrate_character_archetypes():
     """기존 데이터베이스에 character_archetypes.order_chaos, good_evil 컬럼이 없으면 추가"""
     from sqlalchemy import inspect, text

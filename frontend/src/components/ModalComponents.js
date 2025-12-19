@@ -76,7 +76,6 @@ export const ArchetypeMapModal = ({ data, characterData, isLoading, onClose }) =
         );
     }
     
-    // 로딩 완료 후 데이터가 없을 때만 에러 메시지 표시
     if (!data || !data.characters || data.characters.length === 0) {
         return (
             <div className="modal-overlay" onClick={onClose}>
@@ -649,7 +648,6 @@ export const DiaryModal = ({ diaryData, diaryList, isGenerating, onGenerate, onC
             const weatherEmoji = selectedDiary.weather ? getWeatherEmoji(selectedDiary.weather) : '';
             const weatherText = selectedDiary.weather ? selectedDiary.weather : '';
             
-            // 일기 내용 정리: 제목/내용 라인 제거
             const cleanContent = selectedDiary.content
                 .split('\n')
                 .filter(line => {
@@ -1940,7 +1938,7 @@ ${cleanContent}
                                                 selectedCharacterId: selectedCharacterId,
                                                 scheduled_time: scheduledTime
                                             });
-                                            // 생성 완료 후 모달 닫지 않음 (생성된 일기를 보여주기 위해)
+                                            // 생성 완료 후 모달 닫지 않음
                                         } else {
                                             // 키워드 기반 생성
                                             if (!keywordInput.trim()) {
@@ -1954,7 +1952,7 @@ ${cleanContent}
                                                 selectedCharacterId: selectedCharacterId,
                                                 scheduled_time: scheduledTime
                                             });
-                                            // 생성 완료 후 모달 닫지 않음 (생성된 일기를 보여주기 위해)
+                                            // 생성 완료 후 모달 닫지 않음
                                         }
                                     }}
                                     disabled={isGenerating || (fromChat && !aiGenerationType) || ((!fromChat || aiGenerationType === 'keyword') && !keywordInput.trim())}

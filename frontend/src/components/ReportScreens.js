@@ -128,7 +128,7 @@ const detectConflictLevel = (text) => {
                                 /(너|당신|네|니|그쪽).{0,5}(때문|탓|잘못|화나|짜증)/.test(text);
     
     if (hasActualAnnoyance) {
-        score += 1.0; // 실제 짜증 표현이 있을 때만 갈등 점수 추가
+        score += 1.0;
     }
     
     // 강한 갈등 키워드 체크 (가중치: 1.0)
@@ -145,7 +145,6 @@ const detectConflictLevel = (text) => {
         }
     });
     
-    // "지친다" + 화나고 섭섭한 키워드가 함께 있을 때만 갈등 점수 추가
     if (hasTired) {
         const hasConflictWithTired = conflictWithTired.some(k => text.includes(k));
         if (hasConflictWithTired) {
@@ -200,7 +199,6 @@ const convertBackendReportToFrontendFormat = (backendReport, messages, userProfi
         totalMessages: totalMessages || 0
     };
     
-    // 추가 필드 생성 (기존 generateReport와 호환되도록)
     const avgRomanceScore = report.stats.romanceScore;
     const avgComfortScore = report.stats.comfortScore;
     const avgConflictScore = report.stats.conflictScore;
@@ -607,13 +605,13 @@ const generateReport = (messages, userProfile) => {
         nextSceneSuggestion = '더 깊은 이야기를 나누는 장면';
     }
 
-    // 심리 분석 (위로 톤으로 변경)
+    // 심리 분석
     const analysis = `최근 대화에서 ${dominantMood === 'romance' ? '따뜻한 감정과 교감' : dominantMood === 'comfort' ? '위로와 안정을 찾으려는 마음' : dominantMood === 'conflict' ? '갈등과 복잡한 감정' : '다양한 감정'}이 많이 느껴졌어요. 많이 힘드셨죠?`;
 
-    // 심리적 포지션 (위로 톤으로 변경)
+    // 심리적 포지션
     const position = `지금은 ${dominantMood === 'romance' ? '따뜻한 감정을 나누고 싶은 순간' : dominantMood === 'comfort' ? '위로와 공감이 필요한 때' : dominantMood === 'conflict' ? '마음의 짐을 내려놓아도 좋은 때' : '조용히 쉬어도 좋은 하루'}입니다.`;
 
-    // 전문가 해석 (위로 톤으로 변경)
+    // 전문가 해석
     const interpretation = `최근 대화를 보니 ${dominantMood === 'romance' ? '따뜻한 감정을 나누려는 마음이 많이 느껴졌어요. 지금 이 순간의 감정을 소중히 여기시고, 당신의 마음을 알아주고 싶어요.' : dominantMood === 'comfort' ? '위로와 안정을 찾으려는 마음이 많이 느껴졌어요. 외로움이나 그리움이 느껴지는 하루였나요? 당신의 마음을 알아주고 싶어요.' : dominantMood === 'conflict' ? '갈등과 복잡한 감정이 많이 느껴졌어요. 많이 힘드셨죠? 지금은 무리하지 말고 잠시 쉬어도 괜찮아요. 당신의 마음을 알아주고 싶어요.' : '평온하지만 어딘가 지친 마음이 느껴졌어요. 지금은 조용히 쉬어도 괜찮아요. 당신의 마음을 알아주고 싶어요.'}`;
 
     // 심리적 문제 진단
@@ -1761,7 +1759,7 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // BGM 코멘트 가져오기 (가장 많이 대화한 캐릭터가 생성) - 노래 정보와 일치하도록 수정
+    // BGM 코멘트 가져오기
     useEffect(() => {
         const fetchBgmComment = async () => {
             if (!report || !report.bgmRecommendation || !messages || messages.length === 0) {
@@ -1808,7 +1806,7 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                     bgmArtist: currentBgmArtist,
                     characterId: null
                 };
-                bgmCommentFetchedRef.current = true; // 생성 완료 표시
+                bgmCommentFetchedRef.current = true;
                 return;
             }
 
@@ -1981,7 +1979,6 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
             }
         });
         
-        // 변경사항이 있으면 저장
         if (hasChanges) {
             psychologyReports.save(savedReports);
         }
@@ -1989,7 +1986,6 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
         setPreviousReports(savedReports);
     }, [messages, userProfile, hasUserMessages]);
     
-    // BGM 코멘트 가져오기 - 중복 제거 (위의 useEffect와 동일한 기능이므로 제거)
 
     // 정서적 상태 진단 및 위로 메시지 생성 함수
     const generatePersona = (report) => {
@@ -2277,9 +2273,8 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
         // 감정 점수가 백엔드에서 말투 분석을 반영한 값이므로 그대로 사용
         // 스트레스 지수 (갈등 점수가 높을수록 스트레스 높음)
         // 힘듦/스트레스 키워드가 많을수록 스트레스 지수 증가
-        // conflictScore는 0-100 범위이므로 그대로 사용하되, 힘듦/스트레스 키워드 비율에 따라 추가 가중치 적용
         let stressLevel = Math.min(100, Math.max(0, conflictScore));
-        // 힘듦/스트레스 키워드 비율에 따라 추가 스트레스 점수 부여 (최대 40점까지)
+        // 힘듦/스트레스 키워드 비율에 따라 스트레스 점수 부여
         const additionalStressFromKeywords = Math.min(40, tiredStressRatio * 100);
         stressLevel = Math.min(100, stressLevel + additionalStressFromKeywords);
         const stressPosition = stressLevel; // 0% = 편안함, 100% = 위험
@@ -2342,7 +2337,6 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                 return;
             }
             
-            // 약간의 지연을 주어 렌더링이 완료되도록 함
             await new Promise(resolve => setTimeout(resolve, 500));
             
             // 리포트 이미지 컴포넌트를 이미지로 캡처
@@ -2417,7 +2411,6 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                 link.click();
                 document.body.removeChild(link);
                 
-                // 리포트에 이미지 URL, 에피소드 번호, persona 정보 추가
                 const reportWithImage = {
                     ...report,
                     imageUrl: imageUrl,
@@ -2482,7 +2475,6 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                     report.episodeNumber = index + 1;
                 });
             } else if (reportsOnDate.length === 1) {
-                // 1개만 남은 경우 에피소드 번호 제거
                 delete reportsOnDate[0].episodeNumber;
             }
         });
@@ -3504,7 +3496,7 @@ export const ReportScreen = ({ onClose, messages, userProfile }) => {
                                                                     /(너|당신|네|니|그쪽).{0,5}(때문|탓|잘못|화나|짜증)/.test(keywordText);
                                         
                                         if (hasActualAnnoyance) {
-                                            emotionScores.anger += 3; // 실제 짜증 표현이 있을 때만 화남 점수 추가
+                                            emotionScores.anger += 3;
                                         }
                                         
                                         // 힘듦/피로 키워드를 먼저 체크 (가중치 높게) - 다른 강한 감정보다 우선

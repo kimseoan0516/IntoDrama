@@ -2992,14 +2992,20 @@ function App() {
                 const interventionGap = 12; // 입력창과 토론 개입 패널/버튼 사이 고정 간격
                 const interventionBottomPosition = windowHeight - inputAreaTop + interventionGap;
                 
-                // 토론 개입 패널 위치 조정
+                // 토론 개입 패널 위치 조정 (왼쪽 하단에 배치)
                 if (debateInterventionPanelRef.current) {
                     debateInterventionPanelRef.current.style.bottom = `${interventionBottomPosition}px`;
+                    debateInterventionPanelRef.current.style.left = '12px';
+                    debateInterventionPanelRef.current.style.right = 'auto';
+                    debateInterventionPanelRef.current.style.transform = 'none';
                 }
                 
-                // 토론 개입 "선택지 다시 보기" 버튼 위치 조정
+                // 토론 개입 "선택지 다시 보기" 버튼 위치 조정 (왼쪽 하단에 배치)
                 if (debateInterventionShowBtnRef.current) {
                     debateInterventionShowBtnRef.current.style.bottom = `${interventionBottomPosition}px`;
+                    debateInterventionShowBtnRef.current.style.left = '12px';
+                    debateInterventionShowBtnRef.current.style.right = 'auto';
+                    debateInterventionShowBtnRef.current.style.transform = 'none';
                 }
                 
                 setInputAreaHeight(inputAreaRect.height);
@@ -3013,9 +3019,15 @@ function App() {
                 }
                 if (debateInterventionPanelRef.current) {
                     debateInterventionPanelRef.current.style.bottom = '';
+                    debateInterventionPanelRef.current.style.left = '';
+                    debateInterventionPanelRef.current.style.right = '';
+                    debateInterventionPanelRef.current.style.transform = '';
                 }
                 if (debateInterventionShowBtnRef.current) {
                     debateInterventionShowBtnRef.current.style.bottom = '';
+                    debateInterventionShowBtnRef.current.style.left = '';
+                    debateInterventionShowBtnRef.current.style.right = '';
+                    debateInterventionShowBtnRef.current.style.transform = '';
                 }
             }
         };

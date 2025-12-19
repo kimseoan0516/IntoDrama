@@ -3292,7 +3292,7 @@
         align-self: center !important; /* flex 컨테이너에서 중앙 정렬 */
         text-align: center !important;
         margin: 0 auto !important;
-        margin-left: -1px !important; /* 왼쪽으로 약간 이동하여 정확한 중앙 정렬 */
+        margin-left: -5px !important; /* 왼쪽으로 약간 이동하여 정확한 중앙 정렬 */
         display: block !important;
         width: fit-content !important;
         max-width: 85% !important;
@@ -3354,8 +3354,8 @@
     }
     
     .back-button {
-        width: 32px !important;
-        height: 32px !important;
+        width: 44px !important;
+        height: 44px !important;
         flex-shrink: 0 !important;
     }
     

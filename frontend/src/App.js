@@ -2996,8 +2996,8 @@ function App() {
                 if (debateInterventionPanelRef.current) {
                     // setProperty를 사용하여 !important를 포함한 스타일 설정 (CSS의 !important를 덮어쓰기 위해)
                     debateInterventionPanelRef.current.style.setProperty('bottom', `${interventionBottomPosition}px`, 'important');
-                    // left는 CSS에서 0으로 설정되므로 JavaScript에서 제거
-                    debateInterventionPanelRef.current.style.setProperty('left', '0', 'important');
+                    // left는 CSS에서 12px로 설정되므로 JavaScript에서도 12px로 설정
+                    debateInterventionPanelRef.current.style.setProperty('left', '12px', 'important');
                     debateInterventionPanelRef.current.style.setProperty('right', 'auto', 'important');
                     debateInterventionPanelRef.current.style.setProperty('transform', 'none', 'important');
                 }
@@ -3006,8 +3006,8 @@ function App() {
                 if (debateInterventionShowBtnRef.current) {
                     // setProperty를 사용하여 !important를 포함한 스타일 설정 (CSS의 !important를 덮어쓰기 위해)
                     debateInterventionShowBtnRef.current.style.setProperty('bottom', `${interventionBottomPosition}px`, 'important');
-                    // left는 CSS에서 0으로 설정되므로 JavaScript에서 제거
-                    debateInterventionShowBtnRef.current.style.setProperty('left', '0', 'important');
+                    // left는 CSS에서 12px로 설정되므로 JavaScript에서도 12px로 설정
+                    debateInterventionShowBtnRef.current.style.setProperty('left', '12px', 'important');
                     debateInterventionShowBtnRef.current.style.setProperty('right', 'auto', 'important');
                     debateInterventionShowBtnRef.current.style.setProperty('transform', 'none', 'important');
                 }

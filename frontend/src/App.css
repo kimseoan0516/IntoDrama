@@ -3072,63 +3072,63 @@
         transition: bottom 0.2s ease !important;
     }
     
-    /* 모바일: 토론 개입 패널 위치 조정 - 입력창 위에 배치, 완전 중앙 정렬 */
+    /* 모바일: 토론 개입 패널 위치 - 웹과 동일하게 오른쪽에 배치 */
     .debate-intervention-panel {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 50% !important;
-        transform: translateX(-50%) !important; /* 중앙 정렬 */
+        left: calc(50% - 190px) !important; /* 웹과 동일한 위치 */
+        transform: none !important; /* transform 제거 */
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
-        max-width: calc(100% - 24px) !important; /* 좌우 여백 확보 */
+        max-width: 280px !important; /* 웹과 동일한 최대 너비 */
         width: auto !important;
-        margin: 0 auto !important; /* 추가 중앙 정렬 보장 */
-        right: auto !important; /* 오른쪽 정렬 제거 */
+        margin: 0 !important; /* 마진 제거 */
+        right: auto !important;
     }
     
-    /* 모바일: 토론 개입 패널 내부 콘텐츠 중앙 정렬 */
+    /* 모바일: 토론 개입 패널 내부 콘텐츠 - 웹과 동일하게 왼쪽 정렬 */
     .debate-intervention-header {
-        justify-content: center !important; /* 중앙 정렬 */
-        text-align: center !important;
+        justify-content: space-between !important; /* 웹과 동일 */
+        text-align: left !important;
     }
     
     .debate-intervention-header-text {
-        align-items: center !important; /* 텍스트 중앙 정렬 */
-        text-align: center !important;
+        align-items: flex-start !important; /* 웹과 동일 */
+        text-align: left !important;
     }
     
     .debate-intervention-title,
     .debate-intervention-subtitle {
-        text-align: center !important; /* 제목과 부제목 중앙 정렬 */
+        text-align: left !important; /* 웹과 동일한 왼쪽 정렬 */
     }
     
     .debate-intervention-buttons {
-        align-items: center !important; /* 버튼들 중앙 정렬 */
+        align-items: stretch !important; /* 웹과 동일 */
         width: 100% !important;
     }
     
     .debate-intervention-btn {
-        width: 100% !important; /* 버튼 전체 너비 */
-        text-align: center !important; /* 버튼 텍스트 중앙 정렬 */
-        justify-content: center !important; /* 버튼 내부 콘텐츠 중앙 정렬 */
+        width: 100% !important;
+        text-align: left !important; /* 웹과 동일한 왼쪽 정렬 */
+        justify-content: flex-start !important; /* 웹과 동일 */
     }
     
-    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 조정 - 입력창 위에 배치 */
+    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 웹과 동일하게 오른쪽에 배치 */
     .debate-intervention-show-btn-container {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 50% !important;
-        transform: translateX(-50%) !important; /* 중앙 정렬 */
+        left: calc(50% - 190px) !important; /* 웹과 동일한 위치 */
+        transform: none !important; /* transform 제거 */
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
         width: auto !important;
-        margin: 0 auto !important; /* 추가 중앙 정렬 보장 */
-        right: auto !important; /* 오른쪽 정렬 제거 */
-        justify-content: center !important; /* 버튼 중앙 정렬 */
+        margin: 0 !important; /* 마진 제거 */
+        right: auto !important;
+        justify-content: flex-start !important; /* 웹과 동일 */
     }
     
     .debate-intervention-show-btn {
-        margin: 0 auto !important; /* 버튼 중앙 정렬 */
+        margin: 0 !important; /* 마진 제거 */
     }
     
     .input-area textarea,
@@ -3223,33 +3223,86 @@
         margin-left: 48px !important; /* 일반 AI 메시지와 동일한 간격 */
     }
     
-  /* 모바일: 시스템 메시지 정중앙 정렬 */
+    /* 모바일: debate-right 스타일 - 웹과 동일하게 오른쪽에 배치 */
+    .debate-mode .message-bubble.ai.debate-right {
+        align-self: flex-end !important;
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        flex-direction: row-reverse !important;
+    }
+    
+    .debate-mode .message-bubble.ai.debate-right .avatar {
+        order: 2 !important;
+        position: absolute !important;
+        right: 0 !important;
+        left: auto !important;
+    }
+    
+    .debate-mode .message-bubble.ai.debate-right .message-content {
+        margin-left: 0 !important;
+        margin-right: 44px !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .debate-mode .message-bubble.ai.debate-right .message-name {
+        position: absolute !important;
+        right: 44px !important;
+        left: auto !important;
+        top: -15px !important;
+    }
+    
+    .debate-mode .message-bubble.ai.debate-right .message-text {
+        border-top-left-radius: 18px !important;
+        border-top-right-radius: 4px !important;
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .debate-mode .message-bubble.ai.debate-right .message-meta {
+        justify-content: flex-end !important;
+        align-items: flex-end !important;
+        width: 100% !important;
+        padding-right: 0 !important;
+        margin-top: 4px !important;
+    }
+    
+    .debate-mode .message-bubble.ai.debate-right .message-time {
+        text-align: right !important;
+        margin-left: auto !important;
+    }
+    
+  /* 모바일: 시스템 메시지 정중앙 정렬 - 왼쪽으로 보정 */
     .message-list .system-message {
         align-self: center !important; /* flex 컨테이너에서 중앙 정렬 */
         text-align: center !important;
         margin: 0 auto !important;
+        margin-left: -8px !important; /* 왼쪽으로 약간 이동하여 정확한 중앙 정렬 */
         display: block !important;
         width: fit-content !important;
         max-width: 85% !important;
         position: relative !important;
         left: auto !important;
         transform: none !important;
+        box-sizing: border-box !important;
     }
     
-    /* 모바일: 토론 주제 패널 배경색을 채팅방 배경색과 동일하게 */
+    /* 모바일: 토론 주제 패널 배경색 - 웹과 동일한 그라데이션 사용 */
     .debate-topic-panel-content {
-        background: #F5F1EB !important; /* 채팅방 배경색과 동일 */
-        background-image: none !important; /* 그라데이션 제거 */
-        background-color: #F5F1EB !important; /* 배경색 명시적 설정 */
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8F6F3 50%, #F0EDE8 100%) !important;
     }
     
-    /* 모바일: 토론 주제 패널 말풍선 화살표 색상 조정 */
+    /* 모바일: 토론 주제 패널 말풍선 화살표 색상 - 웹과 동일 */
     .debate-topic-panel-content::before {
-        border-top-color: rgba(245, 241, 235, 0.95) !important;
+        border-top-color: rgba(240, 237, 232, 0.95) !important;
     }
     
     .debate-topic-panel-content::after {
-        border-top-color: #F5F1EB !important;
+        border-top-color: #F8F6F3 !important;
     }
     
     /* 모바일: 채팅 헤더 레이아웃 조정 */

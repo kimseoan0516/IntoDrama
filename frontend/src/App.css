@@ -3287,20 +3287,18 @@
         margin-left: auto !important;
     }
     
-  /* 모바일: 시스템 메시지 정중앙 정렬 - 완전히 중앙에 배치 */
+  /* 모바일: 시스템 메시지 정중앙 정렬 - 왼쪽으로 보정 */
     .message-list .system-message {
         align-self: center !important; /* flex 컨테이너에서 중앙 정렬 */
         text-align: center !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
+        margin: 0 auto !important;
+        margin-left: -1px !important; /* 왼쪽으로 약간 이동하여 정확한 중앙 정렬 */
         display: block !important;
         width: fit-content !important;
         max-width: 85% !important;
         position: relative !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important; /* 정확한 중앙 정렬 */
+        left: auto !important;
+        transform: none !important;
         box-sizing: border-box !important;
     }
     

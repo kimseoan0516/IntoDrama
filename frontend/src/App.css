@@ -3261,7 +3261,7 @@
         align-self: flex-end !important; /* 오른쪽 정렬 유지 */
         margin-right: 36px !important; /* 오른쪽 여백 유지 */
         margin-left: 0 !important;
-        max-width: 76% !important; /* 가로 길이 최대 76%로 제한 */
+        max-width: 73% !important; /* 가로 길이 최대 76%로 제한 */
         flex-direction: row-reverse !important; /* 좌우 반전 - 아바타 오른쪽, 말풍선 왼쪽 */
         gap: 8px !important;
         display: flex !important;

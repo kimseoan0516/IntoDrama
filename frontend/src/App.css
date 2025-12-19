@@ -3076,16 +3076,23 @@
     .debate-intervention-panel {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 12px !important; /* 왼쪽 하단에 배치 */
+        left: 12px !important; /* 왼쪽 하단에 배치 - 강제 적용 */
         right: auto !important; /* 오른쪽 정렬 제거 */
         transform: none !important; /* transform 제거 */
         z-index: 1000 !important;
-        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        transition: bottom 0.2s ease, left 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
         max-width: calc(100% - 24px) !important; /* 좌우 여백 확보 */
         width: auto !important;
         margin: 0 !important; /* 마진 제거 */
         margin-left: 0 !important; /* 왼쪽 마진 제거 */
         margin-right: auto !important; /* 오른쪽 마진 자동 */
+    }
+    
+    /* 모바일: base.css의 중앙 정렬 스타일 강제 오버라이드 */
+    .chat-container .debate-intervention-panel {
+        left: 12px !important;
+        right: auto !important;
+        transform: none !important;
     }
     
     /* 모바일: 토론 개입 패널 내부 콘텐츠 - 웹과 동일하게 왼쪽 정렬 */
@@ -3119,16 +3126,23 @@
     .debate-intervention-show-btn-container {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 12px !important; /* 왼쪽 하단에 배치 */
+        left: 12px !important; /* 왼쪽 하단에 배치 - 강제 적용 */
         right: auto !important; /* 오른쪽 정렬 제거 */
         transform: none !important; /* transform 제거 */
         z-index: 1000 !important;
-        transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
+        transition: bottom 0.2s ease, left 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
         width: auto !important;
         margin: 0 !important; /* 마진 제거 */
         margin-left: 0 !important; /* 왼쪽 마진 제거 */
         margin-right: auto !important; /* 오른쪽 마진 자동 */
         justify-content: flex-start !important; /* 왼쪽 정렬 */
+    }
+    
+    /* 모바일: base.css의 중앙 정렬 스타일 강제 오버라이드 */
+    .chat-container .debate-intervention-show-btn-container {
+        left: 12px !important;
+        right: auto !important;
+        transform: none !important;
     }
     
     .debate-intervention-show-btn {
@@ -3324,13 +3338,13 @@
         box-sizing: border-box !important;
     }
     
-    /* 모바일: 토론 주제 패널 배경 - 웹과 동일하게 투명 (패널 뒤 배경이 보이도록) */
+    /* 모바일: 토론 주제 패널 배경 - 채팅방 배경과 동일한 아이보리 색상 (패널 뒤 갈색 배경 제거) */
     .debate-topic-panel {
-        background: transparent !important;
+        background: #F5F1EB !important;
         padding: 16px 20px 8px 20px !important;
     }
     
-    /* 모바일: 토론 모드 채팅 컨테이너 배경 - 채팅방 배경과 동일한 아이보리 색상 (패널 뒤 갈색 배경 제거) */
+    /* 모바일: 토론 모드 채팅 컨테이너 배경 - 채팅방 배경과 동일한 아이보리 색상 */
     .debate-mode .chat-container {
         background: #F5F1EB !important;
     }

@@ -3072,16 +3072,16 @@
         transition: bottom 0.2s ease !important;
     }
     
-    /* 모바일: 토론 개입 패널 위치 - 완전 왼쪽 하단(입력창 위)에 배치 */
+    /* 모바일: 토론 개입 패널 위치 - 입력창 위에 배치 (웹 버전과 동일한 방식) */
     .debate-intervention-panel {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 0 !important; /* 완전 왼쪽 하단에 배치 */
-        right: auto !important;
+        left: 12px !important; /* 좌우 여백 확보 */
+        right: 12px !important; /* 좌우 여백 확보 */
         transform: none !important;
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
-        max-width: calc(100% - 12px) !important; /* 오른쪽 여백만 확보 */
+        max-width: none !important; /* 좌우 여백으로 너비 제한 */
         width: auto !important;
         margin: 0 !important;
         box-sizing: border-box !important;
@@ -3114,12 +3114,12 @@
         justify-content: flex-start !important; /* 웹과 동일 */
     }
     
-    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 완전 왼쪽 하단(입력창 위)에 배치 */
+    /* 모바일: 토론 개입 "선택지 다시 보기" 버튼 위치 - 입력창 위에 배치 (웹 버전과 동일한 방식) */
     .debate-intervention-show-btn-container {
         position: fixed !important;
         bottom: auto !important; /* JavaScript로 동적으로 설정 */
-        left: 0 !important; /* 완전 왼쪽 하단에 배치 */
-        right: auto !important;
+        left: 12px !important; /* 좌우 여백 확보 */
+        right: 12px !important; /* 좌우 여백 확보 */
         transform: none !important;
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */

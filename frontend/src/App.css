@@ -3076,12 +3076,12 @@
     .debate-intervention-panel {
         position: fixed !important;
         /* bottom은 JavaScript로 동적으로 설정 (CSS의 !important 제거) */
-        left: 0 !important; /* 완전 왼쪽 하단에 배치 */
+        left: 12px !important; /* 왼쪽에서 12px 간격 */
         right: auto !important;
         transform: none !important;
         z-index: 1000 !important;
         transition: bottom 0.2s ease !important; /* 위치 변화 시 부드러운 전환 */
-        max-width: calc(100% - 12px) !important; /* 오른쪽 여백만 확보 */
+        max-width: calc(100% - 24px) !important; /* 좌우 각 12px 여백 확보 */
         width: auto !important;
         margin: 0 !important;
         box-sizing: border-box !important;
@@ -3118,7 +3118,7 @@
     .debate-intervention-show-btn-container {
         position: fixed !important;
         /* bottom은 JavaScript로 동적으로 설정 (CSS의 !important 제거) */
-        left: 0 !important; /* 완전 왼쪽 하단에 배치 */
+        left: 12px !important; /* 왼쪽에서 12px 간격 */
         right: auto !important;
         transform: none !important;
         z-index: 1000 !important;

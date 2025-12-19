@@ -2988,11 +2988,10 @@ function App() {
                     templateButtonRef.current.style.bottom = `${templateBottomPosition}px`;
                 }
                 
-                // 토론 개입 패널 및 버튼 위치 조정 (입력창 위 고정 간격)
-                const interventionGap = -150; // 입력창과 토론 개입 패널/버튼 사이 고정 간격 (음수 값으로 아래로 이동)
-                const interventionBottomPosition = windowHeight - inputAreaTop + interventionGap;
+                // 토론 개입 패널 및 버튼 위치 조정 (화면 맨 아래 끝으로 고정)
+                const interventionBottomPosition = 20; // 화면 맨 아래에서 20px 위에 고정
                 
-                // 토론 개입 패널 위치 조정 (왼쪽 하단에 배치 - bottom만 동적 설정, left는 CSS에서 12px로 설정)
+                // 토론 개입 패널 위치 조정 (왼쪽 하단에 배치 - 화면 맨 아래 끝으로 고정)
                 if (debateInterventionPanelRef.current) {
                     debateInterventionPanelRef.current.style.bottom = `${interventionBottomPosition}px`;
                     // left는 CSS에서 12px로 설정되므로 JavaScript에서 제거
@@ -3001,7 +3000,7 @@ function App() {
                     debateInterventionPanelRef.current.style.transform = '';
                 }
                 
-                // 토론 개입 "선택지 다시 보기" 버튼 위치 조정 (왼쪽 하단에 배치 - bottom만 동적 설정, left는 CSS에서 12px로 설정)
+                // 토론 개입 "선택지 다시 보기" 버튼 위치 조정 (왼쪽 하단에 배치 - 화면 맨 아래 끝으로 고정)
                 if (debateInterventionShowBtnRef.current) {
                     debateInterventionShowBtnRef.current.style.bottom = `${interventionBottomPosition}px`;
                     // left는 CSS에서 12px로 설정되므로 JavaScript에서 제거

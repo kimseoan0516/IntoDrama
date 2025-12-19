@@ -2992,19 +2992,19 @@ function App() {
                 const interventionGap = 12; // 입력창과 토론 개입 패널/버튼 사이 고정 간격
                 const interventionBottomPosition = windowHeight - inputAreaTop + interventionGap;
                 
-                // 토론 개입 패널 위치 조정 (웹과 동일한 구조 - bottom만 동적 설정, left는 CSS에서 처리)
+                // 토론 개입 패널 위치 조정 (왼쪽 하단에 배치 - bottom만 동적 설정, left는 CSS에서 12px로 설정)
                 if (debateInterventionPanelRef.current) {
                     debateInterventionPanelRef.current.style.bottom = `${interventionBottomPosition}px`;
-                    // left는 CSS에서 calc(50% - 140px)로 설정되므로 JavaScript에서 제거
+                    // left는 CSS에서 12px로 설정되므로 JavaScript에서 제거
                     debateInterventionPanelRef.current.style.left = '';
                     debateInterventionPanelRef.current.style.right = '';
                     debateInterventionPanelRef.current.style.transform = '';
                 }
                 
-                // 토론 개입 "선택지 다시 보기" 버튼 위치 조정 (웹과 동일한 구조 - bottom만 동적 설정, left는 CSS에서 처리)
+                // 토론 개입 "선택지 다시 보기" 버튼 위치 조정 (왼쪽 하단에 배치 - bottom만 동적 설정, left는 CSS에서 12px로 설정)
                 if (debateInterventionShowBtnRef.current) {
                     debateInterventionShowBtnRef.current.style.bottom = `${interventionBottomPosition}px`;
-                    // left는 CSS에서 calc(50% - 140px)로 설정되므로 JavaScript에서 제거
+                    // left는 CSS에서 12px로 설정되므로 JavaScript에서 제거
                     debateInterventionShowBtnRef.current.style.left = '';
                     debateInterventionShowBtnRef.current.style.right = '';
                     debateInterventionShowBtnRef.current.style.transform = '';

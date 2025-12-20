@@ -428,8 +428,10 @@ def save_chat_history(
             if not title:
                 title = "대화"
     
-    # 메모리 추출 (로그인한 경우에만, 대사 저장이 아닌 경우에만)
-    if current_user and is_manual_quote != 1:
+    # 메모리 추출 (사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 경우에만)
+    # is_manual == 1: 사용자가 직접 저장한 대화만 기억
+    # is_manual_quote != 1: 대사 저장으로 인한 자동 저장은 제외
+    if current_user and is_manual == 1 and is_manual_quote != 1:
         for char_id in character_ids:
             try:
                 extract_memories_from_messages(messages, char_id, current_user.id, db)
@@ -1684,12 +1686,8 @@ def handle_debate(request: DebateRequest, db: Session = Depends(get_db), current
         response_a_text = replace_nickname_placeholders(response_a_text, request.user_nickname)
         response_b_text = replace_nickname_placeholders(response_b_text, request.user_nickname)
         
-        # 메모리 저장 (로그인한 경우에만)
-        if user_id and db:
-            user_messages = [msg for msg in request.chat_history if msg.sender == 'user']
-            if user_messages:
-                extract_memories_from_messages(user_messages, char_a_id, user_id, db)
-                extract_memories_from_messages(user_messages, char_b_id, user_id, db)
+        # 토론 모드는 기억에서 제외 (토론 내용은 일반 대화 히스토리에서 제외되어 페르소나에 영향을 주지 않음)
+        # 메모리 저장은 사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 대화에서만 수행
         
         return {
             "responses": [

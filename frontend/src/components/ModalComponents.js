@@ -2549,7 +2549,7 @@ export const AuthModal = ({ onClose, onSuccess }) => {
         try {
             const body = isLogin 
                 ? { username, password }
-                : { username, email, password, nickname: nickname || '사용자' };
+                : { username, email, password, nickname: nickname || username };
 
             const data = isLogin 
                 ? await api.login(body)
@@ -2592,14 +2592,23 @@ export const AuthModal = ({ onClose, onSuccess }) => {
             <div className="auth-modal">
                 <div className="auth-header">
                     <h2>{isLogin ? '로그인' : '회원가입'}</h2>
-                    <button className="close-button" onClick={onClose}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                        </svg>
-                    </button>
+                    {!isLogin && (
+                        <button className="close-button" onClick={() => {
+                            setIsLogin(true);
+                            setError('');
+                            setUsername('');
+                            setEmail('');
+                            setPassword('');
+                            setNickname('');
+                        }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                    )}
                 </div>
                 
-                <form onSubmit={handleSubmit} className="auth-form">
+                <form onSubmit={handleSubmit} className="auth-form" style={!isLogin ? { padding: '24px 32px', gap: '14px' } : {}}>
                     {error && (
                         <div className="error-message">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
@@ -2712,15 +2721,17 @@ export const AuthModal = ({ onClose, onSuccess }) => {
                     </button>
                 </form>
                 
-                <div className="auth-divider">
-                    <span>또는</span>
-                </div>
+                {isLogin && (
+                    <div className="auth-divider">
+                        <span>또는</span>
+                    </div>
+                )}
                 
-                <div className="auth-switch">
+                <div className="auth-switch" style={!isLogin ? { padding: '16px 32px 24px 32px' } : {}}>
                     <span>{isLogin ? '계정이 없으신가요?' : '이미 계정이 있으신가요?'}</span>
                     <button 
                         type="button"
-                        className="auth-link-button"
+                        className={`auth-link-button ${isLogin ? 'signup-link-button' : ''}`}
                         onClick={() => {
                             setIsLogin(!isLogin);
                             setError('');
@@ -2931,16 +2942,28 @@ const PasswordResetModal = ({ onClose, onSuccess }) => {
                             />
                         </div>
                         
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                             <button 
                                 type="button" 
                                 onClick={() => setStep(1)}
                                 className="auth-submit-button"
-                                style={{ flex: 1, background: '#D7CCC8' }}
+                                style={{ 
+                                    width: 'auto',
+                                    padding: '16px 24px',
+                                    background: '#D7CCC8',
+                                    flexShrink: 0
+                                }}
                             >
                                 이전
                             </button>
-                            <button type="submit" className="auth-submit-button" disabled={loading} style={{ flex: 1 }}>
+                            <button 
+                                type="submit" 
+                                className="auth-submit-button" 
+                                disabled={loading} 
+                                style={{ 
+                                    flex: 1
+                                }}
+                            >
                                 {loading ? (
                                     <>
                                         <div className="spinner"></div>

@@ -100,14 +100,14 @@ pinned: false
 - **대화 맥락 유지**: 대화 흐름을 자연스럽게 이어가며 캐릭터의 일관성 있는 반응 제공
 
 <details>
-<summary><strong>#### 1:1 대화</strong></summary>
+<summary><strong>1:1 대화</strong></summary>
 
 - **단일 캐릭터와의 개인 대화**: 한 명의 드라마 캐릭터와 깊이 있는 1:1 대화를 나눌 수 있습니다
 
 </details>
 
 <details>
-<summary><strong>#### 1:2 멀티채팅</strong></summary>
+<summary><strong>1:2 멀티채팅</strong></summary>
 
 - **2명의 캐릭터와 동시 대화**: 사용자는 최대 2명의 캐릭터와 동시에 대화할 수 있습니다 (1:1 또는 1:2 대화만 지원)
 - **캐릭터 간 상호작용**: 두 캐릭터가 서로 대화하며 사용자와도 자연스럽게 소통하는 3자 대화 형식
@@ -119,7 +119,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 토론 모드</strong></summary>
+<summary><strong>토론 모드</strong></summary>
 
 - **2명의 캐릭터 토론**: 정확히 2명의 캐릭터가 선택된 상태에서 특정 주제에 대해 토론을 진행합니다
 - **토론 주제 선택**: 미리 준비된 토론 주제 중 선택하거나 직접 주제를 입력할 수 있습니다
@@ -140,7 +140,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 대화 저장 및 관리</strong></summary>
+<summary><strong>대화 저장 및 관리</strong></summary>
 
 - **대화 보관함 (내 대화 보관함)**
   - 사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 전체 대화만 표시됩니다
@@ -187,7 +187,7 @@ pinned: false
 ### 📊 통계 및 분석
 
 <details>
-<summary><strong>#### 주간 통계</strong></summary>
+<summary><strong>주간 통계</strong></summary>
 
 - **이번주 대화 요약**: 현재 주(월요일부터 오늘까지)의 대화 활동을 한눈에 확인
 - **캐릭터별 활동량**: 이번주에 가장 많이 대화한 캐릭터 TOP 3를 순위와 함께 표시
@@ -198,7 +198,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 주간 리캡</strong></summary>
+<summary><strong>주간 리캡</strong></summary>
 
 - **월별 주간 대화 요약**: 6개월간의 대화 기록을 월별로 나누어 확인할 수 있습니다
 - **주별 활동 시각화**: 각 주의 대화 활동량을 시각적으로 표현하여 패턴 파악 가능
@@ -210,7 +210,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 심리 리포트</strong></summary>
+<summary><strong>심리 리포트</strong></summary>
 
 - **AI 기반 심리 분석**: 대화 내용을 AI가 분석하여 사용자의 심리 상태를 파악합니다
 - **감정 상태 분석**: 대화에서 드러나는 감정 상태를 분석하고 시각화합니다
@@ -232,7 +232,7 @@ pinned: false
 ### 📝 일기 기능 (마음 기록 노트)
 
 <details>
-<summary><strong>#### 감정 일기 자동 생성</strong></summary>
+<summary><strong>감정 일기 자동 생성</strong></summary>
 
 - **AI 기반 일기 생성**: 대화 내용을 AI가 분석하여 감정 일기를 자동으로 생성합니다
 - **생성 방식 구분**:
@@ -256,7 +256,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 날씨 연동</strong></summary>
+<summary><strong>날씨 연동</strong></summary>
 
 - **실제 날씨 정보**: OpenWeatherMap API를 통해 실제 날씨 정보를 가져옵니다
 - **자동 날씨 기록**: 일기 작성 시 해당 날짜의 날씨 정보가 자동으로 기록됩니다
@@ -270,7 +270,7 @@ pinned: false
 ### 🎁 캐릭터 상호작용
 
 <details>
-<summary><strong>#### 성향 지도 (캐릭터 성향 지도)</strong></summary>
+<summary><strong>성향 지도 (캐릭터 성향 지도)</strong></summary>
 
 - **2D 좌표계 시각화**: 캐릭터들의 성향을 2차원 좌표계로 시각화하여 한눈에 비교할 수 있습니다
 - **성향 축**: 따뜻함/차가움(가로축), 현실적/이상적(세로축) 두 가지 차원으로 캐릭터를 배치합니다
@@ -287,7 +287,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 캐릭터 기억 시스템</strong></summary>
+<summary><strong>캐릭터 기억 시스템</strong></summary>
 
 - **대화 기억**: 캐릭터가 사용자와의 이전 대화 내용을 기억하고 다음 대화에 반영합니다
 - **기억 대상**: 오로지 사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 대화만 캐릭터가 기억합니다
@@ -309,7 +309,7 @@ pinned: false
 ### 🎨 사용자 경험
 
 <details>
-<summary><strong>#### 실시간 타이핑 효과</strong></summary>
+<summary><strong>실시간 타이핑 효과</strong></summary>
 
 - **타이핑 애니메이션**: AI 응답이 한 글자씩 타이핑되는 것처럼 표시되어 생동감 있는 대화 경험 제공
 - **설정 가능**: 설정 메뉴에서 타이핑 효과를 ON/OFF로 전환할 수 있어 선호에 맞게 조정 가능
@@ -319,7 +319,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 메시지 캡처 및 공유</strong></summary>
+<summary><strong>메시지 캡처 및 공유</strong></summary>
 
 - **선택적 캡처**: 원하는 메시지만 선택하여 이미지로 캡처할 수 있습니다
 - **고해상도 이미지**: HTML2Canvas를 사용하여 고해상도의 이미지를 생성합니다
@@ -329,7 +329,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 소설 형식 변환</strong></summary>
+<summary><strong>소설 형식 변환</strong></summary>
 
 - **서사적 문체 변환**: 대화 내용을 소설 형식의 서사적 문체로 자동 변환합니다
 - **자연스러운 재구성**: 대화를 읽기 편한 소설 형식으로 재구성하여 이야기처럼 읽을 수 있습니다
@@ -339,7 +339,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 한국어 조사 자동 처리</strong></summary>
+<summary><strong>한국어 조사 자동 처리</strong></summary>
 
 - **지능형 조사 선택**: 받침 유무에 따라 '와/과', '이/가', '을/를', '은/는' 등을 자동으로 올바르게 선택
 - **자연스러운 문장**: 한국어 문법에 맞는 자연스러운 문장을 자동으로 생성합니다
@@ -349,7 +349,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 프로필 설정</strong></summary>
+<summary><strong>프로필 설정</strong></summary>
 
 - **닉네임 변경**: 사용자 닉네임을 자유롭게 변경할 수 있으며, 대화에서 캐릭터가 이 닉네임을 사용합니다
 - **프로필 사진**: 프로필 사진을 업로드하여 개인화된 프로필을 만들 수 있습니다
@@ -359,7 +359,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 대화 설정</strong></summary>
+<summary><strong>대화 설정</strong></summary>
 
 - **시간대 설정**: 대화의 시간대를 선택하여 캐릭터의 반응을 조절할 수 있습니다
   - 현재 시간: 실제 현재 시간대에 맞춰 자동으로 반응합니다 (기본값)
@@ -378,7 +378,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 음성 입력 기능</strong></summary>
+<summary><strong>음성 입력 기능</strong></summary>
 
 - **음성 인식**: 브라우저의 Web Speech API를 활용하여 음성으로 메시지를 입력할 수 있습니다
 - **실시간 음성 감정 분석**: 음성 입력 중 실시간으로 음성의 톤과 감정을 분석합니다
@@ -391,7 +391,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 교환일기 기능</strong></summary>
+<summary><strong>교환일기 기능</strong></summary>
 
 - **캐릭터와의 편지 교환**: 일기를 작성하고 캐릭터에게 보내면, 캐릭터가 답장편지를 작성하여 돌려보냅니다
 - **일기 작성**: 마음 기록 노트에서 일기를 작성한 후 "답장 받기" 옵션을 활성화하면 교환일기가 생성됩니다
@@ -408,7 +408,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 음악 추천 기능</strong></summary>
+<summary><strong>음악 추천 기능</strong></summary>
 
 - **감정 기반 음악 추천**: 대화 내용을 분석하여 사용자의 감정 상태에 맞는 음악을 추천합니다
 - **캐릭터 음악 추천**: 가장 많이 대화한 캐릭터가 사용자의 기분에 맞춰 음악을 추천하고 코멘트를 남깁니다
@@ -420,7 +420,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 감정 기반 UI 변화</strong></summary>
+<summary><strong>감정 기반 UI 변화</strong></summary>
 
 - **실시간 감정 감지**: 사용자와 캐릭터의 메시지를 실시간으로 분석하여 감정을 감지합니다
 - **감정 타입**: 로맨스(romance), 위로(comfort), 갈등(conflict), 중립(neutral) 4가지 감정 타입을 감지합니다
@@ -448,7 +448,7 @@ pinned: false
 </details>
 
 <details>
-<summary><strong>#### 기타 UX 기능</strong></summary>
+<summary><strong>기타 UX 기능</strong></summary>
 
 - **메시지 소리 알림**: 새 메시지가 도착할 때 소리 알림을 재생합니다 (설정에서 ON/OFF 가능)
 - **랜덤 플레이스홀더**: 입력창에 표시되는 플레이스홀더 텍스트가 랜덤으로 변경되어 재미를 더합니다

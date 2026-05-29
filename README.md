@@ -43,6 +43,28 @@ pinned: false
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Why I Built This](#why-i-built-this)
+- [My Contribution & Design Focus](#my-contribution--design-focus)
+- [Demo](#demo)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [API Documentation](#api-documentation)
+- [Database Schema](#database-schema)
+- [Implementation Details](#implementation-details)
+- [Troubleshooting](#troubleshooting)
+- [Roadmap](#roadmap)
+- [License](#license)
+- [Final Note](#final-note)
+
+---
+
 ## Overview
 
 **IntoDrama**는 드라마를 좋아하는 사용자가 작품이 끝난 뒤에도 캐릭터와 정서적으로 연결되는 경험을 제공하기 위해 만든 AI 챗봇 서비스입니다.

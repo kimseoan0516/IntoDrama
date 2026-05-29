@@ -33,12 +33,6 @@ pinned: false
 
 <br />
 
-<a href="#overview">Overview</a> ·
-<a href="#why-i-built-this">Why I Built This</a> ·
-<a href="#my-contribution--design-focus">My Contribution</a> ·
-<a href="#core-features">Core Features</a> ·
-<a href="#getting-started">Getting Started</a>
-
 </div>
 
 ---

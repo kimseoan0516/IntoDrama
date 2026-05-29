@@ -7,17 +7,39 @@ sdk: docker
 pinned: false
 ---
 
-# IntoDrama
+<div align="center">
 
-> **드라마가 끝나도, 캐릭터와의 이야기는 계속될 수 있을까?**  
-> IntoDrama는 드라마 캐릭터의 말투·관계성·감정선을 기반으로 사용자가 캐릭터와 대화하고, 편지를 주고받고, 감정 기록을 남길 수 있는 **AI 캐릭터 챗봇 플랫폼**입니다.
+# IntoDrama
+### 드라마가 끝난 뒤에도 캐릭터와의 이야기를 이어가는 AI 페르소나 챗봇
+
+**High-Fidelity Persona Engine · Emotion-aware UI · AI Fan Experience Platform**
+
+<br />
+
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.121.1-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash-4285F4?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev)
+[![SQLite](https://img.shields.io/badge/SQLite-Local_DB-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://sqlite.org)
+[![License](https://img.shields.io/badge/License-MIT-C9A84C?style=flat-square)](LICENSE)
+
+<br />
 
 <p>
-  <strong>AI Persona Chatbot</strong> ·
-  <strong>Drama Character Interaction</strong> ·
-  <strong>Emotion-aware UI</strong> ·
-  <strong>FastAPI + React</strong>
+  <strong>직접 수집한 드라마 명대사와 캐릭터별 말투 데이터를 기반으로</strong><br />
+  사용자가 좋아하는 캐릭터와 대화하고, 편지를 주고받고, 감정 기록을 남길 수 있도록 설계한
+  <strong>AI 캐릭터 챗봇 플랫폼</strong>입니다.
 </p>
+
+<br />
+
+<a href="#overview">Overview</a> ·
+<a href="#why-i-built-this">Why I Built This</a> ·
+<a href="#my-contribution--design-focus">My Contribution</a> ·
+<a href="#core-features">Core Features</a> ·
+<a href="#getting-started">Getting Started</a>
+
+</div>
 
 ---
 

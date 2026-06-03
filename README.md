@@ -96,7 +96,7 @@ IntoDrama는 이 문제를 해결하기 위해, **캐릭터 고증 + 장기 기�
 
 ## My Contribution & Design Focus
 
-이 프로젝트에서 가장 중요하게 생각한 부분은 **“AI가 캐릭터처럼 말하는 것”**이 아니라, 사용자가 실제로 그 캐릭터와 관계를 쌓고 있다고 느끼게 만드는 것이었습니다.
+이 프로젝트에서 가장 중요하게 생각한 부분은 “AI가 캐릭터처럼 말하는 것”이 아니라, 사용자가 실제로 그 캐릭터와 관계를 쌓고 있다고 느끼게 만드는 것이었습니다.
 
 ### 1. 직접 구축한 캐릭터 페르소나 데이터
 
@@ -774,7 +774,6 @@ This project is licensed under the MIT License.
 - Google Gemini API: Google API Terms of Service
 - OpenWeatherMap API: OpenWeatherMap Terms of Service
 
-> 캐릭터, 작품명, 대사 등 제3자 저작물과 관련된 요소를 활용할 경우, 배포 및 상업적 이용 시 관련 권리와 플랫폼 정책을 반드시 확인해야 합니다.
 
 ---
 

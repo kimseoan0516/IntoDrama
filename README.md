@@ -151,9 +151,7 @@ AI 대화의 몰입감을 높이기 위해 사용자의 감정과 대화 분위�
 
 저장한 캐릭터 대사를 카드형 이미지로 변환해 갤러리에 저장하거나 공유할 수 있는 기능입니다.  
 대화 경험이 앱 안에서 끝나지 않고, 사용자가 직접 보관·공유할 수 있는 팬 콘텐츠이자 자연스러운 홍보 포인트로 확장되도록 고려했습니다.
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/620c2b7d-3184-4df7-b06f-54c169d47152" alt="저장 대사 이미지 카드 데모" width="320" />
-</p>
+<img src="https://github.com/user-attachments/assets/620c2b7d-3184-4df7-b06f-54c169d47152" alt="저장 대사 이미지 카드 데모" width="280" />
 
 
 ---

@@ -1232,15 +1232,14 @@ export const StatsScreen = ({ onClose, token, messages, onDeleteChat, refreshTri
                                                                 fullChat = allHistories.find(h => {
                                                                     try {
                                                                         const msgs = typeof h.messages === 'string' ? JSON.parse(h.messages) : (h.messages || []);
-                                                                        const isManual = (h.is_manual === 1 || h.is_manual === true);
                                                                         const isNotQuote = (h.is_manual_quote === 0 || h.is_manual_quote === false || h.is_manual_quote === null || h.is_manual_quote === undefined);
                                                                         const hasMultipleMsgs = msgs.length > 1;
                                                                         const hasMatchingText = msgs.some(m => {
                                                                             const msgText = typeof m === 'string' ? JSON.parse(m).text : (m.text || '');
                                                                             return msgText === quoteText || msgText.trim() === quoteText.trim();
                                                                         });
-                                                                        
-                                                                        const match = isManual && isNotQuote && hasMultipleMsgs && hasMatchingText;
+
+                                                                        const match = isNotQuote && hasMultipleMsgs && hasMatchingText;
                                                                         if (match) {
                                                                             console.log('✅ Found saved chat:', {
                                                                                 id: h.id,

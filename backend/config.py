@@ -61,8 +61,8 @@ else:
     try:
         API_KEY = API_KEY.strip()
         genai.configure(api_key=API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        print(">>> ✅ Google Gemini AI 모델(gemini-1.5-flash)이 성공적으로 로드되었습니다.")
+        model = genai.GenerativeModel('gemini-2.0-flash')
+        print(">>> ✅ Google Gemini AI 모델(gemini-2.0-flash)이 성공적으로 로드되었습니다.")
         print(f">>> API 키 확인: {API_KEY[:10]}...{API_KEY[-4:] if len(API_KEY) > 14 else '***'}")
     except Exception as e:
         print(f"!!! 모델 로드 실패: {e}")

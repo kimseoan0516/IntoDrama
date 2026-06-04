@@ -67,7 +67,8 @@ const ChatScreen = ({
     debateJustEnded,
     inputAreaRef,
     debateInterventionPanelRef,
-    debateInterventionShowBtnRef
+    debateInterventionShowBtnRef,
+    isLoadingHistoryRef
 }) => {
     const charA = selectedChars?.[0];
     const charB = selectedChars?.[1]; 
@@ -4988,6 +4989,7 @@ function App() {
                     token={token}
                     setHistoryRefreshTrigger={setHistoryRefreshTrigger}
                     debateJustEnded={debateJustEnded}
+                    isLoadingHistoryRef={isLoadingHistoryRef}
                 />
             );
         }

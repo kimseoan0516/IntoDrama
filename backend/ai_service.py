@@ -725,6 +725,9 @@ def get_ai_response(
         
         return ai_message
 
+    except ResourceExhausted as e:
+        print(f"[!! AI({persona['name']}) API 한도 초과 !!] {e}")
+        return "AI가 응답하는 데 문제가 생겼습니다. (오류: API 사용 한도를 초과했습니다. 잠시 후 다시 시도해주세요.)"
     except InvalidArgument as e:
         error_str = str(e)
         if "location" in error_str.lower() or "region" in error_str.lower() or "not supported" in error_str.lower():
@@ -749,11 +752,13 @@ def get_ai_response(
         return "AI가 응답하는 데 문제가 생겼습니다. (오류: API 리소스를 찾을 수 없습니다. API 키와 모델 설정을 확인해주세요.)"
     except Exception as e:
         error_str = str(e)
-        # 지역 제한 관련 키워드 확인
+        if "resourceexhausted" in error_str.lower() or "quota" in error_str.lower() or "rate" in error_str.lower():
+            print(f"[!! AI({persona['name']}) API 한도 초과 (일반 예외) !!] {e}")
+            return "AI가 응답하는 데 문제가 생겼습니다. (오류: API 사용 한도를 초과했습니다. 잠시 후 다시 시도해주세요.)"
         if any(keyword in error_str.lower() for keyword in ["location", "region", "not supported", "country", "geographic"]):
             print(f"[!! AI({persona['name']}) 지역 제한 오류 (일반 예외) !!] {e}")
             return "AI가 응답하는 데 문제가 생겼습니다. (오류: 현재 지역에서는 Google Gemini API를 사용할 수 없습니다. 해결 방법: 1) VPN 사용, 2) Google AI Studio에서 API 키의 지역 설정 확인, 3) 다른 지역에서 생성한 API 키 사용)"
-        print(f"[!! AI({persona['name']}) 응답 최종 오류 (재시도 3회 실패) !!] {e}")
+        print(f"[!! AI({persona['name']}) 응답 최종 오류 !!] {e}")
         return f"AI가 응답하는 데 문제가 생겼습니다. (오류: {error_str})"
 
 
@@ -1128,6 +1133,12 @@ def get_multi_ai_response_json(
 
         return ai_message_text
 
+    except ResourceExhausted as e:
+        print(f"[!! AI (Multi-JSON) API 한도 초과 !!] {e}")
+        return json.dumps({
+            "response_A": "AI가 응답하는 데 문제가 생겼습니다. (오류: API 사용 한도를 초과했습니다. 잠시 후 다시 시도해주세요.)",
+            "response_B": "오류. (위의 A 응답 참고)"
+        }, ensure_ascii=False)
     except InvalidArgument as e:
         error_str = str(e)
         if "location" in error_str.lower() or "region" in error_str.lower() or "not supported" in error_str.lower():

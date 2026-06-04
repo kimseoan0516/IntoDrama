@@ -1649,12 +1649,18 @@ const ChatScreen = ({
 
     useEffect(() => {
         if (messageListRef.current) {
+            // 보관함에서 불러오기 중이면 자동 스크롤 하지 않음
+            if (isLoadingHistoryRef.current) {
+                isLoadingHistoryRef.current = false;
+                return;
+            }
+
             const element = messageListRef.current;
-            
+
             // 타이핑 중에는 smooth 스크롤 비활성화하여 튕김 방지
             const originalScrollBehavior = element.style.scrollBehavior;
             element.style.scrollBehavior = 'auto';
-            
+
             const scrollToBottom = () => {
                 if (messageListRef.current) {
                     const el = messageListRef.current;
@@ -1662,18 +1668,18 @@ const ChatScreen = ({
                     el.scrollTop = el.scrollHeight;
                 }
             };
-            
+
             // 자동 스크롤
             const observer = new MutationObserver(() => {
                 scrollToBottom();
             });
-            
+
             observer.observe(element, {
                 childList: true,
                 subtree: true,
                 characterData: true
             });
-            
+
             // 초기 스크롤
             requestAnimationFrame(() => {
                 scrollToBottom();
@@ -1681,11 +1687,11 @@ const ChatScreen = ({
                     scrollToBottom();
                 });
             });
-            
+
             const timer1 = setTimeout(scrollToBottom, 0);
             const timer2 = setTimeout(scrollToBottom, 10);
             const timer3 = setTimeout(scrollToBottom, 50);
-            
+
             return () => {
                 observer.disconnect();
                 clearTimeout(timer1);
@@ -2896,6 +2902,7 @@ function App() {
     const [inputAreaHeight, setInputAreaHeight] = useState(0);
     
     const messageListRef = useRef(null);
+    const isLoadingHistoryRef = useRef(false);
 
     const defaultProfilePic = "https://placehold.co/100x100/bcaaa4/795548?text=User";
     const [user, setUser] = useState(null);
@@ -3240,8 +3247,9 @@ function App() {
                 return msg;
             }).filter(msg => msg !== null && msg.text);
             
+            isLoadingHistoryRef.current = true;
             setMessages(loadedMessages);
-            
+
             // userProfile과 settings는 선택적으로 로드
             if (history.userProfile) {
                 setUserProfile(history.userProfile);

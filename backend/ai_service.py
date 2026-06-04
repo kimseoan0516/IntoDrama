@@ -26,7 +26,7 @@ from personas import CHARACTER_PERSONAS
 @retry(
     wait=wait_exponential(multiplier=1, min=1, max=10),
     stop=stop_after_attempt(3),
-    retry=retry_if_exception_type((ResourceExhausted, ServiceUnavailable, InternalServerError))
+    retry=retry_if_exception_type((ServiceUnavailable, InternalServerError))
 )
 def generate_content_with_retry(model_instance, **kwargs):
     """Gemini API 호출 재시도 래퍼"""

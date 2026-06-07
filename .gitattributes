@@ -1,9 +1,6 @@
 favicon.ico filter=lfs diff=lfs merge=lfs -text
 frontend/public/favicon.ico filter=lfs diff=lfs merge=lfs -text
-frontend/public/favicon.ico filter=lfs diff=lfs merge=lfs -text
 *.ico filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
-*.png !text !filter !merge !diff
 frontend/public/logo512.png filter=lfs diff=lfs merge=lfs -text
 frontend/public/logo192.png filter=lfs diff=lfs merge=lfs -text
 frontend/build/logo192.png filter=lfs diff=lfs merge=lfs -text

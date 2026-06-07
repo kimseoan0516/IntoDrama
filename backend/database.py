@@ -64,17 +64,18 @@ class ChatHistory(Base):
 
 class CharacterMemory(Base):
     __tablename__ = "character_memories"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     character_id = Column(String, nullable=False, index=True)
+    source_chat_id = Column(Integer, nullable=True)  # 기억이 추출된 ChatHistory ID
     memory_type = Column(String, nullable=False)  # 'emotion', 'event', 'preference', 'relationship'
     content = Column(Text, nullable=False)  # 기억 내용
     context = Column(Text)  # 기억의 맥락 (JSON string)
     importance = Column(Integer, default=5)  # 중요도 1-10
     created_at = Column(DateTime, default=datetime.utcnow)
     last_referenced = Column(DateTime, default=datetime.utcnow)
-    
+
     user = relationship("User")
 
 class EmotionDiary(Base):
@@ -316,12 +317,37 @@ def migrate_character_archetypes():
     except Exception as e:
         print(f"마이그레이션 확인 중 오류 (무시 가능): {e}")
 
+# character_memories 테이블 source_chat_id 컬럼 마이그레이션
+def migrate_character_memories_source_chat():
+    """기존 character_memories 테이블에 source_chat_id 컬럼이 없으면 추가"""
+    from sqlalchemy import inspect, text
+
+    try:
+        inspector = inspect(engine)
+        if 'character_memories' not in inspector.get_table_names():
+            return
+
+        columns = [col['name'] for col in inspector.get_columns('character_memories')]
+
+        if 'source_chat_id' not in columns:
+            with engine.connect() as conn:
+                try:
+                    conn.execute(text("ALTER TABLE character_memories ADD COLUMN source_chat_id INTEGER"))
+                    conn.commit()
+                    print("데이터베이스 마이그레이션 완료: character_memories.source_chat_id 컬럼 추가됨")
+                except Exception as e:
+                    print(f"마이그레이션 오류 (이미 존재할 수 있음): {e}")
+    except Exception as e:
+        print(f"마이그레이션 확인 중 오류 (무시 가능): {e}")
+
+
 # 마이그레이션 실행
 migrate_database()
 migrate_emotion_diaries()
 migrate_chat_histories_quote()
 migrate_exchange_diaries()
 migrate_character_archetypes()
+migrate_character_memories_source_chat()
 
 def get_db():
     db = SessionLocal()

@@ -305,8 +305,8 @@ def analyze_user_speech_style(chat_history_for_ai: List[dict]) -> dict:
 # 캐릭터 메모리 시스템
 # ===========================================
 
-def extract_memories_from_messages(messages: List, character_id: str, user_id: int, db: Session):
-    """메시지에서 중요한 기억을 추출하여 저장"""
+def extract_memories_from_messages(messages: List, character_id: str, user_id: int, db: Session, chat_history_id: int = None):
+    """메시지에서 중요한 기억을 추출하여 저장 (수동 저장된 대화에서만 호출됨)"""
     # 감정 관련 키워드
     emotion_keywords = {
         '힘들', '슬퍼', '울어', '아파', '외로워', '불안', '걱정', '두려워',
@@ -352,12 +352,13 @@ def extract_memories_from_messages(messages: List, character_id: str, user_id: i
                     memory = CharacterMemory(
                         user_id=user_id,
                         character_id=character_id,
+                        source_chat_id=chat_history_id,
                         memory_type='emotion',
                         content=text[:200],  # 처음 200자만
                         importance=7 if any(k in text for k in ['사랑', '좋아', '행복']) else 5
                     )
                     db.add(memory)
-        
+
         # 이벤트 기억 추출
         for keyword in event_keywords:
             if keyword in text:
@@ -367,11 +368,12 @@ def extract_memories_from_messages(messages: List, character_id: str, user_id: i
                     CharacterMemory.memory_type == 'event',
                     CharacterMemory.content.contains(keyword)
                 ).first()
-                
+
                 if not existing:
                     memory = CharacterMemory(
                         user_id=user_id,
                         character_id=character_id,
+                        source_chat_id=chat_history_id,
                         memory_type='event',
                         content=text[:200],
                         importance=8

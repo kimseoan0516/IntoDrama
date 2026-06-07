@@ -12,7 +12,7 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from database import get_db, User, ChatHistory
+from database import get_db, User, ChatHistory, CharacterMemory
 from auth import get_current_user, get_current_user_optional
 from ai_service import (
     get_ai_response, 
@@ -428,47 +428,51 @@ def save_chat_history(
             if not title:
                 title = "대화"
     
-    # 메모리 추출 (사용자가 직접 "서버에 저장" 버튼을 눌러 저장한 경우에만)
-    # is_manual == 1: 사용자가 직접 저장한 대화만 기억
-    # is_manual_quote != 1: 대사 저장으로 인한 자동 저장은 제외
-    if current_user and is_manual == 1 and is_manual_quote != 1:
-        for char_id in character_ids:
-            try:
-                extract_memories_from_messages(messages, char_id, current_user.id, db)
-            except Exception as e:
-                print(f"메모리 추출 오류 (무시됨): {e}")
-    
-    # 채팅 히스토리 저장
+    # 채팅 히스토리 저장 (메모리 추출보다 먼저 - chat_id가 필요)
     chat_history = ChatHistory(
         user_id=current_user.id,
         character_ids=json.dumps(character_ids),
         messages=json.dumps(messages),
         title=title,
-        is_manual=is_manual,  # 프론트엔드에서 전달한 값 사용
+        is_manual=is_manual,
         is_manual_quote=is_manual_quote,
         quote_message_id=quote_message_id
     )
     db.add(chat_history)
     db.commit()
     db.refresh(chat_history)
-    
+
+    # 메모리 추출 (수동 저장된 대화에서만, source_chat_id로 추적)
+    if current_user and is_manual == 1 and is_manual_quote != 1:
+        for char_id in character_ids:
+            try:
+                extract_memories_from_messages(messages, char_id, current_user.id, db, chat_history_id=chat_history.id)
+            except Exception as e:
+                print(f"메모리 추출 오류 (무시됨): {e}")
+
     return {"success": True, "chat_id": chat_history.id, "id": chat_history.id}
 
 
 @router.delete("/histories/{chat_id}")
 def delete_chat_history(chat_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    """채팅 히스토리 삭제"""
+    """채팅 히스토리 삭제 (연결된 기억도 함께 삭제)"""
     chat = db.query(ChatHistory).filter(
         ChatHistory.id == chat_id,
         ChatHistory.user_id == current_user.id
     ).first()
-    
+
     if not chat:
         raise HTTPException(status_code=404, detail="Chat history not found")
-    
+
+    # 이 대화에서 추출된 기억 삭제
+    db.query(CharacterMemory).filter(
+        CharacterMemory.source_chat_id == chat_id,
+        CharacterMemory.user_id == current_user.id
+    ).delete()
+
     db.delete(chat)
     db.commit()
-    
+
     return {"success": True}
 
 

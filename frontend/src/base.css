@@ -30,8 +30,9 @@
 
 .message-list {
     padding: 20px 16px 40px 16px;
-    display: flex; 
-    flex-direction: column; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 24px;
     background: #F5F1EB;
     min-height: min-content;
@@ -68,9 +69,10 @@
 }
 
 .message-bubble {
-    display: flex; 
-    align-items: flex-start; 
-    gap: 8px; 
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: fit-content;
     max-width: 80%;
     position: relative;
     animation: fadeIn 0.3s ease;
@@ -247,12 +249,16 @@
     align-self: flex-start;
     margin-right: auto;
     margin-left: 0;
+    width: auto;
+    max-width: 80%;
 }
 
 .debate-mode .message-bubble.ai.debate-right {
     align-self: flex-end;
     margin-left: auto;
     margin-right: 0;
+    width: auto;
+    max-width: 80%;
     flex-direction: row-reverse;
 }
 

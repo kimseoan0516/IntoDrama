@@ -91,6 +91,7 @@ async def favicon():
 
 
 @app.get("/logo192.png")
+@app.get("/static/logo192.png")
 async def logo192():
     for path in [PUBLIC_DIR / "logo192.png", BUILD_DIR / "logo192.png"]:
         if path.exists():
@@ -101,6 +102,7 @@ async def logo192():
 
 
 @app.get("/logo512.png")
+@app.get("/static/logo512.png")
 async def logo512():
     for path in [PUBLIC_DIR / "logo512.png", BUILD_DIR / "logo512.png"]:
         if path.exists():

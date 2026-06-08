@@ -94,7 +94,9 @@ async def favicon():
 async def logo192():
     for path in [PUBLIC_DIR / "logo192.png", BUILD_DIR / "logo192.png"]:
         if path.exists():
-            return FileResponse(str(path), media_type="image/png")
+            resp = FileResponse(str(path), media_type="image/png")
+            resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            return resp
     return Response(status_code=204)
 
 
@@ -102,7 +104,9 @@ async def logo192():
 async def logo512():
     for path in [PUBLIC_DIR / "logo512.png", BUILD_DIR / "logo512.png"]:
         if path.exists():
-            return FileResponse(str(path), media_type="image/png")
+            resp = FileResponse(str(path), media_type="image/png")
+            resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            return resp
     return Response(status_code=204)
 
 

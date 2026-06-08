@@ -102,15 +102,49 @@ def health_check():
 
 @app.get("/favicon.ico")
 async def favicon():
-    """프로젝트 root 디렉토리의 favicon.ico 파일을 반환합니다."""
-    # 프로젝트 root 디렉토리 경로 (backend/main.py의 상위 디렉토리)
     project_root = Path(__file__).parent.parent
-    favicon_path = project_root / "favicon.ico"
-    
-    if favicon_path.exists() and favicon_path.is_file():
-        return FileResponse(str(favicon_path))
-    
-    # favicon.ico가 없으면 204 No Content 반환 (브라우저 오류 방지)
+    for path in [
+        project_root / "favicon.ico",
+        project_root / "frontend" / "public" / "favicon.ico",
+    ]:
+        if path.exists():
+            return FileResponse(str(path))
+    return Response(status_code=204)
+
+
+@app.get("/logo192.png")
+async def logo192():
+    project_root = Path(__file__).parent.parent
+    for path in [
+        project_root / "frontend" / "public" / "logo192.png",
+        project_root / "frontend" / "build" / "logo192.png",
+    ]:
+        if path.exists():
+            return FileResponse(str(path), media_type="image/png")
+    return Response(status_code=204)
+
+
+@app.get("/logo512.png")
+async def logo512():
+    project_root = Path(__file__).parent.parent
+    for path in [
+        project_root / "frontend" / "public" / "logo512.png",
+        project_root / "frontend" / "build" / "logo512.png",
+    ]:
+        if path.exists():
+            return FileResponse(str(path), media_type="image/png")
+    return Response(status_code=204)
+
+
+@app.get("/manifest.json")
+async def manifest():
+    project_root = Path(__file__).parent.parent
+    for path in [
+        project_root / "frontend" / "public" / "manifest.json",
+        project_root / "frontend" / "build" / "manifest.json",
+    ]:
+        if path.exists():
+            return FileResponse(str(path), media_type="application/json")
     return Response(status_code=204)
 
 

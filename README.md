@@ -31,6 +31,8 @@ pinned: false
   <strong>AI 캐릭터 챗봇 플랫폼</strong>입니다.
 </p>
 
+<p><strong>배포주소 :</strong> <a href="https://intodrama.vercel.app/">https://intodrama.vercel.app/</a></p>
+
 <br />
 
 </div>

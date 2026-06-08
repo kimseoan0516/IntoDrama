@@ -7,6 +7,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
+from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
 from config import CORS_ORIGINS, ORIGIN_REGEX
@@ -45,23 +46,15 @@ app.add_middleware(
 # 데이터베이스 테이블 생성
 # ===========================================
 
-# 앱 시작 시 테이블 생성
 Base.metadata.create_all(bind=engine)
 
 # ===========================================
 # 라우터 등록
 # ===========================================
 
-# 인증 라우터
 app.include_router(auth_router)
-
-# 채팅 라우터
 app.include_router(chat_router)
-
-# 일기 라우터
 app.include_router(diary_router)
-
-# 기타 기능 라우터
 app.include_router(features_router)
 
 # ===========================================
@@ -73,7 +66,7 @@ async def startup_event():
     """서버 시작 시 캐릭터 성향 데이터 초기화"""
     from database import get_db
     from features import initialize_archetype_cache
-    
+
     db = next(get_db())
     try:
         initialize_archetype_cache(db)
@@ -81,32 +74,17 @@ async def startup_event():
         db.close()
 
 # ===========================================
-# 루트 엔드포인트
+# 정적 파일 & 아이콘 엔드포인트
 # ===========================================
 
-@app.get("/")
-def read_root():
-    """API 루트 엔드포인트"""
-    return {
-        "message": "IntoDrama API",
-        "version": "1.0.0",
-        "status": "running"
-    }
-
-
-@app.get("/health")
-def health_check():
-    """헬스 체크 엔드포인트"""
-    return {"status": "healthy"}
+PROJECT_ROOT = Path(__file__).parent.parent
+BUILD_DIR = PROJECT_ROOT / "frontend" / "build"
+PUBLIC_DIR = PROJECT_ROOT / "frontend" / "public"
 
 
 @app.get("/favicon.ico")
 async def favicon():
-    project_root = Path(__file__).parent.parent
-    for path in [
-        project_root / "favicon.ico",
-        project_root / "frontend" / "public" / "favicon.ico",
-    ]:
+    for path in [PROJECT_ROOT / "favicon.ico", PUBLIC_DIR / "favicon.ico"]:
         if path.exists():
             return FileResponse(str(path))
     return Response(status_code=204)
@@ -114,11 +92,7 @@ async def favicon():
 
 @app.get("/logo192.png")
 async def logo192():
-    project_root = Path(__file__).parent.parent
-    for path in [
-        project_root / "frontend" / "public" / "logo192.png",
-        project_root / "frontend" / "build" / "logo192.png",
-    ]:
+    for path in [PUBLIC_DIR / "logo192.png", BUILD_DIR / "logo192.png"]:
         if path.exists():
             return FileResponse(str(path), media_type="image/png")
     return Response(status_code=204)
@@ -126,11 +100,7 @@ async def logo192():
 
 @app.get("/logo512.png")
 async def logo512():
-    project_root = Path(__file__).parent.parent
-    for path in [
-        project_root / "frontend" / "public" / "logo512.png",
-        project_root / "frontend" / "build" / "logo512.png",
-    ]:
+    for path in [PUBLIC_DIR / "logo512.png", BUILD_DIR / "logo512.png"]:
         if path.exists():
             return FileResponse(str(path), media_type="image/png")
     return Response(status_code=204)
@@ -138,14 +108,39 @@ async def logo512():
 
 @app.get("/manifest.json")
 async def manifest():
-    project_root = Path(__file__).parent.parent
-    for path in [
-        project_root / "frontend" / "public" / "manifest.json",
-        project_root / "frontend" / "build" / "manifest.json",
-    ]:
+    for path in [BUILD_DIR / "manifest.json", PUBLIC_DIR / "manifest.json"]:
         if path.exists():
             return FileResponse(str(path), media_type="application/json")
     return Response(status_code=204)
+
+
+# ===========================================
+# 프론트엔드 정적 파일 서빙 (빌드된 React 앱)
+# ===========================================
+
+if BUILD_DIR.exists():
+    # /static 경로로 JS/CSS 번들 서빙
+    app.mount("/static", StaticFiles(directory=str(BUILD_DIR / "static")), name="static")
+
+    @app.get("/health")
+    def health_check():
+        return {"status": "healthy"}
+
+    # React Router를 위한 catch-all: 모든 미지정 경로는 index.html 반환
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        index = BUILD_DIR / "index.html"
+        if index.exists():
+            return FileResponse(str(index))
+        return Response(status_code=404)
+else:
+    @app.get("/")
+    def read_root():
+        return {"message": "IntoDrama API", "version": "1.0.0", "status": "running"}
+
+    @app.get("/health")
+    def health_check():
+        return {"status": "healthy"}
 
 
 # ===========================================
@@ -153,6 +148,4 @@ async def manifest():
 # ===========================================
 
 if __name__ == "__main__":
-    # host="0.0.0.0"으로 설정하여 모든 네트워크 인터페이스에서 접근 가능하도록 함
-    # 모바일 기기에서 접근하려면 이 설정이 필요합니다
     uvicorn.run(app, host="0.0.0.0", port=8000)
